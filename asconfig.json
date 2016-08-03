@@ -1,0 +1,14 @@
+{
+	"config": "node",
+	"compilerOptions": {
+		"debug": true,
+		"external-library-path": [
+			"typedefs"
+		],
+		"warnings": false
+	},
+	"files":
+	[
+		"source/ASConfigC.as"
+	]
+}
