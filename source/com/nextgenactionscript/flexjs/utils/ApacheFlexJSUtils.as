@@ -69,7 +69,7 @@ package com.nextgenactionscript.flexjs.utils
 
 			if("FLEX_HOME" in process.env)
 			{
-				sdkPath = process.env.FLEX_HOME;
+				sdkPath = process.env["FLEX_HOME"];
 				if(isValidSDK(sdkPath))
 				{
 					return sdkPath;
@@ -78,7 +78,7 @@ package com.nextgenactionscript.flexjs.utils
 
 			if("PATH" in process.env)
 			{
-				var paths:Array = process.env.PATH.split(path.delimiter);
+				var paths:Array = process.env["PATH"].split(path.delimiter);
 				var pathCount:int = paths.length;
 				for(var i:int = 0; i < pathCount; i++)
 				{
@@ -114,7 +114,7 @@ package com.nextgenactionscript.flexjs.utils
 
 			if("JAVA_HOME" in process.env)
 			{
-				var javaHome:String = process.env.JAVA_HOME;
+				var javaHome:String = process.env["JAVA_HOME"];
 				var javaPath:String = path.join(javaHome, "bin", executableFile);
 				if(fs.existsSync(javaPath))
 				{
@@ -124,7 +124,7 @@ package com.nextgenactionscript.flexjs.utils
 
 			if("PATH" in process.env)
 			{
-				var paths:Array = process.env.PATH.split(path.delimiter);
+				var paths:Array = process.env["PATH"].split(path.delimiter);
 				var pathCount:int = paths.length;
 				for(var i:int = 0; i < pathCount; i++)
 				{
