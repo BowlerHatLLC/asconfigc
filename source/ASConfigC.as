@@ -69,7 +69,7 @@ package
 			process.chdir(path.dirname(this._configFilePath));
 
 			this.parseConfig();
-			this.compile();
+			this.compileProject();
 		}
 
 		private var _flexHome:String;
@@ -540,7 +540,7 @@ package
 			this._args.push(sizePair.height);
 		}
 
-		private function compile():void
+		private function compileProject():void
 		{
 			var jarName:String = "mxmlc.jar";
 			if(this._projectType === ProjectType.LIB)
