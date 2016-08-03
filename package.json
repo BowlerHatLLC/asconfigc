@@ -12,7 +12,13 @@
     "Apache FlexJS",
     "FlexJS"
   ],
-  "main": "bin/js-debug/index.js",
+  "bin": "./asconfigc",
+  "files": [
+    "bin/js-release",
+    "schemas",
+    "NOTICE",
+    "asconfigc"
+  ],
   "dependencies": {
     "jsen": "^0.6.1",
     "minimist": "^1.2.0"
