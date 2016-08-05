@@ -21,6 +21,7 @@ package
 	import com.nextgenactionscript.asconfigc.JSOutputType;
 	import com.nextgenactionscript.asconfigc.ProjectType;
 	import com.nextgenactionscript.flexjs.utils.ApacheFlexJSUtils;
+	import com.nextgenactionscript.utils.ActionScriptSDKUtils;
 
 	/**
 	 * A command line utility to build a project defined with an asconfig.json
@@ -33,15 +34,6 @@ package
 		public function ASConfigC()
 		{
 			this.parseArguments();
-			if(!this._flexHome)
-			{
-				this._flexHome = ApacheFlexJSUtils.findSDK();
-				if(!this._flexHome)
-				{
-					console.error("Apache FlexJS SDK not found. Set FLEX_HOME, add to PATH, or use --flexHome option.");
-					process.exit(1);
-				}
-			}
 			if(!this._javaExecutable)
 			{
 				this._javaExecutable = ApacheFlexJSUtils.findJava();
@@ -69,6 +61,9 @@ package
 			process.chdir(path.dirname(this._configFilePath));
 
 			this.parseConfig();
+			//validate the SDK after knowing if we're building SWF or JS
+			//because JS has stricter SDK requirements
+			this.validateSDK();
 			this.compileProject();
 		}
 
@@ -142,16 +137,7 @@ package
 					}
 					case "flexHome":
 					{
-						var flexHome:String = args[key] as String;
-						if(ApacheFlexJSUtils.isValidSDK(flexHome))
-						{
-							this._flexHome = flexHome;
-						}
-						else
-						{
-							console.error("Path to Apache FlexJS SDK is not valid: " + path);
-							process.exit(1);
-						}
+						this._flexHome = args[key] as String;
 						break;
 					}
 					case "project":
@@ -538,6 +524,42 @@ package
 			this._args.push("--" + CompilerOptions.DEFAULT_SIZE);
 			this._args.push(sizePair.width);
 			this._args.push(sizePair.height);
+		}
+
+		private function validateSDK():void
+		{
+			if(this._flexHome)
+			{
+				//the --flexHome argument was used, so check if it's valid
+				if(!ApacheFlexJSUtils.isValidSDK(this._flexHome))
+				{
+					if(!this._isSWF || !ActionScriptSDKUtils.isValidSDK(this._flexHome))
+					{
+						console.error("Path to Apache FlexJS SDK is not valid: " + this._flexHome);
+						process.exit(1);
+					}
+					else if(!ActionScriptSDKUtils.isValidSDK(this._flexHome))
+					{
+						console.error("Path to SDK is not valid: " + this._flexHome);
+					}
+				}
+			}
+			else
+			{
+				//the --flexHome argument wasn't passed in, so try to find an SDK
+				this._flexHome = ApacheFlexJSUtils.findSDK();
+				if(!this._flexHome && this._isSWF)
+				{
+					//if we're building a SWF, we don't necessarily need
+					//FlexJS, so try to find another compatible SDK
+					this._flexHome = ActionScriptSDKUtils.findSDK();
+				}
+				if(!this._flexHome)
+				{
+					console.error("SDK not found. Set FLEX_HOME, add to PATH, or use --flexHome option.");
+					process.exit(1);
+				}
+			}
 		}
 
 		private function compileProject():void
