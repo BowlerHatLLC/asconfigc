@@ -31,6 +31,20 @@ package
 	{
 		private static const ASCONFIG_JSON:String = "asconfig.json";
 
+		private static const MXMLC_JARS:Vector.<String> = new <String>
+		[
+			"falcon-mxmlc.jar",
+			"mxmlc-cli.jar",
+			"mxmlc.jar",
+		];
+
+		private static const COMPC_JARS:Vector.<String> = new <String>
+		[
+			"falcon-compc.jar",
+			"compc-cli.jar",
+			"compc.jar",
+		];
+
 		public function ASConfigC()
 		{
 			this.parseArguments();
@@ -563,35 +577,41 @@ package
 			}
 		}
 
-		private function compileProject():void
+		private function findJarPath():String
 		{
-			var jarName:String = "mxmlc.jar";
+			var jarPath:String = null;
+			var jarNames:Vector.<String> = MXMLC_JARS;
 			if(this._projectType === ProjectType.LIB)
 			{
-				jarName = "compc.jar";
+				jarNames = COMPC_JARS;
 			}
-			var jarPath:String;
-			if(this._isSWF)
+			var jarNamesCount:int = jarNames.length;
+			for(var i:int = 0; i < jarNamesCount; i++)
 			{
-				jarPath = path.join(this._flexHome, "lib", jarName);
-				if(!fs.existsSync(jarPath))
+				var jarName:String = jarNames[i];
+				if(this._isSWF)
 				{
-					//the adobe air sdk names these differently
-					jarName = "mxmlc-cli.jar";
-					if(this._projectType === ProjectType.LIB)
-					{
-						jarName = "compc-cli.jar";
-					}
 					jarPath = path.join(this._flexHome, "lib", jarName);
 				}
+				else
+				{
+					jarPath = path.join(this._flexHome, "js", "lib", jarName);
+				}
+				if(fs.existsSync(jarPath))
+				{
+					break;
+				}
+				jarPath = null;
 			}
-			else //javascript
+			return jarPath;
+		}
+
+		private function compileProject():void
+		{
+			var jarPath:String = this.findJarPath();
+			if(!jarPath)
 			{
-				jarPath = path.join(this._flexHome, "js", "lib", jarName);
-			}
-			if(!fs.existsSync(jarPath))
-			{
-				console.error("Compiler not found. Expected: " + jarPath);
+				console.error("Compiler not found in SDK. Expected: " + jarPath);
 				process.exit(1);
 			}
 			var frameworkPath:String = path.join(this._flexHome, "frameworks");
