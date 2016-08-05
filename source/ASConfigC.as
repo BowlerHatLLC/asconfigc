@@ -533,7 +533,7 @@ package
 				//the --flexHome argument was used, so check if it's valid
 				if(!ApacheFlexJSUtils.isValidSDK(this._flexHome))
 				{
-					if(!this._isSWF || !ActionScriptSDKUtils.isValidSDK(this._flexHome))
+					if(!this._isSWF)
 					{
 						console.error("Path to Apache FlexJS SDK is not valid: " + this._flexHome);
 						process.exit(1);
@@ -541,6 +541,7 @@ package
 					else if(!ActionScriptSDKUtils.isValidSDK(this._flexHome))
 					{
 						console.error("Path to SDK is not valid: " + this._flexHome);
+						process.exit(1);
 					}
 				}
 			}
@@ -573,10 +574,25 @@ package
 			if(this._isSWF)
 			{
 				jarPath = path.join(this._flexHome, "lib", jarName);
+				if(!fs.existsSync(jarPath))
+				{
+					//the adobe air sdk names these differently
+					jarName = "mxmlc-cli.jar";
+					if(this._projectType === ProjectType.LIB)
+					{
+						jarName = "compc-cli.jar";
+					}
+					jarPath = path.join(this._flexHome, "lib", jarName);
+				}
 			}
 			else //javascript
 			{
 				jarPath = path.join(this._flexHome, "js", "lib", jarName);
+			}
+			if(!fs.existsSync(jarPath))
+			{
+				console.error("Compiler not found. Expected: " + jarPath);
+				process.exit(1);
 			}
 			var frameworkPath:String = path.join(this._flexHome, "frameworks");
 			this._args.unshift("+flexlib=" + frameworkPath);

@@ -34,7 +34,11 @@ package com.nextgenactionscript.utils
 			{
 				return false;
 			}
-			var sdkDescriptionPath:String = path.join(absolutePath, "flex-sdk-description.xml");	
+			var sdkDescriptionPath:String = path.join(absolutePath, "flex-sdk-description.xml");
+			if(!fs.existsSync(sdkDescriptionPath))
+			{
+				sdkDescriptionPath = path.join(absolutePath, "air-sdk-description.xml");
+			}
 			if(!fs.existsSync(sdkDescriptionPath) || fs.statSync(sdkDescriptionPath).isDirectory())
 			{
 				return false;
