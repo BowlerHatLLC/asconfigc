@@ -25,6 +25,7 @@ package com.nextgenactionscript.asconfigc
 		public static const DUMP_CONFIG:String = "dump-config";
 		public static const EXTERNAL_LIBRARY_PATH:String = "external-library-path";
 		public static const JS_OUTPUT_TYPE:String = "js-output-type";
+		public static const KEEP_AS3_METADATA:String = "keep-as3-metadata";
 		public static const LIBRARY_PATH:String = "library-path";
 		public static const LINK_REPORT:String = "link-report";
 		public static const LOAD_CONFIG:String = "load-config";
