@@ -5,6 +5,9 @@
 		"external-library-path": [
 			"typedefs"
 		],
+		"source-path": [
+			"source"
+		],
 		"warnings": false
 	},
 	"files":
