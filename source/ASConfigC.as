@@ -17,6 +17,7 @@ package
 {
 	import com.nextgenactionscript.asconfigc.ASConfigFields;
 	import com.nextgenactionscript.asconfigc.CompilerOptions;
+	import com.nextgenactionscript.asconfigc.CompilerOptionsParser;
 	import com.nextgenactionscript.asconfigc.ConfigName;
 	import com.nextgenactionscript.asconfigc.JSOutputType;
 	import com.nextgenactionscript.asconfigc.ProjectType;
@@ -292,151 +293,21 @@ package
 
 		private function readCompilerOptions(options:Object):void
 		{
-			for(var key:String in options)
+			try
 			{
-				switch(key)
-				{
-					case CompilerOptions.ACCESSIBLE:
-					{
-						this.setBoolean(key, options[key]);
-						break;
-					}
-					case CompilerOptions.DEBUG:
-					{
-						this.setBoolean(key, options[key]);
-						break;
-					}
-					case CompilerOptions.DEBUG_PASSWORD:
-					{
-						this.setValue(key, options[key]);
-						break;
-					}
-					case CompilerOptions.DEFAULT_FRAME_RATE:
-					{
-
-						this.setValue(key, options[key]);
-						break;
-					}
-					case CompilerOptions.DEFAULT_SIZE:
-					{
-						this.setDefaultSize(options[key]);
-						break;
-					}
-					case CompilerOptions.DUMP_CONFIG:
-					{
-						this.setValue(key, options[key]);
-						break;
-					}
-					case CompilerOptions.EXTERNAL_LIBRARY_PATH:
-					{
-						this.appendPaths(key, options[key]);
-						break;
-					}
-					case CompilerOptions.JS_OUTPUT_TYPE:
-					{
-						//if it is set explicitly, then clear the default
-						this._jsOutputType = null;
-						this.setValue(key, options[key]);
-						break;
-					}
-					case CompilerOptions.LIBRARY_PATH:
-					{
-						this.appendPaths(key, options[key]);
-						break;
-					}
-					case CompilerOptions.LINK_REPORT:
-					{
-						this.setValue(key, options[key]);
-						break;
-					}
-					case CompilerOptions.LOAD_CONFIG:
-					{
-						this.appendPaths(key, options[key]);
-						break;
-					}
-					case CompilerOptions.LOCALE:
-					{
-						this.setValues(key, options[key]);
-						break;
-					}
-					case CompilerOptions.OPTIMIZE:
-					{
-						this.setBoolean(key, options[key]);
-						break;
-					}
-					case CompilerOptions.OMIT_TRACE_STATEMENTS:
-					{
-						this.setBoolean(key, options[key]);
-						break;
-					}
-					case CompilerOptions.OUTPUT:
-					{
-						this.setValue(key, options[key]);
-						break;
-					}
-					case CompilerOptions.SOURCE_MAP:
-					{
-						this.setBoolean(key, options[key]);
-						break;
-					}
-					case CompilerOptions.SOURCE_PATH:
-					{
-						this.appendPaths(key, options[key]);
-						break;
-					}
-					case CompilerOptions.STRICT:
-					{
-						this.setBoolean(key, options[key]);
-						break;
-					}
-					case CompilerOptions.SWF_VERSION:
-					{
-						this.setValue(key, options[key]);
-						break;
-					}
-					case CompilerOptions.TARGET_PLAYER:
-					{
-						this.setValue(key, options[key]);
-						break;
-					}
-					case CompilerOptions.TOOLS_LOCALE:
-					{
-						this.setValue(key, options[key]);
-						break;
-					}
-					case CompilerOptions.USE_DIRECT_BLIT:
-					{
-						this.setBoolean(key, options[key]);
-						break;
-					}
-					case CompilerOptions.USE_GPU:
-					{
-						this.setBoolean(key, options[key]);
-						break;
-					}
-					case CompilerOptions.USE_NETWORK:
-					{
-						this.setBoolean(key, options[key]);
-						break;
-					}
-					case CompilerOptions.USE_RESOURCE_BUNDLE_METADATA:
-					{
-						this.setBoolean(key, options[key]);
-						break;
-					}
-					case CompilerOptions.VERBOSE_STACKTRACES:
-					{
-						this.setBoolean(key, options[key]);
-						break;
-					}
-					default:
-					{
-						console.error("Error: Unknown compiler option: " + key);
-						process.exit(1);
-					}
-				}
+				CompilerOptionsParser.parse(options, this._args);
 			}
-			if(this._jsOutputType)
+			catch(error:Error)
+			{
+				console.error(error.message);
+				process.exit(1);
+			}
+			if(CompilerOptions.JS_OUTPUT_TYPE in options)
+			{
+				//if it is set explicitly, then clear the default
+				this._jsOutputType = null;
+			}
+			else if(this._jsOutputType)
 			{
 				this._args.push("--" + CompilerOptions.JS_OUTPUT_TYPE + "=" + this._jsOutputType);
 			}
@@ -470,74 +341,6 @@ package
 					this._jsOutputType = null;
 				}
 			}
-		}
-
-		private function setValue(optionName:String, value:Object):void
-		{
-			this._args.push("--" + optionName + "=" + value.toString());
-		}
-
-		private function setBoolean(optionName:String, value:Boolean):void
-		{
-			var boolString:String = value ? "true" : "false";
-			this._args.push("--" + optionName + "=" + boolString);
-		}
-
-		private function setValues(optionName:String, values:Array):void
-		{
-			if(values.length === 0)
-			{
-				return;
-			}
-			var firstValue:Object = values[0];
-			if(firstValue === null)
-			{
-				console.error("Value for option \"" + optionName + "\" not valid:" + firstValue);
-				process.exit(1);
-			}
-			this._args.push("--" + optionName + "=" + firstValue.toString());
-			this.appendValues(optionName, values.slice(1));
-		}
-
-		private function appendValues(optionName:String, values:Array):void
-		{
-			if(values.length === 0)
-			{
-				return;
-			}
-			var valuesCount:int = values.length;
-			for(var i:int = 0; i < valuesCount; i++)
-			{
-				var currentValue:Object = values[i];
-				if(currentValue === null)
-				{
-					console.error("Value for option \"" + optionName + "\" not valid:" + currentValue);
-					process.exit(1);
-				}
-				this._args.push("--" + optionName + "+=" + currentValue.toString());
-			}
-		}
-
-		private function appendPaths(optionName:String, paths:Array):void
-		{
-			var pathsCount:int = paths.length;
-			for(var i:int = 0; i < pathsCount; i++)
-			{
-				var currentPath:String = paths[i];
-				if(!fs.existsSync(currentPath))
-				{
-					console.error("Path for option \"" + optionName + "\" not found:" + currentPath);
-					process.exit(1);
-				}
-				this._args.push("--" + optionName + "+=" + currentPath);
-			}
-		}
-
-		private function setDefaultSize(sizePair:Object):void
-		{
-			this._args.push("--" + CompilerOptions.DEFAULT_SIZE);
-			this._args.push(sizePair.width);
-			this._args.push(sizePair.height);
 		}
 
 		private function validateSDK():void
