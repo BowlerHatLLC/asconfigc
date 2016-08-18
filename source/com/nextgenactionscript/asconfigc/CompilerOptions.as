@@ -30,6 +30,7 @@ package com.nextgenactionscript.asconfigc
 		public static const LINK_REPORT:String = "link-report";
 		public static const LOAD_CONFIG:String = "load-config";
 		public static const LOCALE:String = "locale";
+		public static const NAMESPACE:String = "namespace";
 		public static const OPTIMIZE:String = "optimize";
 		public static const OMIT_TRACE_STATEMENTS:String = "omit-trace-statements";
 		public static const OUTPUT:String = "output";
@@ -44,5 +45,10 @@ package com.nextgenactionscript.asconfigc
 		public static const USE_NETWORK:String = "use-network";
 		public static const USE_RESOURCE_BUNDLE_METADATA:String = "use-resource-bundle-metadata";
 		public static const VERBOSE_STACKTRACES:String = "verbose-stacktraces";
+
+		//library options
+		public static const INCLUDE_CLASSES:String = "include-classes";
+		public static const INCLUDE_NAMESPACES:String = "include-namespace";
+		public static const INCLUDE_SOURCES:String = "include-sources";
 	}
 }

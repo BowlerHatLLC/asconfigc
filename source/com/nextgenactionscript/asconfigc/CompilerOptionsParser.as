@@ -44,7 +44,6 @@ package com.nextgenactionscript.asconfigc
 					}
 					case CompilerOptions.DEFAULT_FRAME_RATE:
 					{
-
 						setValue(key, options[key], result);
 						break;
 					}
@@ -59,6 +58,21 @@ package com.nextgenactionscript.asconfigc
 						break;
 					}
 					case CompilerOptions.EXTERNAL_LIBRARY_PATH:
+					{
+						appendPaths(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.INCLUDE_CLASSES:
+					{
+						appendValues(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.INCLUDE_NAMESPACES:
+					{
+						appendValues(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.INCLUDE_SOURCES:
 					{
 						appendPaths(key, options[key], result);
 						break;
@@ -91,6 +105,11 @@ package com.nextgenactionscript.asconfigc
 					case CompilerOptions.LOCALE:
 					{
 						setValues(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.NAMESPACE:
+					{
+						setNamespace(options[key], result);
 						break;
 					}
 					case CompilerOptions.OPTIMIZE:
@@ -197,6 +216,27 @@ package com.nextgenactionscript.asconfigc
 			}
 			result.push("--" + optionName + "=" + firstValue.toString());
 			appendValues(optionName, values.slice(1), result);
+		}
+
+		private static function setNamespace(values:Array, result:Array):void
+		{
+			if(values.length === 0)
+			{
+				return;
+			}
+			var valuesCount:int = values.length;
+			for(var i:int = 0; i < valuesCount; i++)
+			{
+				var currentValue:Object = values[i];
+				if(currentValue === null)
+				{
+					console.error("Value for option \"" + CompilerOptions.NAMESPACE + "\" not valid:" + currentValue);
+					process.exit(1);
+				}
+				result.push("--" + CompilerOptions.NAMESPACE);
+				result.push(currentValue.uri.toString());
+				result.push(currentValue.manifest.toString());
+			}
 		}
 
 		private static function appendValues(optionName:String, values:Array, result:Array):void
