@@ -271,12 +271,22 @@ package
 			if(ASConfigFields.FILES in configData)
 			{
 				var files:Array = configData[ASConfigFields.FILES] as Array;
-				var filesCount:int = files.length;
-				for(var i:int = 0; i < filesCount; i++)
+				if(this._projectType === ProjectType.LIB)
 				{
-					var file:String = files[i];
-					this._args.push(file);
-				} 
+					CompilerOptionsParser.parse(
+					{
+						"include-sources": files
+					}, this._args);
+				}
+				else
+				{
+					var filesCount:int = files.length;
+					for(var i:int = 0; i < filesCount; i++)
+					{
+						var file:String = files[i];
+						this._args.push(file);
+					}
+				}
 			}
 		}
 
