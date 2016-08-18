@@ -343,6 +343,7 @@ package
 				case ConfigName.AIR:
 				case ConfigName.AIRMOBILE:
 				{
+					this._jsOutputType = null;
 					this._isSWF = true;
 					break;
 				}
