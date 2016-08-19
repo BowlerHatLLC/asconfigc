@@ -80,6 +80,7 @@ package
 			//because JS has stricter SDK requirements
 			this.validateSDK();
 			this.compileProject();
+			process.exit(0);
 		}
 
 		private var _flexHome:String;
