@@ -444,6 +444,7 @@ package
 			}
 			catch(error:Error)
 			{
+				console.error("Failed to execute compiler. " + error);
 				process.exit(1);
 			}
 		}
