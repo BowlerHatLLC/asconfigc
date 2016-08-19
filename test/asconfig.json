@@ -1,0 +1,19 @@
+{
+	"config": "node",
+	"compilerOptions": {
+		"debug": true,
+		"keep-as3-metadata": [
+			"Test",
+			"Before",
+			"After"
+		],
+		"source-path": [
+			"../source",
+			"third-party/nextgenas-test"
+		]
+	},
+	"files":
+	[
+		"source/TestASConfigC.as"
+	]
+}
