@@ -438,9 +438,9 @@ package
 			{
 				var result:Object = child_process.execFileSync(this._javaExecutable, this._args,
 				{
+					stdio: "inherit",
 					encoding: "utf8"
 				});
-				console.info(result);
 			}
 			catch(error:Error)
 			{
