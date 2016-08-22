@@ -211,7 +211,7 @@ package com.nextgenactionscript.asconfigc
 			var firstValue:Object = values[0];
 			if(firstValue === null)
 			{
-				console.error("Value for option \"" + optionName + "\" not valid:" + firstValue);
+				console.error("Value for option \"" + optionName + "\" not valid: " + firstValue);
 				process.exit(1);
 			}
 			result.push("--" + optionName + "=" + firstValue.toString());
@@ -230,7 +230,7 @@ package com.nextgenactionscript.asconfigc
 				var currentValue:Object = values[i];
 				if(currentValue === null)
 				{
-					console.error("Value for option \"" + CompilerOptions.NAMESPACE + "\" not valid:" + currentValue);
+					console.error("Value for option \"" + CompilerOptions.NAMESPACE + "\" not valid: " + currentValue);
 					process.exit(1);
 				}
 				result.push("--" + CompilerOptions.NAMESPACE);
@@ -251,7 +251,7 @@ package com.nextgenactionscript.asconfigc
 				var currentValue:Object = values[i];
 				if(currentValue === null)
 				{
-					console.error("Value for option \"" + optionName + "\" not valid:" + currentValue);
+					console.error("Value for option \"" + optionName + "\" not valid: " + currentValue);
 					process.exit(1);
 				}
 				result.push("--" + optionName + "+=" + currentValue.toString());
@@ -266,7 +266,7 @@ package com.nextgenactionscript.asconfigc
 				var currentPath:String = paths[i];
 				if(!fs.existsSync(currentPath))
 				{
-					console.error("Path for option \"" + optionName + "\" not found:" + currentPath);
+					console.error("Path for option \"" + optionName + "\" not found: " + currentPath);
 					process.exit(1);
 				}
 				result.push("--" + optionName + "+=" + currentPath);
