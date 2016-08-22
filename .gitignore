@@ -18,3 +18,4 @@ bin-release/
 node_modules/
 typings/
 .vscode/
+asconfigc-*.tgz
