@@ -2,6 +2,7 @@ package tests
 {
 	import com.nextgenactionscript.asconfigc.CompilerOptionsParser;
 	import com.nextgenactionscript.asconfigc.CompilerOptions;
+	import nextgenas.test.assert.Assert;
 
 	public class CompilerOptionsTests
 	{
@@ -11,9 +12,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.ACCESSIBLE] = true;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.ACCESSIBLE);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.ACCESSIBLE + "=true",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.ACCESSIBLE + "=true",
 				"Incorrect argument value for " + CompilerOptions.ACCESSIBLE);
 		}
 
@@ -23,9 +24,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.DEBUG] = true;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.DEBUG);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.DEBUG + "=true",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.DEBUG + "=true",
 				"Incorrect argument value for " + CompilerOptions.DEBUG);
 		}
 
@@ -36,9 +37,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.DEBUG_PASSWORD] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.DEBUG_PASSWORD);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.DEBUG_PASSWORD + "=" + value,
+			Assert.strictEqual(result[0], "--" + CompilerOptions.DEBUG_PASSWORD + "=" + value,
 				"Incorrect argument value for " + CompilerOptions.DEBUG_PASSWORD);
 		}
 
@@ -49,9 +50,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.DEFAULT_FRAME_RATE] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.DEFAULT_FRAME_RATE);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.DEFAULT_FRAME_RATE + "=" + value,
+			Assert.strictEqual(result[0], "--" + CompilerOptions.DEFAULT_FRAME_RATE + "=" + value,
 				"Incorrect argument value for " + CompilerOptions.DEFAULT_FRAME_RATE);
 		}
 
@@ -66,13 +67,13 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.DEFAULT_SIZE] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 3,
+			Assert.strictEqual(result.length, 3,
 				"Incorrect argument count for " + CompilerOptions.DEFAULT_SIZE);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.DEFAULT_SIZE,
+			Assert.strictEqual(result[0], "--" + CompilerOptions.DEFAULT_SIZE,
 				"Incorrect argument 0 value for " + CompilerOptions.DEFAULT_SIZE);
-			asserts.strictEqual(result[1], value.width.toString(),
+			Assert.strictEqual(result[1], value.width.toString(),
 				"Incorrect argument 1 value for " + CompilerOptions.DEFAULT_SIZE);
-			asserts.strictEqual(result[2], value.height.toString(),
+			Assert.strictEqual(result[2], value.height.toString(),
 				"Incorrect argument 2 value for " + CompilerOptions.DEFAULT_SIZE);
 		}
 
@@ -83,9 +84,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.DUMP_CONFIG] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.DUMP_CONFIG);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.DUMP_CONFIG + "=" + value,
+			Assert.strictEqual(result[0], "--" + CompilerOptions.DUMP_CONFIG + "=" + value,
 				"Incorrect argument value for " + CompilerOptions.DUMP_CONFIG);
 		}
 
@@ -100,11 +101,11 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.EXTERNAL_LIBRARY_PATH] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 2,
+			Assert.strictEqual(result.length, 2,
 				"Incorrect argument count for " + CompilerOptions.EXTERNAL_LIBRARY_PATH);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.EXTERNAL_LIBRARY_PATH + "+=" + value[0],
+			Assert.strictEqual(result[0], "--" + CompilerOptions.EXTERNAL_LIBRARY_PATH + "+=" + value[0],
 				"Incorrect argument 0 value for " + CompilerOptions.EXTERNAL_LIBRARY_PATH);
-			asserts.strictEqual(result[1], "--" + CompilerOptions.EXTERNAL_LIBRARY_PATH + "+=" + value[1],
+			Assert.strictEqual(result[1], "--" + CompilerOptions.EXTERNAL_LIBRARY_PATH + "+=" + value[1],
 				"Incorrect argument 1 value for " + CompilerOptions.EXTERNAL_LIBRARY_PATH);
 		}
 
@@ -119,11 +120,11 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.INCLUDE_CLASSES] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 2,
+			Assert.strictEqual(result.length, 2,
 				"Incorrect argument count for " + CompilerOptions.INCLUDE_CLASSES);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.INCLUDE_CLASSES + "+=" + value[0],
+			Assert.strictEqual(result[0], "--" + CompilerOptions.INCLUDE_CLASSES + "+=" + value[0],
 				"Incorrect argument 0 value for " + CompilerOptions.INCLUDE_CLASSES);
-			asserts.strictEqual(result[1], "--" + CompilerOptions.INCLUDE_CLASSES + "+=" + value[1],
+			Assert.strictEqual(result[1], "--" + CompilerOptions.INCLUDE_CLASSES + "+=" + value[1],
 				"Incorrect argument 1 value for " + CompilerOptions.INCLUDE_CLASSES);
 		}
 
@@ -138,11 +139,11 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.INCLUDE_NAMESPACES] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 2,
+			Assert.strictEqual(result.length, 2,
 				"Incorrect argument count for " + CompilerOptions.INCLUDE_NAMESPACES);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.INCLUDE_NAMESPACES + "+=" + value[0],
+			Assert.strictEqual(result[0], "--" + CompilerOptions.INCLUDE_NAMESPACES + "+=" + value[0],
 				"Incorrect argument 0 value for " + CompilerOptions.INCLUDE_NAMESPACES);
-			asserts.strictEqual(result[1], "--" + CompilerOptions.INCLUDE_NAMESPACES + "+=" + value[1],
+			Assert.strictEqual(result[1], "--" + CompilerOptions.INCLUDE_NAMESPACES + "+=" + value[1],
 				"Incorrect argument 1 value for " + CompilerOptions.INCLUDE_NAMESPACES);
 		}
 
@@ -157,11 +158,11 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.INCLUDE_SOURCES] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 2,
+			Assert.strictEqual(result.length, 2,
 				"Incorrect argument count for " + CompilerOptions.INCLUDE_SOURCES);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.INCLUDE_SOURCES + "+=" + value[0],
+			Assert.strictEqual(result[0], "--" + CompilerOptions.INCLUDE_SOURCES + "+=" + value[0],
 				"Incorrect argument 0 value for " + CompilerOptions.INCLUDE_SOURCES);
-			asserts.strictEqual(result[1], "--" + CompilerOptions.INCLUDE_SOURCES + "+=" + value[1],
+			Assert.strictEqual(result[1], "--" + CompilerOptions.INCLUDE_SOURCES + "+=" + value[1],
 				"Incorrect argument 1 value for " + CompilerOptions.INCLUDE_SOURCES);
 		}
 
@@ -172,9 +173,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.JS_OUTPUT_TYPE] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.JS_OUTPUT_TYPE);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.JS_OUTPUT_TYPE + "=" + value,
+			Assert.strictEqual(result[0], "--" + CompilerOptions.JS_OUTPUT_TYPE + "=" + value,
 				"Incorrect argument value for " + CompilerOptions.JS_OUTPUT_TYPE);
 		}
 
@@ -189,11 +190,11 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.KEEP_AS3_METADATA] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 2,
+			Assert.strictEqual(result.length, 2,
 				"Incorrect argument count for " + CompilerOptions.KEEP_AS3_METADATA);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.KEEP_AS3_METADATA + "+=" + value[0],
+			Assert.strictEqual(result[0], "--" + CompilerOptions.KEEP_AS3_METADATA + "+=" + value[0],
 				"Incorrect argument 0 value for " + CompilerOptions.KEEP_AS3_METADATA);
-			asserts.strictEqual(result[1], "--" + CompilerOptions.KEEP_AS3_METADATA + "+=" + value[1],
+			Assert.strictEqual(result[1], "--" + CompilerOptions.KEEP_AS3_METADATA + "+=" + value[1],
 				"Incorrect argument 1 value for " + CompilerOptions.KEEP_AS3_METADATA);
 		}
 
@@ -207,9 +208,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.LIBRARY_PATH] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.LIBRARY_PATH);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.LIBRARY_PATH + "+=" + value[0],
+			Assert.strictEqual(result[0], "--" + CompilerOptions.LIBRARY_PATH + "+=" + value[0],
 				"Incorrect argument value for " + CompilerOptions.LIBRARY_PATH);
 		}
 
@@ -220,9 +221,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.LINK_REPORT] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.LINK_REPORT);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.LINK_REPORT + "=" + value,
+			Assert.strictEqual(result[0], "--" + CompilerOptions.LINK_REPORT + "=" + value,
 				"Incorrect argument value for " + CompilerOptions.LINK_REPORT);
 		}
 
@@ -236,9 +237,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.LOAD_CONFIG] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.LOAD_CONFIG);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.LOAD_CONFIG + "+=" + value[0],
+			Assert.strictEqual(result[0], "--" + CompilerOptions.LOAD_CONFIG + "+=" + value[0],
 				"Incorrect argument value for " + CompilerOptions.LOAD_CONFIG);
 		}
 
@@ -253,11 +254,11 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.LOCALE] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 2,
+			Assert.strictEqual(result.length, 2,
 				"Incorrect argument count for " + CompilerOptions.LOCALE);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.LOCALE + "=" + value[0],
+			Assert.strictEqual(result[0], "--" + CompilerOptions.LOCALE + "=" + value[0],
 				"Incorrect argument 0 value for " + CompilerOptions.LOCALE);
-			asserts.strictEqual(result[1], "--" + CompilerOptions.LOCALE + "+=" + value[1],
+			Assert.strictEqual(result[1], "--" + CompilerOptions.LOCALE + "+=" + value[1],
 				"Incorrect argument 1 value for " + CompilerOptions.LOCALE);
 		}
 
@@ -278,19 +279,19 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.NAMESPACE] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 6,
+			Assert.strictEqual(result.length, 6,
 				"Incorrect argument count for " + CompilerOptions.NAMESPACE);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.NAMESPACE,
+			Assert.strictEqual(result[0], "--" + CompilerOptions.NAMESPACE,
 				"Incorrect argument 0 value for " + CompilerOptions.NAMESPACE);
-			asserts.strictEqual(result[1], value[0].uri,
+			Assert.strictEqual(result[1], value[0].uri,
 				"Incorrect argument 1 value for " + CompilerOptions.NAMESPACE);
-			asserts.strictEqual(result[2], value[0].manifest,
+			Assert.strictEqual(result[2], value[0].manifest,
 				"Incorrect argument 2 value for " + CompilerOptions.NAMESPACE);
-			asserts.strictEqual(result[3], "--" + CompilerOptions.NAMESPACE,
+			Assert.strictEqual(result[3], "--" + CompilerOptions.NAMESPACE,
 				"Incorrect argument 3 value for " + CompilerOptions.NAMESPACE);
-			asserts.strictEqual(result[4], value[1].uri,
+			Assert.strictEqual(result[4], value[1].uri,
 				"Incorrect argument 4 value for " + CompilerOptions.NAMESPACE);
-			asserts.strictEqual(result[5], value[1].manifest,
+			Assert.strictEqual(result[5], value[1].manifest,
 				"Incorrect argument 5 value for " + CompilerOptions.NAMESPACE);
 		}
 
@@ -300,9 +301,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.OMIT_TRACE_STATEMENTS] = true;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.OMIT_TRACE_STATEMENTS);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.OMIT_TRACE_STATEMENTS + "=true",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.OMIT_TRACE_STATEMENTS + "=true",
 				"Incorrect argument value for " + CompilerOptions.OMIT_TRACE_STATEMENTS);
 		}
 
@@ -312,9 +313,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.OPTIMIZE] = true;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.OPTIMIZE);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.OPTIMIZE + "=true",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.OPTIMIZE + "=true",
 				"Incorrect argument value for " + CompilerOptions.OPTIMIZE);
 		}
 
@@ -325,9 +326,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.OUTPUT] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.OUTPUT);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.OUTPUT + "=" + value,
+			Assert.strictEqual(result[0], "--" + CompilerOptions.OUTPUT + "=" + value,
 				"Incorrect argument value for " + CompilerOptions.OUTPUT);
 		}
 
@@ -337,9 +338,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.STRICT] = true;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.STRICT);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.STRICT + "=true",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.STRICT + "=true",
 				"Incorrect argument value for " + CompilerOptions.STRICT);
 		}
 
@@ -349,9 +350,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.SOURCE_MAP] = true;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.SOURCE_MAP);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.SOURCE_MAP + "=true",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.SOURCE_MAP + "=true",
 				"Incorrect argument value for " + CompilerOptions.SOURCE_MAP);
 		}
 
@@ -366,11 +367,11 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.SOURCE_PATH] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 2,
+			Assert.strictEqual(result.length, 2,
 				"Incorrect argument count for " + CompilerOptions.SOURCE_PATH);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.SOURCE_PATH + "+=" + value[0],
+			Assert.strictEqual(result[0], "--" + CompilerOptions.SOURCE_PATH + "+=" + value[0],
 				"Incorrect argument 0 value for " + CompilerOptions.SOURCE_PATH);
-			asserts.strictEqual(result[1], "--" + CompilerOptions.SOURCE_PATH + "+=" + value[1],
+			Assert.strictEqual(result[1], "--" + CompilerOptions.SOURCE_PATH + "+=" + value[1],
 				"Incorrect argument 1 value for " + CompilerOptions.SOURCE_PATH);
 		}
 
@@ -381,9 +382,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.SWF_VERSION] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.SWF_VERSION);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.SWF_VERSION + "=" + value,
+			Assert.strictEqual(result[0], "--" + CompilerOptions.SWF_VERSION + "=" + value,
 				"Incorrect argument value for " + CompilerOptions.SWF_VERSION);
 		}
 
@@ -394,9 +395,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.TARGET_PLAYER] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.TARGET_PLAYER);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.TARGET_PLAYER + "=" + value,
+			Assert.strictEqual(result[0], "--" + CompilerOptions.TARGET_PLAYER + "=" + value,
 				"Incorrect argument value for " + CompilerOptions.TARGET_PLAYER);
 		}
 
@@ -407,9 +408,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.TOOLS_LOCALE] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.TOOLS_LOCALE);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.TOOLS_LOCALE + "=" + value,
+			Assert.strictEqual(result[0], "--" + CompilerOptions.TOOLS_LOCALE + "=" + value,
 				"Incorrect argument value for " + CompilerOptions.TOOLS_LOCALE);
 		}
 
@@ -419,9 +420,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.USE_DIRECT_BLIT] = true;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.USE_DIRECT_BLIT);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.USE_DIRECT_BLIT + "=true",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.USE_DIRECT_BLIT + "=true",
 				"Incorrect argument value for " + CompilerOptions.USE_DIRECT_BLIT);
 		}
 
@@ -431,9 +432,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.USE_GPU] = true;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.USE_GPU);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.USE_GPU + "=true",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.USE_GPU + "=true",
 				"Incorrect argument value for " + CompilerOptions.USE_GPU);
 		}
 
@@ -443,9 +444,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.USE_NETWORK] = true;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.USE_NETWORK);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.USE_NETWORK + "=true",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.USE_NETWORK + "=true",
 				"Incorrect argument value for " + CompilerOptions.USE_NETWORK);
 		}
 
@@ -455,9 +456,9 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.USE_RESOURCE_BUNDLE_METADATA] = true;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.USE_RESOURCE_BUNDLE_METADATA);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.USE_RESOURCE_BUNDLE_METADATA + "=true",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.USE_RESOURCE_BUNDLE_METADATA + "=true",
 				"Incorrect argument value for " + CompilerOptions.USE_RESOURCE_BUNDLE_METADATA);
 		}
 
@@ -467,12 +468,10 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.VERBOSE_STACKTRACES] = true;
 			var result:Array = CompilerOptionsParser.parse(args);
-			asserts.strictEqual(result.length, 1,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.VERBOSE_STACKTRACES);
-			asserts.strictEqual(result[0], "--" + CompilerOptions.VERBOSE_STACKTRACES + "=true",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.VERBOSE_STACKTRACES + "=true",
 				"Incorrect argument value for " + CompilerOptions.VERBOSE_STACKTRACES);
 		}
 	}
 }
-
-var asserts:Object = require("assert");
