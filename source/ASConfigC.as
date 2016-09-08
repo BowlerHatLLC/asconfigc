@@ -110,7 +110,7 @@ package
 			console.info(" -h, --help                          Print this help message.");
 			console.info(" -v, --version                       Print the version.");
 			console.info(" -p DIRECTORY, --project DIRECTORY   Compile the asconfig.json project in the given directory. If omitted, will look for asconfig.json in current directory.");
-			console.info(" --flexHome DIRECTORY                Specify the directory where Apache FlexJS is located. Defaults to checking FLEX_HOME and PATH environment variables.");
+			console.info(" --flexHome DIRECTORY                Specify the directory where Apache FlexJS, or another supported SDK, is located. If omitted, defaults to checking FLEX_HOME and PATH environment variables.");
 		}
 
 		private function parseArguments():void
