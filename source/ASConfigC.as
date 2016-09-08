@@ -115,26 +115,11 @@ package
 
 		private function parseArguments():void
 		{
-			var args:Object = minimist(process.argv.slice(2),
-			{
-				alias:
-				{
-					h: ["help"],
-					p: ["project"],
-					v: ["version"]
-				}
-			});
+			var args:Object = minimist(process.argv.slice(2));
 			for(var key:String in args)
 			{
 				switch(key)
 				{
-					case "h":
-					case "p":
-					case "v":
-					{
-						//ignore aliases
-						break;
-					}
 					case "_":
 					{
 						var value:String = args[key] as String;
@@ -145,6 +130,7 @@ package
 						}
 						break;
 					}
+					case "h":
 					case "help":
 					{
 						this.printUsage();
@@ -156,6 +142,7 @@ package
 						this._flexHome = args[key] as String;
 						break;
 					}
+					case "p":
 					case "project":
 					{
 						var projectDirectoryPath:String = args[key] as String;
@@ -179,6 +166,7 @@ package
 						this._configFilePath = configFilePath;
 						break;
 					}
+					case "v":
 					case "version":
 					{
 						this.printVersion();
