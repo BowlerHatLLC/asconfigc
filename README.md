@@ -1,27 +1,28 @@
 # asconfigc
 
-A command line utility that compiles an ActionScript project configured with asconfig.json.
+A command line utility that compiles an ActionScript project configured with an `asconfig.json` file. This utility parses the configuration file and runs the compiler with the appropriate options. Supports a variety of ActionScript SDKs, including the Apache FlexJS SDK and the Adobe AIR SDK & Compiler.
 
 ## Installation
 
-This utility is still in development. A preview build will be available soon.
+Requires [Node.js](https://nodejs.org/).
+
+```
+npm install -g asconfigc
+```
 
 ## Usage
 
-```
-asconfigc -p .
-asconfigc -p path/to/project
-```
+Run `asconfigc` in a directory containing an `asconfig.json` file.
 
-The following arguments are available:
+The following options are available:
 
 * `-p DIRECTORY` or `--project DIRECTORY`
 
-	Compile the asconfig.json project in the given directory. If omitted, will look for asconfig.json in current directory.
+	Compile the `asconfig.json` project in the given directory. If omitted, will look for `asconfig.json` in current directory.
 
 * `--flexHome DIRECTORY`
 
-	Specify the directory where Apache FlexJS is located. Defaults to checking FLEX_HOME and PATH environment variables.
+	Specify the directory where Apache FlexJS, or another supported SDK, is located. If  `--flexHome` is omitted, defaults to checking `FLEX_HOME` and `PATH` environment variables.
 
 * `-h` or `--help`
 
