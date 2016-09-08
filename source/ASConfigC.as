@@ -277,6 +277,12 @@ package
 					}
 				}
 			}
+			//if js-output-type was not specified, use the default
+			//swf projects won't have a js-output-type
+			if(this._jsOutputType)
+			{
+				this._args.push("--" + CompilerOptions.JS_OUTPUT_TYPE + "=" + this._jsOutputType);
+			}
 		}
 
 		private function readProjectType(configData:Object):String
@@ -305,10 +311,6 @@ package
 			{
 				//if it is set explicitly, then clear the default
 				this._jsOutputType = null;
-			}
-			else if(this._jsOutputType)
-			{
-				this._args.push("--" + CompilerOptions.JS_OUTPUT_TYPE + "=" + this._jsOutputType);
 			}
 		}
 
