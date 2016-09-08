@@ -22,7 +22,7 @@ The following options are available:
 
 * `--flexHome DIRECTORY`
 
-	Specify the directory where Apache FlexJS, or another supported SDK, is located. If  `--flexHome` is omitted, defaults to checking `FLEX_HOME` and `PATH` environment variables.
+	Specify the directory where Apache FlexJS, or another supported SDK, is located. If omitted, defaults to checking `FLEX_HOME` and `PATH` environment variables for a supported SDK.
 
 * `-h` or `--help`
 
