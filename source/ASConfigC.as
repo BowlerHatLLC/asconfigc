@@ -433,10 +433,17 @@ package
 					encoding: "utf8"
 				});
 			}
-			catch(error:Error)
+			catch(error:Object)
 			{
-				console.error("Failed to execute compiler. " + error);
-				process.exit(1);
+				if(error.status === null)
+				{
+					//this means something went wrong running the executable
+					console.error("Failed to execute compiler: " + error.code);
+					process.exit(1);
+				}
+				//while this means there was an error code from the executable,
+				//probably from compilation errors
+				process.exit(error.status);
 			}
 		}
 	}
