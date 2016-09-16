@@ -83,11 +83,23 @@ package com.nextgenactionscript.flexjs.utils
 				for(var i:int = 0; i < pathCount; i++)
 				{
 					var currentPath:String = paths[i];
-					var asjscPath:String = path.join(currentPath, ASJSC);
+					//first check if this directory contains the NPM version for
+					//Windows
+					var asjscPath:String = path.join(currentPath, ASJSC + ".cmd");
 					if(fs.existsSync(asjscPath))
 					{
-						//this may not be the actual file if Apache FlexJS was
-						//installed with NPM
+						sdkPath = path.join(path.dirname(asjscPath), "node_modules", "flexjs");
+						if(isValidSDK(sdkPath))
+						{
+							return sdkPath;
+						}
+					}
+					asjscPath = path.join(currentPath, ASJSC);
+					if(fs.existsSync(asjscPath))
+					{
+						//this may a symbolic link rather than the actual file,
+						//such as when Apache FlexJS is installed with NPM on
+						//Mac, so get the real path.
 						asjscPath = fs.realpathSync(asjscPath);
 						sdkPath = path.join(path.dirname(asjscPath), "..", "..");
 						if(isValidSDK(sdkPath))
