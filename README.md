@@ -1,6 +1,6 @@
 # asconfigc
 
-A command line utility that compiles an ActionScript project configured with an `asconfig.json` file. This utility parses the configuration file and runs the compiler with the appropriate options. Supports a variety of ActionScript SDKs, including the Apache FlexJS SDK and the Adobe AIR SDK & Compiler.
+A command line utility that compiles an ActionScript project configured with an [`asconfig.json`](https://github.com/BowlerHatLLC/vscode-nextgenas/wiki/asconfig.json) file. This utility parses the configuration file and runs the compiler with the appropriate options. Supports a variety of ActionScript SDKs, including the Apache FlexJS SDK and the Adobe AIR SDK & Compiler.
 
 ## Installation
 
@@ -12,7 +12,7 @@ npm install -g asconfigc
 
 ## Usage
 
-Run `asconfigc` in a directory containing an `asconfig.json` file.
+Run `asconfigc` in a directory containing an [`asconfig.json`](https://github.com/BowlerHatLLC/vscode-nextgenas/wiki/asconfig.json) file.
 
 The following options are available:
 
