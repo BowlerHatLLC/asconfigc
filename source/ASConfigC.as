@@ -311,6 +311,8 @@ package
 			{
 				//if it is set explicitly, then clear the default
 				this._jsOutputType = null;
+				//also, make sure that we don't try to a build a SWF
+				this._isSWF = false;
 			}
 		}
 
