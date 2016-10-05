@@ -20,6 +20,7 @@ package com.nextgenactionscript.asconfigc
 		public static const TYPE:String = "type";
 		public static const CONFIG:String = "config";
 		public static const COMPILER_OPTIONS:String = "compilerOptions";
+		public static const ADDITIONAL_OPTIONS:String = "additionalOptions";
 		public static const FILES:String = "files";
 	}
 }

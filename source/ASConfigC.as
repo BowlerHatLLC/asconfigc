@@ -90,6 +90,7 @@ package
 		private var _jsOutputType:String;
 		private var _isSWF:Boolean;
 		private var _args:Array;
+		private var _additionalOptions:String;
 
 		private function printVersion():void
 		{
@@ -256,6 +257,10 @@ package
 			{
 				var compilerOptions:Object = configData[ASConfigFields.COMPILER_OPTIONS];
 				this.readCompilerOptions(compilerOptions);
+			}
+			if(ASConfigFields.ADDITIONAL_OPTIONS in configData)
+			{
+				this._additionalOptions = configData[ASConfigFields.ADDITIONAL_OPTIONS];
 			}
 			if(ASConfigFields.FILES in configData)
 			{
@@ -429,7 +434,12 @@ package
 			this._args.unshift("-Dflexcompiler=" + this._flexHome);
 			try
 			{
-				var result:Object = child_process.execFileSync(this._javaExecutable, this._args,
+				var command:String = this._javaExecutable + " " + this._args.join(" ");
+				if(this._additionalOptions)
+				{
+					command += " " + this._additionalOptions;
+				}
+				var result:Object = child_process.execSync(command,
 				{
 					stdio: "inherit",
 					encoding: "utf8"
