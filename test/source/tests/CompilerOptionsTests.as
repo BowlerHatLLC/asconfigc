@@ -88,17 +88,21 @@ package tests
 				},
 				{
 					name: "CONFIG::str",
-					value: "test"
+					value: "'test'"
 				},
 				{
 					name: "CONFIG::num",
 					value: 12.3
+				},
+				{
+					name: "CONFIG::expr",
+					value: "2 + 4"
 				}
 			];
 			var args:Object = {};
 			args[CompilerOptions.DEFINE] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			Assert.strictEqual(result.length, 3,
+			Assert.strictEqual(result.length, 4,
 				"Incorrect argument count for " + CompilerOptions.DEFINE);
 			Assert.strictEqual(result[0],
 				"--" + CompilerOptions.DEFINE + "+=" + value[0].name + "," + value[0].value,
@@ -109,6 +113,9 @@ package tests
 			Assert.strictEqual(result[2],
 				"--" + CompilerOptions.DEFINE + "+=" + value[2].name + "," + value[2].value,
 				"Incorrect argument 2 value for " + CompilerOptions.DEFINE);
+			Assert.strictEqual(result[3],
+				"--" + CompilerOptions.DEFINE + "+=" + value[3].name + ",\"" + value[3].value + "\"",
+				"Incorrect argument 3 value for " + CompilerOptions.DEFINE);
 		}
 
 		[Test]
