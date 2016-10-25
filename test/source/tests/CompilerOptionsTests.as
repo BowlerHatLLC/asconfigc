@@ -78,6 +78,40 @@ package tests
 		}
 
 		[Test]
+		public function testDefine():void
+		{
+			var value:Array =
+			[
+				{
+					name: "CONFIG::bool",
+					value: true
+				},
+				{
+					name: "CONFIG::str",
+					value: "test"
+				},
+				{
+					name: "CONFIG::num",
+					value: 12.3
+				}
+			];
+			var args:Object = {};
+			args[CompilerOptions.DEFINE] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 3,
+				"Incorrect argument count for " + CompilerOptions.DEFINE);
+			Assert.strictEqual(result[0],
+				"--" + CompilerOptions.DEFINE + "+=" + value[0].name + "," + value[0].value,
+				"Incorrect argument 0 value for " + CompilerOptions.DEFINE);
+			Assert.strictEqual(result[1],
+				"--" + CompilerOptions.DEFINE + "+=" + value[1].name + ",\"" + value[1].value + "\"",
+				"Incorrect argument 1 value for " + CompilerOptions.DEFINE);
+			Assert.strictEqual(result[2],
+				"--" + CompilerOptions.DEFINE + "+=" + value[2].name + "," + value[2].value,
+				"Incorrect argument 2 value for " + CompilerOptions.DEFINE);
+		}
+
+		[Test]
 		public function testDumpConfig():void
 		{
 			var value:String = "./path/to/file.xml";

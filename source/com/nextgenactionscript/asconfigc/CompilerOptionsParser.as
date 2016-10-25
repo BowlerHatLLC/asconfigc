@@ -52,6 +52,11 @@ package com.nextgenactionscript.asconfigc
 						setDefaultSize(options[key], result);
 						break;
 					}
+					case CompilerOptions.DEFINE:
+					{
+						setDefine(options[key], result);
+						break;
+					}
 					case CompilerOptions.DUMP_CONFIG:
 					{
 						setValue(key, options[key], result);
@@ -278,6 +283,32 @@ package com.nextgenactionscript.asconfigc
 			result.push("--" + CompilerOptions.DEFAULT_SIZE);
 			result.push(sizePair.width.toString());
 			result.push(sizePair.height.toString());
+		}
+
+		private static function setDefine(values:Array, result:Array):void
+		{
+			if(values.length === 0)
+			{
+				return;
+			}
+			var valuesCount:int = values.length;
+			for(var i:int = 0; i < valuesCount; i++)
+			{
+				var currentValue:Object = values[i];
+				if(currentValue === null)
+				{
+					console.error("Value for option \"" + CompilerOptions.DEFINE + "\" not valid: " + currentValue);
+					process.exit(1);
+				}
+				var defineName:String = currentValue.name.toString();
+				var defineValue:Object = currentValue.value;
+				if(defineValue is String)
+				{
+					defineValue = "\"" + defineValue + "\"";
+				}
+				result.push("--" + CompilerOptions.DEFINE + "+=" +
+					defineName + "," + defineValue.toString());
+			}
 		}
 	}
 }
