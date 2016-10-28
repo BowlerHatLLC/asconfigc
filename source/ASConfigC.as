@@ -418,6 +418,24 @@ package
 			return jarPath;
 		}
 
+		private function escapePath(path:String):String
+		{
+			//we don't want spaces in paths or they will be interpreted as new
+			//command line options
+			if(process.platform === "win32")
+			{
+				//on windows, paths may be wrapped in quotes to include spaces
+				path = "\"" + path + "\"";
+			}
+			else
+			{
+				//on other platforms, a backslash preceding a string will
+				//include the space in the path
+				path = path.replace(/\ /g, "\\ ");
+			}
+			return path;
+		}
+
 		private function compileProject():void
 		{
 			var jarPath:String = this.findJarPath();
@@ -427,14 +445,14 @@ package
 				process.exit(1);
 			}
 			var frameworkPath:String = path.join(this._flexHome, "frameworks");
-			this._args.unshift("+flexlib=" + frameworkPath);
-			this._args.unshift(jarPath);
+			this._args.unshift("+flexlib=" + escapePath(frameworkPath);
+			this._args.unshift(escapePath(jarPath));
 			this._args.unshift("-jar");
-			this._args.unshift("-Dflexlib=" + frameworkPath);
-			this._args.unshift("-Dflexcompiler=" + this._flexHome);
+			this._args.unshift("-Dflexlib=" + escapePath(frameworkPath));
+			this._args.unshift("-Dflexcompiler=" + escapePath(this._flexHome));
 			try
 			{
-				var command:String = this._javaExecutable + " " + this._args.join(" ");
+				var command:String = escapePath(this._javaExecutable) + " " + this._args.join(" ");
 				if(this._additionalOptions)
 				{
 					command += " " + this._additionalOptions;
