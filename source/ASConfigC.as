@@ -89,6 +89,7 @@ package
 		private var _projectType:String;
 		private var _jsOutputType:String;
 		private var _isSWF:Boolean;
+		private var _configName:String;
 		private var _args:Array;
 		private var _additionalOptions:String;
 
@@ -249,9 +250,9 @@ package
 			this._projectType = this.readProjectType(configData);
 			if(ASConfigFields.CONFIG in configData)
 			{
-				var configName:String = configData[ASConfigFields.CONFIG] as String;
-				this.detectJavaScript(configName);
-				this._args.push("+configname=" + configName);
+				this._configName = configData[ASConfigFields.CONFIG] as String;
+				this.detectJavaScript(this._configName);
+				this._args.push("+configname=" + this._configName);
 			}
 			if(ASConfigFields.COMPILER_OPTIONS in configData)
 			{
@@ -361,7 +362,7 @@ package
 				{
 					if(!this._isSWF)
 					{
-						console.error("Path to Apache FlexJS SDK is not valid: " + this._flexHome);
+						console.error("Configuration \"" + this._configName + "\" requires Apache FlexJS. Path to SDK is not valid: " + this._flexHome);
 						process.exit(1);
 					}
 					else if(!ActionScriptSDKUtils.isValidSDK(this._flexHome))
