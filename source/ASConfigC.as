@@ -80,6 +80,7 @@ package
 			//because JS has stricter SDK requirements
 			this.validateSDK();
 			this.compileProject();
+			this.processDescriptor();
 			process.exit(0);
 		}
 
@@ -92,6 +93,9 @@ package
 		private var _configName:String;
 		private var _args:Array;
 		private var _additionalOptions:String;
+		private var _airDescriptor:String;
+		private var _outputPath:String;
+		private var _mainFile:String;
 
 		private function printVersion():void
 		{
@@ -258,10 +262,24 @@ package
 			{
 				var compilerOptions:Object = configData[ASConfigFields.COMPILER_OPTIONS];
 				this.readCompilerOptions(compilerOptions);
+				if(CompilerOptions.OUTPUT in compilerOptions)
+				{
+					this._outputPath = compilerOptions[CompilerOptions.OUTPUT];
+				}
 			}
 			if(ASConfigFields.ADDITIONAL_OPTIONS in configData)
 			{
 				this._additionalOptions = configData[ASConfigFields.ADDITIONAL_OPTIONS];
+			}
+			if(ASConfigFields.APPLICATION in configData)
+			{
+				this._airDescriptor = configData[ASConfigFields.APPLICATION];
+				if(this._airDescriptor &&
+					(!fs.existsSync(this._airDescriptor) || fs.statSync(this._airDescriptor).isDirectory()))
+				{
+					console.error("Adobe AIR application descriptor not found: " + this._airDescriptor);
+					process.exit(1);
+				}
 			}
 			if(ASConfigFields.FILES in configData)
 			{
@@ -280,6 +298,10 @@ package
 					{
 						var file:String = files[i];
 						this._args.push(file);
+					}
+					if(filesCount > 0)
+					{
+						this._mainFile = files[filesCount - 1];
 					}
 				}
 			}
@@ -446,7 +468,7 @@ package
 				process.exit(1);
 			}
 			var frameworkPath:String = path.join(this._flexHome, "frameworks");
-			this._args.unshift("+flexlib=" + escapePath(frameworkPath);
+			this._args.unshift("+flexlib=" + escapePath(frameworkPath));
 			this._args.unshift(escapePath(jarPath));
 			this._args.unshift("-jar");
 			this._args.unshift("-Dflexlib=" + escapePath(frameworkPath));
@@ -476,6 +498,30 @@ package
 				//probably from compilation errors
 				process.exit(error.status);
 			}
+		}
+
+		private function processDescriptor():void
+		{
+			if(this._airDescriptor === null)
+			{
+				return;
+			}
+			var outputDir:String = null;
+			var contentName:String = null;
+			if(this._outputPath === null)
+			{
+				outputDir = path.dirname(this._mainFile);
+				contentName = path.basename(this._mainFile);
+			}
+			else
+			{
+				outputDir = path.dirname(this._outputPath);
+				contentName = path.basename(this._outputPath);
+			}
+			var descriptor:String = fs.readFileSync(this._airDescriptor, "utf8") as String;
+			descriptor = descriptor.replace(/<content>.+<\/content>/, "<content>" + contentName + "</content>");
+			var descriptorOutputPath:String = path.resolve(outputDir, path.basename(this._airDescriptor));
+			fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
 		}
 	}
 }
