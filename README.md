@@ -24,6 +24,10 @@ The following options are available:
 
 	Specify the directory where Apache FlexJS, or another supported SDK, is located. If omitted, defaults to checking `FLEX_HOME` and `PATH` environment variables for a supported SDK.
 
+* `--debug=true` or `--debug=false`
+
+	Overrides the debug compiler option specified in asconfig.json.
+
 * `-h` or `--help`
 
 	Print help message.
