@@ -96,6 +96,7 @@ package
 		private var _airDescriptor:String;
 		private var _outputPath:String;
 		private var _mainFile:String;
+		private var _forceDebug:* = undefined;
 
 		private function printVersion():void
 		{
@@ -117,6 +118,7 @@ package
 			console.info(" -v, --version                       Print the version.");
 			console.info(" -p DIRECTORY, --project DIRECTORY   Compile the asconfig.json project in the given directory. If omitted, will look for asconfig.json in current directory.");
 			console.info(" --flexHome DIRECTORY                Specify the directory where Apache FlexJS, or another supported SDK, is located. If omitted, defaults to checking FLEX_HOME and PATH environment variables.");
+			console.info(" --debug=true, --debug=false         Overrides the debug compiler option specified in asconfig.json.");
 		}
 
 		private function parseArguments():void
@@ -170,6 +172,20 @@ package
 							process.exit(1);
 						}
 						this._configFilePath = configFilePath;
+						break;
+					}
+					case "debug":
+					{
+						//support both --debug=true or simply --debug
+						var debugValue:Object = args[key];
+						if(typeof debugValue === "string")
+						{
+							this._forceDebug = debugValue === "true";
+						}
+						else
+						{
+							this._forceDebug = debugValue as Boolean;
+						}
 						break;
 					}
 					case "v":
@@ -261,6 +277,13 @@ package
 			if(ASConfigFields.COMPILER_OPTIONS in configData)
 			{
 				var compilerOptions:Object = configData[ASConfigFields.COMPILER_OPTIONS];
+				if(this._forceDebug === true || this._forceDebug === false)
+				{
+					//ignore the debug option when it is specified on the
+					//command line
+					delete compilerOptions["debug"];
+					this._args.push("--debug=" + this._forceDebug);
+				}
 				this.readCompilerOptions(compilerOptions);
 				if(CompilerOptions.OUTPUT in compilerOptions)
 				{
