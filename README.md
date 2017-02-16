@@ -26,7 +26,7 @@ The following options are available:
 
 * `--debug=true` or `--debug=false`
 
-	Overrides the debug compiler option specified in asconfig.json.
+	Overrides the `debug` compiler option specified in `asconfig.json`.
 
 * `-h` or `--help`
 
