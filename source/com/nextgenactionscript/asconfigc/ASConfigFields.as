@@ -23,5 +23,6 @@ package com.nextgenactionscript.asconfigc
 		public static const ADDITIONAL_OPTIONS:String = "additionalOptions";
 		public static const FILES:String = "files";
 		public static const APPLICATION:String = "application";
+		public static const COPY_SOURCE_PATH_ASSETS:String = "copySourcePathAssets";
 	}
 }

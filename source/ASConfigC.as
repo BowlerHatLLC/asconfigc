@@ -30,6 +30,10 @@ package
 	 */
 	public class ASConfigC
 	{
+		private static const FILE_EXTENSION_AS:String = ".as";
+		private static const FILE_EXTENSION_MXML:String = ".mxml";
+		private static const FILE_EXTENSION_SWF:String = ".swf";
+		private static const AIR_DEFAULT_CONTENT_HTML:String = "index.html";
 		private static const ASCONFIG_JSON:String = "asconfig.json";
 
 		private static const MXMLC_JARS:Vector.<String> = new <String>
@@ -80,6 +84,7 @@ package
 			//because JS has stricter SDK requirements
 			this.validateSDK();
 			this.compileProject();
+			this.copySourcePathAssets();
 			this.processDescriptor();
 			process.exit(0);
 		}
@@ -94,9 +99,12 @@ package
 		private var _args:Array;
 		private var _additionalOptions:String;
 		private var _airDescriptor:String = null;
-		private var _outputPath:String;
-		private var _mainFile:String;
+		private var _outputPath:String = null;
+		private var _mainFile:String = null;
 		private var _forceDebug:* = undefined;
+		private var _debugBuild:Boolean = false;
+		private var _sourcePaths:Vector.<String> = null;
+		private var _copySourcePathAssets:Boolean = false;
 
 		private function printVersion():void
 		{
@@ -285,6 +293,14 @@ package
 					this._args.push("--debug=" + this._forceDebug);
 				}
 				this.readCompilerOptions(compilerOptions);
+				if(this._forceDebug === true || compilerOptions.debug)
+				{
+					this._debugBuild = true;
+				}
+				if(CompilerOptions.SOURCE_PATH in compilerOptions)
+				{
+					this._sourcePaths = compilerOptions[CompilerOptions.SOURCE_PATH];
+				}
 				if(CompilerOptions.OUTPUT in compilerOptions)
 				{
 					this._outputPath = compilerOptions[CompilerOptions.OUTPUT];
@@ -296,13 +312,19 @@ package
 			}
 			if(ASConfigFields.APPLICATION in configData)
 			{
-				this._airDescriptor = configData[ASConfigFields.APPLICATION];
+				//if the path is relative, path.resolve() will give us the
+				//absolute path
+				this._airDescriptor = path.resolve(configData[ASConfigFields.APPLICATION]);
 				if(this._airDescriptor !== null &&
 					(!fs.existsSync(this._airDescriptor) || fs.statSync(this._airDescriptor).isDirectory()))
 				{
 					console.error("Adobe AIR application descriptor not found: " + this._airDescriptor);
 					process.exit(1);
 				}
+			}
+			if(ASConfigFields.COPY_SOURCE_PATH_ASSETS in configData)
+			{
+				this._copySourcePathAssets = configData[ASConfigFields.COPY_SOURCE_PATH_ASSETS];
 			}
 			if(ASConfigFields.FILES in configData)
 			{
@@ -523,28 +545,166 @@ package
 			}
 		}
 
+		private function copySourcePathAssets():void
+		{
+			if(!this._copySourcePathAssets)
+			{
+				return;
+			}
+			var sourcePaths:Vector.<String> = null;
+			if(this._sourcePaths !== null)
+			{
+				sourcePaths = this._sourcePaths.slice();
+			}
+			else
+			{
+				sourcePaths = new <String>[];
+			}
+			if(this._mainFile !== null)
+			{
+				var mainPath:String = path.dirname(this._mainFile);
+				if(sourcePaths.indexOf(mainPath) === -1)
+				{
+					sourcePaths.push(mainPath);
+				}
+			}
+			var sourcePathsCount:int = sourcePaths.length;
+			for(var i:int = 0; i < sourcePathsCount; i++)
+			{
+				sourcePaths[i] = path.resolve(sourcePaths[i]);
+			}
+			var outputDirectory:String = this.calculateOutputDirectory();
+			if(sourcePaths.indexOf(outputDirectory) !== -1)
+			{
+				console.warn("Assets in source path will not be copied because the output directory is a source path: " + outputDirectory);
+				return;
+			}
+			console.log("output directory: " + outputDirectory);
+			for(i = 0; i < sourcePathsCount; i++)
+			{
+				var sourcePath:String = sourcePaths[i];
+				console.log("source path: " + sourcePath);
+				var files:Array = fs.readdirSync(sourcePath);
+				var fileCount:int = files.length;
+				for(var j:int = 0; j < fileCount; j++)
+				{
+					var file:String = files[j];
+					var fullPath:String = path.resolve(sourcePath, file);
+					if(fs.statSync(fullPath).isDirectory())
+					{
+						console.log("directory:", fullPath);
+						continue;
+					}
+					var extname:String = path.extname(file);
+					if(extname === FILE_EXTENSION_AS || extname === FILE_EXTENSION_MXML)
+					{
+						continue;
+					}
+					if(this._airDescriptor !== null && this._airDescriptor === fullPath)
+					{
+						//skip this file because we're processing it elsewhere
+						continue;
+					}
+					console.log("asset in source path:", file);
+					if(this._isSWF)
+					{
+						var targetPath:String = path.resolve(outputDirectory, file);
+						fs.createReadStream(fullPath).pipe(fs.createWriteStream(targetPath));
+					}
+					else
+					{
+						var debugOutputDir:String = path.join(outputDirectory, "bin", "js-debug");
+						targetPath = path.resolve(debugOutputDir, file);
+						fs.createReadStream(fullPath).pipe(fs.createWriteStream(targetPath));
+						if(!this._debugBuild)
+						{
+							var releaseOutputDir:String = path.join(outputDirectory, "bin", "js-release");
+							targetPath = path.resolve(releaseOutputDir, file);
+							fs.createReadStream(fullPath).pipe(fs.createWriteStream(targetPath));
+						}
+						
+					}
+				}
+			}
+		}
+
 		private function processDescriptor():void
 		{
 			if(this._airDescriptor === null)
 			{
 				return;
 			}
-			var outputDir:String = null;
-			var contentName:String = null;
-			if(this._outputPath === null)
+			var outputDir:String = this.calculateOutputDirectory();
+			var contentValue:String = this.calculateApplicationContent();
+			if(contentValue === null)
 			{
-				outputDir = path.dirname(this._mainFile);
-				contentName = path.basename(this._mainFile);
-			}
-			else
-			{
-				outputDir = path.dirname(this._outputPath);
-				contentName = path.basename(this._outputPath);
+				console.error("Failed to find content for application descriptor.");
+				process.exit(1);
 			}
 			var descriptor:String = fs.readFileSync(this._airDescriptor, "utf8") as String;
-			descriptor = descriptor.replace(/<content>.+<\/content>/, "<content>" + contentName + "</content>");
-			var descriptorOutputPath:String = path.resolve(outputDir, path.basename(this._airDescriptor));
-			fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
+			descriptor = descriptor.replace(/<content>.+<\/content>/, "<content>" + contentValue + "</content>");
+			if(this._isSWF)
+			{
+				var descriptorOutputPath:String = path.resolve(outputDir, path.basename(this._airDescriptor));
+				fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
+			}
+			else //js
+			{
+				var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
+				var debugDescriptorOutputPath:String = path.resolve(debugOutputDir, path.basename(this._airDescriptor));
+				fs.writeFileSync(debugDescriptorOutputPath, descriptor, "utf8");
+				if(!this._debugBuild)
+				{
+					var releaseOutputDir:String = path.join(outputDir, "bin", "js-release");
+					var releaseDescriptorOutputPath:String = path.resolve(releaseOutputDir, path.basename(this._airDescriptor));
+					fs.writeFileSync(releaseDescriptorOutputPath, descriptor, "utf8");
+				}
+			}
+		}
+
+		private function calculateOutputDirectory():String
+		{
+			if(this._outputPath === null)
+			{
+				if(this._mainFile === null)
+				{
+					return process.cwd();
+				}
+				var mainPath:String = path.resolve(path.dirname(this._mainFile));
+				if(!this._isSWF)
+				{
+					//FlexJS treats these directory structures as a special case
+					if(mainPath.endsWith("/src/main/flex") ||
+						mainPath.endsWith("\\src\\main\\flex") ||
+						mainPath.endsWith("/src") ||
+						mainPath.endsWith("\\src"))
+					{
+						return path.resolve(mainPath, "../");
+					}
+				}
+				return mainPath;
+			}
+			return path.dirname(this._outputPath);
+		}
+
+		private function calculateApplicationContent():String
+		{
+			if(this._outputPath === null)
+			{
+				if(this._isSWF)
+				{
+					if(this._mainFile === null)
+					{
+						return null;
+					}
+					//replace .as or .mxml with .swf
+					var fileName:String = path.basename(this._mainFile);
+					return fileName.substr(0, fileName.length - path.extname(this._mainFile).length) + FILE_EXTENSION_SWF;
+				}
+				//An AIR app will load an HTML file as its main content
+				return AIR_DEFAULT_CONTENT_HTML;
+			}
+			return path.basename(this._outputPath);
 		}
 	}
 }
