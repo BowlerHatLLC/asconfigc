@@ -93,7 +93,7 @@ package
 		private var _configName:String;
 		private var _args:Array;
 		private var _additionalOptions:String;
-		private var _airDescriptor:String;
+		private var _airDescriptor:String = null;
 		private var _outputPath:String;
 		private var _mainFile:String;
 		private var _forceDebug:* = undefined;
@@ -297,7 +297,7 @@ package
 			if(ASConfigFields.APPLICATION in configData)
 			{
 				this._airDescriptor = configData[ASConfigFields.APPLICATION];
-				if(this._airDescriptor &&
+				if(this._airDescriptor !== null &&
 					(!fs.existsSync(this._airDescriptor) || fs.statSync(this._airDescriptor).isDirectory()))
 				{
 					console.error("Adobe AIR application descriptor not found: " + this._airDescriptor);
