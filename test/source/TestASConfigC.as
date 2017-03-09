@@ -1,6 +1,9 @@
 package
 {
 	import tests.CompilerOptionsTests;
+	import tests.FindSourcePathAssetsTests;
+	import tests.FindOutputDirectoryTests;
+	import tests.FindApplicationContentTests;
 	import nextgenas.test.TestRunner;
 	import nextgenas.test.events.TestEvent;
 	import nextgenas.test.listeners.TraceListener;
@@ -16,6 +19,9 @@ package
 			this._runner.run(new <Class>
 			[
 				CompilerOptionsTests,
+				FindSourcePathAssetsTests,
+				FindOutputDirectoryTests,
+				FindApplicationContentTests,
 			]);
 		}
 

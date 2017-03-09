@@ -21,6 +21,9 @@ package
 	import com.nextgenactionscript.asconfigc.ConfigName;
 	import com.nextgenactionscript.asconfigc.JSOutputType;
 	import com.nextgenactionscript.asconfigc.ProjectType;
+	import com.nextgenactionscript.asconfigc.utils.findSourcePathAssets;
+	import com.nextgenactionscript.asconfigc.utils.findOutputDirectory;
+	import com.nextgenactionscript.asconfigc.utils.findApplicationContent;
 	import com.nextgenactionscript.flexjs.utils.ApacheFlexJSUtils;
 	import com.nextgenactionscript.utils.ActionScriptSDKUtils;
 
@@ -30,10 +33,6 @@ package
 	 */
 	public class ASConfigC
 	{
-		private static const FILE_EXTENSION_AS:String = ".as";
-		private static const FILE_EXTENSION_MXML:String = ".mxml";
-		private static const FILE_EXTENSION_SWF:String = ".swf";
-		private static const AIR_DEFAULT_CONTENT_HTML:String = "index.html";
 		private static const ASCONFIG_JSON:String = "asconfig.json";
 
 		private static const MXMLC_JARS:Vector.<String> = new <String>
@@ -560,70 +559,35 @@ package
 			{
 				sourcePaths = new <String>[];
 			}
-			if(this._mainFile !== null)
+			var outputDirectory:String = findOutputDirectory(this._mainFile, this._outputPath, this._isSWF);
+			var excludes:Vector.<String> = new <String>[];
+			if(this._airDescriptor !== null)
 			{
-				var mainPath:String = path.dirname(this._mainFile);
-				if(sourcePaths.indexOf(mainPath) === -1)
+				excludes.push(this._airDescriptor);
+			}
+			var assetPaths:Vector.<String> = findSourcePathAssets(this._mainFile, sourcePaths, outputDirectory, excludes);
+			var assetCount:int = assetPaths.length;
+			for(var i:int = 0; i < assetCount; i++)
+			{
+				var assetPath:String = assetPaths[i];
+				var assetName:String = path.basename(assetPath);
+				if(this._isSWF)
 				{
-					sourcePaths.push(mainPath);
+					var targetPath:String = path.resolve(outputDirectory, assetName);
+					fs.createReadStream(assetPath).pipe(fs.createWriteStream(targetPath));
 				}
-			}
-			var sourcePathsCount:int = sourcePaths.length;
-			for(var i:int = 0; i < sourcePathsCount; i++)
-			{
-				sourcePaths[i] = path.resolve(sourcePaths[i]);
-			}
-			var outputDirectory:String = this.calculateOutputDirectory();
-			if(sourcePaths.indexOf(outputDirectory) !== -1)
-			{
-				console.warn("Assets in source path will not be copied because the output directory is a source path: " + outputDirectory);
-				return;
-			}
-			console.log("output directory: " + outputDirectory);
-			for(i = 0; i < sourcePathsCount; i++)
-			{
-				var sourcePath:String = sourcePaths[i];
-				console.log("source path: " + sourcePath);
-				var files:Array = fs.readdirSync(sourcePath);
-				var fileCount:int = files.length;
-				for(var j:int = 0; j < fileCount; j++)
+				else
 				{
-					var file:String = files[j];
-					var fullPath:String = path.resolve(sourcePath, file);
-					if(fs.statSync(fullPath).isDirectory())
+					var debugOutputDir:String = path.join(outputDirectory, "bin", "js-debug");
+					targetPath = path.resolve(debugOutputDir, assetName);
+					fs.createReadStream(assetPath).pipe(fs.createWriteStream(targetPath));
+					if(!this._debugBuild)
 					{
-						console.log("directory:", fullPath);
-						continue;
+						var releaseOutputDir:String = path.join(outputDirectory, "bin", "js-release");
+						targetPath = path.resolve(releaseOutputDir, assetName);
+						fs.createReadStream(assetPath).pipe(fs.createWriteStream(targetPath));
 					}
-					var extname:String = path.extname(file);
-					if(extname === FILE_EXTENSION_AS || extname === FILE_EXTENSION_MXML)
-					{
-						continue;
-					}
-					if(this._airDescriptor !== null && this._airDescriptor === fullPath)
-					{
-						//skip this file because we're processing it elsewhere
-						continue;
-					}
-					console.log("asset in source path:", file);
-					if(this._isSWF)
-					{
-						var targetPath:String = path.resolve(outputDirectory, file);
-						fs.createReadStream(fullPath).pipe(fs.createWriteStream(targetPath));
-					}
-					else
-					{
-						var debugOutputDir:String = path.join(outputDirectory, "bin", "js-debug");
-						targetPath = path.resolve(debugOutputDir, file);
-						fs.createReadStream(fullPath).pipe(fs.createWriteStream(targetPath));
-						if(!this._debugBuild)
-						{
-							var releaseOutputDir:String = path.join(outputDirectory, "bin", "js-release");
-							targetPath = path.resolve(releaseOutputDir, file);
-							fs.createReadStream(fullPath).pipe(fs.createWriteStream(targetPath));
-						}
-						
-					}
+					
 				}
 			}
 		}
@@ -634,8 +598,8 @@ package
 			{
 				return;
 			}
-			var outputDir:String = this.calculateOutputDirectory();
-			var contentValue:String = this.calculateApplicationContent();
+			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, this._isSWF);
+			var contentValue:String = findApplicationContent(this._mainFile, this._outputPath, this._isSWF);
 			if(contentValue === null)
 			{
 				console.error("Failed to find content for application descriptor.");
@@ -660,51 +624,6 @@ package
 					fs.writeFileSync(releaseDescriptorOutputPath, descriptor, "utf8");
 				}
 			}
-		}
-
-		private function calculateOutputDirectory():String
-		{
-			if(this._outputPath === null)
-			{
-				if(this._mainFile === null)
-				{
-					return process.cwd();
-				}
-				var mainPath:String = path.resolve(path.dirname(this._mainFile));
-				if(!this._isSWF)
-				{
-					//FlexJS treats these directory structures as a special case
-					if(mainPath.endsWith("/src/main/flex") ||
-						mainPath.endsWith("\\src\\main\\flex") ||
-						mainPath.endsWith("/src") ||
-						mainPath.endsWith("\\src"))
-					{
-						return path.resolve(mainPath, "../");
-					}
-				}
-				return mainPath;
-			}
-			return path.dirname(this._outputPath);
-		}
-
-		private function calculateApplicationContent():String
-		{
-			if(this._outputPath === null)
-			{
-				if(this._isSWF)
-				{
-					if(this._mainFile === null)
-					{
-						return null;
-					}
-					//replace .as or .mxml with .swf
-					var fileName:String = path.basename(this._mainFile);
-					return fileName.substr(0, fileName.length - path.extname(this._mainFile).length) + FILE_EXTENSION_SWF;
-				}
-				//An AIR app will load an HTML file as its main content
-				return AIR_DEFAULT_CONTENT_HTML;
-			}
-			return path.basename(this._outputPath);
 		}
 	}
 }
