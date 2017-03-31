@@ -574,7 +574,8 @@ package
 				if(this._isSWF)
 				{
 					var targetPath:String = path.resolve(outputDirectory, assetName);
-					fs.createReadStream(assetPath).pipe(fs.createWriteStream(targetPath));
+					var content:Object = fs.readFileSync(assetPath);
+					fs.writeFileSync(targetPath, content);
 				}
 				else
 				{
@@ -585,7 +586,8 @@ package
 					{
 						var releaseOutputDir:String = path.join(outputDirectory, "bin", "js-release");
 						targetPath = path.resolve(releaseOutputDir, assetName);
-						fs.createReadStream(assetPath).pipe(fs.createWriteStream(targetPath));
+						content = fs.readFileSync(assetPath);
+						fs.writeFileSync(targetPath, content);
 					}
 					
 				}
