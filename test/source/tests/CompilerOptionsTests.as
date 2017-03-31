@@ -256,6 +256,22 @@ package tests
 		}
 
 		[Test]
+		public function testLibraryPathWithSpace():void
+		{
+			var value:Array =
+			[
+				"./test 3"
+			];
+			var args:Object = {};
+			args[CompilerOptions.LIBRARY_PATH] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.LIBRARY_PATH);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.LIBRARY_PATH + "+=\"" + value[0] + "\"",
+				"Incorrect argument value for " + CompilerOptions.LIBRARY_PATH);
+		}
+
+		[Test]
 		public function testLinkReport():void
 		{
 			var value:String = "path/to/link-report.xml";
@@ -414,6 +430,22 @@ package tests
 				"Incorrect argument 0 value for " + CompilerOptions.SOURCE_PATH);
 			Assert.strictEqual(result[1], "--" + CompilerOptions.SOURCE_PATH + "+=" + value[1],
 				"Incorrect argument 1 value for " + CompilerOptions.SOURCE_PATH);
+		}
+
+		[Test]
+		public function testSourcePathWithSpace():void
+		{
+			var value:Array =
+			[
+				"./test 3"
+			];
+			var args:Object = {};
+			args[CompilerOptions.SOURCE_PATH] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.SOURCE_PATH);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.SOURCE_PATH + "+=\"" + value[0] + "\"",
+				"Incorrect argument 0 value for " + CompilerOptions.SOURCE_PATH);
 		}
 
 		[Test]

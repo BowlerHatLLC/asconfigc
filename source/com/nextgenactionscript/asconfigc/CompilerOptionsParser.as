@@ -274,7 +274,14 @@ package com.nextgenactionscript.asconfigc
 					console.error("Path for option \"" + optionName + "\" not found: " + currentPath);
 					process.exit(1);
 				}
-				result.push("--" + optionName + "+=" + currentPath);
+				if(currentPath.indexOf(" ") !== -1)
+				{
+					result.push("--" + optionName + "+=\"" + currentPath + "\"");
+				}
+				else
+				{
+					result.push("--" + optionName + "+=" + currentPath);
+				}
 			}
 		}
 
