@@ -21,6 +21,7 @@ package
 	import com.nextgenactionscript.asconfigc.ConfigName;
 	import com.nextgenactionscript.asconfigc.JSOutputType;
 	import com.nextgenactionscript.asconfigc.ProjectType;
+	import com.nextgenactionscript.asconfigc.utils.assetPathToOutputPath;
 	import com.nextgenactionscript.asconfigc.utils.findSourcePathAssets;
 	import com.nextgenactionscript.asconfigc.utils.findOutputDirectory;
 	import com.nextgenactionscript.asconfigc.utils.findApplicationContent;
@@ -570,26 +571,27 @@ package
 			for(var i:int = 0; i < assetCount; i++)
 			{
 				var assetPath:String = assetPaths[i];
-				var assetName:String = path.basename(assetPath);
+				var content:Object = fs.readFileSync(assetPath);
 				if(this._isSWF)
 				{
-					var targetPath:String = path.resolve(outputDirectory, assetName);
-					var content:Object = fs.readFileSync(assetPath);
+					var targetPath:String = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, outputDirectory);
+					mkdirp["sync"](path.dirname(targetPath));
 					fs.writeFileSync(targetPath, content);
 				}
 				else
 				{
+					
 					var debugOutputDir:String = path.join(outputDirectory, "bin", "js-debug");
-					targetPath = path.resolve(debugOutputDir, assetName);
-					fs.createReadStream(assetPath).pipe(fs.createWriteStream(targetPath));
+					targetPath = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, debugOutputDir);
+					mkdirp["sync"](path.dirname(targetPath));
+					fs.writeFileSync(targetPath, content);
 					if(!this._debugBuild)
 					{
 						var releaseOutputDir:String = path.join(outputDirectory, "bin", "js-release");
-						targetPath = path.resolve(releaseOutputDir, assetName);
-						content = fs.readFileSync(assetPath);
+						targetPath = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, releaseOutputDir);
+						mkdirp["sync"](path.dirname(targetPath));
 						fs.writeFileSync(targetPath, content);
 					}
-					
 				}
 			}
 		}

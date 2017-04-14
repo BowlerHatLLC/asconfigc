@@ -1,6 +1,6 @@
 {
   "name": "asconfigc",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Compiles ActionScript project configured with asconfig.json",
   "author": "Josh Tynjala",
   "repository": "BowlerHatLLC/asconfigc",
@@ -24,7 +24,8 @@
   },
   "dependencies": {
     "jsen": "^0.6.1",
-    "minimist": "^1.2.0"
+    "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1"
   },
   "devDependencies": {},
   "scripts": {

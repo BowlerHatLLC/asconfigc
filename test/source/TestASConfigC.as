@@ -4,6 +4,7 @@ package
 	import tests.FindSourcePathAssetsTests;
 	import tests.FindOutputDirectoryTests;
 	import tests.FindApplicationContentTests;
+	import tests.AssetPathToOutputPathTests;
 	import nextgenas.test.TestRunner;
 	import nextgenas.test.events.TestEvent;
 	import nextgenas.test.listeners.TraceListener;
@@ -22,6 +23,7 @@ package
 				FindSourcePathAssetsTests,
 				FindOutputDirectoryTests,
 				FindApplicationContentTests,
+				AssetPathToOutputPathTests,
 			]);
 		}
 
