@@ -6,12 +6,12 @@
 			"typedefs"
 		],
 		"source-path": [
-			"source"
+			"src"
 		],
 		"source-map": true
 	},
 	"files":
 	[
-		"source/ASConfigC.as"
+		"src/ASConfigC.as"
 	]
 }
