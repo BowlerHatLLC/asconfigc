@@ -25,7 +25,7 @@ package com.nextgenactionscript.asconfigc.utils
 		}
 		//make a copy because we might modify this array
 		sourcePaths = sourcePaths.slice();
-		if(mainFile !== null)
+		if(mainFile)
 		{
 			//the parent directory of the main file is automatically added as a
 			//source path by the compiler

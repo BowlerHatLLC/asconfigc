@@ -17,7 +17,7 @@ package com.nextgenactionscript.asconfigc.utils
 {
 	public function assetPathToOutputPath(assetPath:String, mainFile:String, sourcePaths:Vector.<String>, outputDir:String):String
 	{
-		if(sourcePaths === null)
+		if(!sourcePaths)
 		{
 			sourcePaths = new <String>[];
 		}
@@ -26,7 +26,7 @@ package com.nextgenactionscript.asconfigc.utils
 			//make a copy because we might modify it
 			sourcePaths = sourcePaths.slice();
 		}
-		if(mainFile !== null)
+		if(mainFile)
 		{
 			//the parent directory of the main file is automatically added as a
 			//source path by the compiler
@@ -50,7 +50,7 @@ package com.nextgenactionscript.asconfigc.utils
 				break;
 			}
 		}
-		if(relativePath === null)
+		if(!relativePath)
 		{
 			throw new Error("Could not find asset in source path: " + assetPath);
 		}

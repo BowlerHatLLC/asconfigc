@@ -17,9 +17,9 @@ package com.nextgenactionscript.asconfigc.utils
 {
 	public function findOutputDirectory(mainFile:String, outputPath:String, isSWF:Boolean):String
 	{
-		if(outputPath === null)
+		if(!outputPath)
 		{
-			if(mainFile === null)
+			if(!mainFile)
 			{
 				return process.cwd();
 			}

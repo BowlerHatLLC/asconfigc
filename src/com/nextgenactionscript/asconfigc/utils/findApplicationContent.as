@@ -17,11 +17,11 @@ package com.nextgenactionscript.asconfigc.utils
 {
 	public function findApplicationContent(mainFile:String, outputPath:String, isSWF:Boolean):String
 	{
-		if(outputPath === null)
+		if(!outputPath)
 		{
 			if(isSWF)
 			{
-				if(mainFile === null)
+				if(!mainFile)
 				{
 					return null;
 				}
