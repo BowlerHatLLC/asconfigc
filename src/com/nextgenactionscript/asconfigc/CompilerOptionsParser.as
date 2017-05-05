@@ -157,6 +157,11 @@ package com.nextgenactionscript.asconfigc
 						setValue(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.TARGETS:
+					{
+						setCommaArray(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.TOOLS_LOCALE:
 					{
 						setValue(key, options[key], result);
@@ -221,6 +226,11 @@ package com.nextgenactionscript.asconfigc
 			}
 			result.push("--" + optionName + "=" + firstValue.toString());
 			appendValues(optionName, values.slice(1), result);
+		}
+
+		private static function setCommaArray(optionName:String, values:Array, result:Array):void
+		{
+			result.push("--" + optionName + "=" + values.join(","));
 		}
 
 		private static function setNamespace(values:Array, result:Array):void

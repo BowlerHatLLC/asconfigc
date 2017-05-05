@@ -475,6 +475,32 @@ package tests
 		}
 
 		[Test]
+		public function testTargetsWithOneValue():void
+		{
+			var value:Array = ["JS"];
+			var args:Object = {};
+			args[CompilerOptions.TARGETS] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.TARGETS);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.TARGETS + "=" + value[0],
+				"Incorrect argument value for " + CompilerOptions.TARGETS);
+		}
+
+		[Test]
+		public function testTargetsWithTwoValues():void
+		{
+			var value:Array = ["JS","SWF"];
+			var args:Object = {};
+			args[CompilerOptions.TARGETS] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.TARGETS);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.TARGETS + "=" + value[0] + "," + value[1],
+				"Incorrect argument value for " + CompilerOptions.TARGETS);
+		}
+
+		[Test]
 		public function testToolsLocale():void
 		{
 			var value:String = "fr_FR";

@@ -39,6 +39,7 @@ package com.nextgenactionscript.asconfigc
 		public static const SOURCE_PATH:String = "source-path";
 		public static const STRICT:String = "strict";
 		public static const SWF_VERSION:String = "swf-version";
+		public static const TARGETS:String = "targets";
 		public static const TARGET_PLAYER:String = "target-player";
 		public static const TOOLS_LOCALE:String = "tools-locale";
 		public static const USE_DIRECT_BLIT:String = "use-direct-blit";
