@@ -1,7 +1,6 @@
 {
 	"config": "node",
 	"compilerOptions": {
-		"debug": true,
 		"external-library-path": [
 			"typedefs"
 		],
