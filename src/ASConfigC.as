@@ -21,10 +21,11 @@ package
 	import com.nextgenactionscript.asconfigc.ConfigName;
 	import com.nextgenactionscript.asconfigc.JSOutputType;
 	import com.nextgenactionscript.asconfigc.ProjectType;
+	import com.nextgenactionscript.asconfigc.Targets;
 	import com.nextgenactionscript.asconfigc.utils.assetPathToOutputPath;
-	import com.nextgenactionscript.asconfigc.utils.findSourcePathAssets;
-	import com.nextgenactionscript.asconfigc.utils.findOutputDirectory;
 	import com.nextgenactionscript.asconfigc.utils.findApplicationContent;
+	import com.nextgenactionscript.asconfigc.utils.findOutputDirectory;
+	import com.nextgenactionscript.asconfigc.utils.findSourcePathAssets;
 	import com.nextgenactionscript.flexjs.utils.ApacheFlexJSUtils;
 	import com.nextgenactionscript.utils.ActionScriptSDKUtils;
 
@@ -93,9 +94,10 @@ package
 		private var _javaExecutable:String;
 		private var _configFilePath:String;
 		private var _projectType:String;
+		private var _configRequiresFlexJS:Boolean;
+		private var _isSWFTargetOnly:Boolean;
+		private var _outputIsJS:Boolean;
 		private var _jsOutputType:String;
-		private var _isSWF:Boolean;
-		private var _configName:String;
 		private var _args:Array;
 		private var _additionalOptions:String;
 		private var _airDescriptor:String = null;
@@ -278,9 +280,9 @@ package
 			this._projectType = this.readProjectType(configData);
 			if(ASConfigFields.CONFIG in configData)
 			{
-				this._configName = configData[ASConfigFields.CONFIG] as String;
-				this.detectJavaScript(this._configName);
-				this._args.push("+configname=" + this._configName);
+				var configName:String = configData[ASConfigFields.CONFIG] as String;
+				this.detectJavaScript(configName);
+				this._args.push("+configname=" + configName);
 			}
 			if(ASConfigFields.COMPILER_OPTIONS in configData)
 			{
@@ -315,7 +317,7 @@ package
 				//if the path is relative, path.resolve() will give us the
 				//absolute path
 				this._airDescriptor = path.resolve(configData[ASConfigFields.APPLICATION]);
-				if(this._airDescriptor !== null &&
+				if(this._airDescriptor &&
 					(!fs.existsSync(this._airDescriptor) || fs.statSync(this._airDescriptor).isDirectory()))
 				{
 					console.error("Adobe AIR application descriptor not found: " + this._airDescriptor);
@@ -380,12 +382,25 @@ package
 				console.error(error.message);
 				process.exit(1);
 			}
+			//make sure that we require FlexJS when these options are specified
 			if(CompilerOptions.JS_OUTPUT_TYPE in options)
 			{
+				this._configRequiresFlexJS = true;
 				//if it is set explicitly, then clear the default
 				this._jsOutputType = null;
-				//also, make sure that we don't try to a build a SWF
-				this._isSWF = false;
+			}
+			if(CompilerOptions.TARGETS in options)
+			{
+				this._configRequiresFlexJS = true;
+				var targets:Array = options[CompilerOptions.TARGETS];
+				this._isSWFTargetOnly = targets.length === 1 && targets.indexOf(Targets.SWF) !== -1;
+				//if targets is set explicitly, then we're using a newer SDK
+				//that doesn't need js-output-type
+				this._jsOutputType = null;
+			}
+			if(CompilerOptions.SOURCE_MAP in options)
+			{
+				this._configRequiresFlexJS = true;
 			}
 		}
 
@@ -396,65 +411,47 @@ package
 				case ConfigName.JS:
 				{
 					this._jsOutputType = JSOutputType.JSC;
-					this._isSWF = false;
+					this._configRequiresFlexJS = true;
 					break;
 				}
 				case ConfigName.NODE:
 				{
 					this._jsOutputType = JSOutputType.NODE;
-					this._isSWF = false;
+					this._configRequiresFlexJS = true;
 					break;
-				}
-				case ConfigName.FLEX:
-				case ConfigName.AIR:
-				case ConfigName.AIRMOBILE:
-				{
-					this._jsOutputType = null;
-					this._isSWF = true;
-					break;
-				}
-				default:
-				{
-					this._jsOutputType = null;
 				}
 			}
 		}
 
 		private function validateSDK():void
 		{
-			if(this._flexHome)
+			//the --flexHome argument wasn't passed in, try to find an SDK
+			if(!this._flexHome)
 			{
-				//the --flexHome argument was used, so check if it's valid
-				if(!ApacheFlexJSUtils.isValidSDK(this._flexHome))
-				{
-					if(!this._isSWF)
-					{
-						console.error("Configuration \"" + this._configName + "\" requires Apache FlexJS. Path to SDK is not valid: " + this._flexHome);
-						process.exit(1);
-					}
-					else if(!ActionScriptSDKUtils.isValidSDK(this._flexHome))
-					{
-						console.error("Path to SDK is not valid: " + this._flexHome);
-						process.exit(1);
-					}
-				}
-			}
-			else
-			{
-				//the --flexHome argument wasn't passed in, so try to find an SDK
 				this._flexHome = ApacheFlexJSUtils.findSDK();
-				if(!this._flexHome && this._isSWF)
+			}
+			if(!this._flexHome && !this._configRequiresFlexJS)
+			{
+				//asconfigc prefers to use FlexJS, but if the specified
+				//configuration options don't require FlexJS, it will use any
+				//valid SDK
+				this._flexHome = ActionScriptSDKUtils.findSDK();
+			}
+			if(!this._flexHome)
+			{
+				console.error("SDK not found. Set FLEX_HOME, add to PATH, or use --flexHome option.");
+				process.exit(1);
+			}
+			var sdkIsFlexJS:Boolean = ApacheFlexJSUtils.isValidSDK(this._flexHome);
+			if(this._configRequiresFlexJS)
+			{
+				if(!sdkIsFlexJS)
 				{
-					//if we're building a SWF, we don't necessarily need
-					//FlexJS, so try to find another compatible SDK
-					this._flexHome = ActionScriptSDKUtils.findSDK();
-				}
-				if(!this._flexHome)
-				{
-					console.error("SDK not found. Set FLEX_HOME, add to PATH, or use --flexHome option.");
+					console.error("Configuration options in asconfig.json require Apache FlexJS. Path to SDK is not valid: " + this._flexHome);
 					process.exit(1);
 				}
 			}
+			this._outputIsJS = sdkIsFlexJS && !this._isSWFTargetOnly;
 		}
 
 		private function findJarPath():String
@@ -469,13 +466,13 @@ package
 			for(var i:int = 0; i < jarNamesCount; i++)
 			{
 				var jarName:String = jarNames[i];
-				if(this._isSWF)
+				if(this._outputIsJS)
 				{
-					jarPath = path.join(this._flexHome, "lib", jarName);
+					jarPath = path.join(this._flexHome, "js", "lib", jarName);
 				}
 				else
 				{
-					jarPath = path.join(this._flexHome, "js", "lib", jarName);
+					jarPath = path.join(this._flexHome, "lib", jarName);
 				}
 				if(fs.existsSync(jarPath))
 				{
@@ -552,7 +549,7 @@ package
 				return;
 			}
 			var sourcePaths:Vector.<String> = null;
-			if(this._sourcePaths !== null)
+			if(this._sourcePaths)
 			{
 				sourcePaths = this._sourcePaths.slice();
 			}
@@ -560,9 +557,9 @@ package
 			{
 				sourcePaths = new <String>[];
 			}
-			var outputDirectory:String = findOutputDirectory(this._mainFile, this._outputPath, this._isSWF);
+			var outputDirectory:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
 			var excludes:Vector.<String> = new <String>[];
-			if(this._airDescriptor !== null)
+			if(this._airDescriptor)
 			{
 				excludes.push(this._airDescriptor);
 			}
@@ -572,17 +569,10 @@ package
 			{
 				var assetPath:String = assetPaths[i];
 				var content:Object = fs.readFileSync(assetPath);
-				if(this._isSWF)
+				if(this._outputIsJS)
 				{
-					var targetPath:String = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, outputDirectory);
-					mkdirp["sync"](path.dirname(targetPath));
-					fs.writeFileSync(targetPath, content);
-				}
-				else
-				{
-					
 					var debugOutputDir:String = path.join(outputDirectory, "bin", "js-debug");
-					targetPath = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, debugOutputDir);
+					var targetPath:String = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, debugOutputDir);
 					mkdirp["sync"](path.dirname(targetPath));
 					fs.writeFileSync(targetPath, content);
 					if(!this._debugBuild)
@@ -593,17 +583,23 @@ package
 						fs.writeFileSync(targetPath, content);
 					}
 				}
+				else
+				{
+					targetPath = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, outputDirectory);
+					mkdirp["sync"](path.dirname(targetPath));
+					fs.writeFileSync(targetPath, content);
+				}
 			}
 		}
 
 		private function processDescriptor():void
 		{
-			if(this._airDescriptor === null)
+			if(!this._airDescriptor)
 			{
 				return;
 			}
-			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, this._isSWF);
-			var contentValue:String = findApplicationContent(this._mainFile, this._outputPath, this._isSWF);
+			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
+			var contentValue:String = findApplicationContent(this._mainFile, this._outputPath, !this._outputIsJS);
 			if(contentValue === null)
 			{
 				console.error("Failed to find content for application descriptor.");
@@ -611,12 +607,7 @@ package
 			}
 			var descriptor:String = fs.readFileSync(this._airDescriptor, "utf8") as String;
 			descriptor = descriptor.replace(/<content>.+<\/content>/, "<content>" + contentValue + "</content>");
-			if(this._isSWF)
-			{
-				var descriptorOutputPath:String = path.resolve(outputDir, path.basename(this._airDescriptor));
-				fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
-			}
-			else //js
+			if(this._outputIsJS)
 			{
 				var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
 				var debugDescriptorOutputPath:String = path.resolve(debugOutputDir, path.basename(this._airDescriptor));
@@ -627,6 +618,11 @@ package
 					var releaseDescriptorOutputPath:String = path.resolve(releaseOutputDir, path.basename(this._airDescriptor));
 					fs.writeFileSync(releaseDescriptorOutputPath, descriptor, "utf8");
 				}
+			}
+			else //swf
+			{
+				var descriptorOutputPath:String = path.resolve(outputDir, path.basename(this._airDescriptor));
+				fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
 			}
 		}
 	}
