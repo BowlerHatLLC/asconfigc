@@ -91,6 +91,10 @@ package tests
 					value: "'test'"
 				},
 				{
+					name: "CONFIG::str2",
+					value: "\"test\""
+				},
+				{
 					name: "CONFIG::num",
 					value: 12.3
 				},
@@ -102,7 +106,7 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.DEFINE] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			Assert.strictEqual(result.length, 4,
+			Assert.strictEqual(result.length, 5,
 				"Incorrect argument count for " + CompilerOptions.DEFINE);
 			Assert.strictEqual(result[0],
 				"--" + CompilerOptions.DEFINE + "+=" + value[0].name + "," + value[0].value,
@@ -111,11 +115,14 @@ package tests
 				"--" + CompilerOptions.DEFINE + "+=" + value[1].name + ",\"" + value[1].value + "\"",
 				"Incorrect argument 1 value for " + CompilerOptions.DEFINE);
 			Assert.strictEqual(result[2],
-				"--" + CompilerOptions.DEFINE + "+=" + value[2].name + "," + value[2].value,
+				"--" + CompilerOptions.DEFINE + "+=" + value[2].name + ",\"\\\"test\\\"\"",
 				"Incorrect argument 2 value for " + CompilerOptions.DEFINE);
 			Assert.strictEqual(result[3],
-				"--" + CompilerOptions.DEFINE + "+=" + value[3].name + ",\"" + value[3].value + "\"",
+				"--" + CompilerOptions.DEFINE + "+=" + value[3].name + "," + value[3].value,
 				"Incorrect argument 3 value for " + CompilerOptions.DEFINE);
+			Assert.strictEqual(result[4],
+				"--" + CompilerOptions.DEFINE + "+=" + value[4].name + ",\"" + value[4].value + "\"",
+				"Incorrect argument 4 value for " + CompilerOptions.DEFINE);
 		}
 
 		[Test]

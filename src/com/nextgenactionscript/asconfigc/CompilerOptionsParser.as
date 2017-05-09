@@ -321,6 +321,7 @@ package com.nextgenactionscript.asconfigc
 				var defineValue:Object = currentValue.value;
 				if(defineValue is String)
 				{
+					defineValue = defineValue.replace(/\"/g, "\\\"");
 					defineValue = "\"" + defineValue + "\"";
 				}
 				result.push("--" + CompilerOptions.DEFINE + "+=" +
