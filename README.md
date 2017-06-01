@@ -36,6 +36,10 @@ The following options are available:
 
 	Print the version of `asconfigc`.
 
+## Made with Apache FlexJS
+
+The source code for the `asconfigc` utility is written in ActionScript. That's right, a utility that runs on Node.js — written in ActionScript and compiled with Apache FlexJS. Pretty cool, right?
+
 ## Support this project
 
 Want to see more ActionScript transpiler tools and utilities like `asconfigc`? How about in-depth articles and step-by-step video tutorials that teach you how to use ActionScript with libraries like jQuery, CreateJS, and Pixi.js? Please [become a patron](http://patreon.com/josht) and support the next generation of ActionScript development on the web -- without a plugin!
