@@ -25,6 +25,11 @@ package com.nextgenactionscript.asconfigc
 		public static const DEFINE:String = "define";
 		public static const DUMP_CONFIG:String = "dump-config";
 		public static const EXTERNAL_LIBRARY_PATH:String = "external-library-path";
+		public static const HTML_OUTPUT_FILENAME:String = "html-output-filename";
+		public static const HTML_TEMPLATE:String = "html-template";
+		public static const JS_COMPILER_OPTION:String = "js-compiler-option";
+		public static const JS_EXTERNAL_LIBRARY_PATH:String = "js-external-library-path";
+		public static const JS_LIBRARY_PATH:String = "js-library-path";
 		public static const JS_OUTPUT_TYPE:String = "js-output-type";
 		public static const KEEP_AS3_METADATA:String = "keep-as3-metadata";
 		public static const LIBRARY_PATH:String = "library-path";
@@ -35,9 +40,12 @@ package com.nextgenactionscript.asconfigc
 		public static const OPTIMIZE:String = "optimize";
 		public static const OMIT_TRACE_STATEMENTS:String = "omit-trace-statements";
 		public static const OUTPUT:String = "output";
+		public static const REMOVE_CIRCULARS:String = "remove-circulars";
 		public static const SOURCE_MAP:String = "source-map";
 		public static const SOURCE_PATH:String = "source-path";
 		public static const STRICT:String = "strict";
+		public static const SWF_EXTERNAL_LIBRARY_PATH:String = "swf-external-library-path";
+		public static const SWF_LIBRARY_PATH:String = "swf-library-path";
 		public static const SWF_VERSION:String = "swf-version";
 		public static const TARGETS:String = "targets";
 		public static const TARGET_PLAYER:String = "target-player";

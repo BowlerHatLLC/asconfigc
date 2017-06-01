@@ -67,6 +67,16 @@ package com.nextgenactionscript.asconfigc
 						appendPaths(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.HTML_OUTPUT_FILENAME:
+					{
+						setValue(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.HTML_TEMPLATE:
+					{
+						setValue(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.INCLUDE_CLASSES:
 					{
 						appendValues(key, options[key], result);
@@ -78,6 +88,21 @@ package com.nextgenactionscript.asconfigc
 						break;
 					}
 					case CompilerOptions.INCLUDE_SOURCES:
+					{
+						appendPaths(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.JS_COMPILER_OPTION:
+					{
+						appendJSCompilerOptions(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.JS_EXTERNAL_LIBRARY_PATH:
+					{
+						appendPaths(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.JS_LIBRARY_PATH:
 					{
 						appendPaths(key, options[key], result);
 						break;
@@ -132,6 +157,11 @@ package com.nextgenactionscript.asconfigc
 						setValue(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.REMOVE_CIRCULARS:
+					{
+						setBoolean(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.SOURCE_MAP:
 					{
 						setBoolean(key, options[key], result);
@@ -145,6 +175,16 @@ package com.nextgenactionscript.asconfigc
 					case CompilerOptions.STRICT:
 					{
 						setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.SWF_EXTERNAL_LIBRARY_PATH:
+					{
+						appendPaths(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.SWF_LIBRARY_PATH:
+					{
+						appendPaths(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.SWF_VERSION:
@@ -251,6 +291,25 @@ package com.nextgenactionscript.asconfigc
 				result.push("--" + CompilerOptions.NAMESPACE);
 				result.push(currentValue.uri.toString());
 				result.push(currentValue.manifest.toString());
+			}
+		}
+
+		private static function appendJSCompilerOptions(optionName:String, values:Array, result:Array):void
+		{
+			if(values.length === 0)
+			{
+				return;
+			}
+			var valuesCount:int = values.length;
+			for(var i:int = 0; i < valuesCount; i++)
+			{
+				var currentValue:Object = values[i];
+				if(currentValue === null)
+				{
+					console.error("Value for option \"" + optionName + "\" not valid: " + currentValue);
+					process.exit(1);
+				}
+				result.push("--" + optionName + "+=\"" + currentValue.toString() + "\"");
 			}
 		}
 

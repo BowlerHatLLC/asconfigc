@@ -158,6 +158,32 @@ package tests
 		}
 
 		[Test]
+		public function testHTMLOutputFilename():void
+		{
+			var value:String = "output.html";
+			var args:Object = {};
+			args[CompilerOptions.HTML_OUTPUT_FILENAME] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.HTML_OUTPUT_FILENAME);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.HTML_OUTPUT_FILENAME + "=" + value,
+				"Incorrect argument value for " + CompilerOptions.HTML_OUTPUT_FILENAME);
+		}
+
+		[Test]
+		public function testHTMLTemplate():void
+		{
+			var value:String = ".path/to/template.html";
+			var args:Object = {};
+			args[CompilerOptions.HTML_TEMPLATE] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.HTML_TEMPLATE);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.HTML_TEMPLATE + "=" + value,
+				"Incorrect argument value for " + CompilerOptions.HTML_TEMPLATE);
+		}
+
+		[Test]
 		public function testIncludeClasses():void
 		{
 			var value:Array =
@@ -212,6 +238,57 @@ package tests
 				"Incorrect argument 0 value for " + CompilerOptions.INCLUDE_SOURCES);
 			Assert.strictEqual(result[1], "--" + CompilerOptions.INCLUDE_SOURCES + "+=" + value[1],
 				"Incorrect argument 1 value for " + CompilerOptions.INCLUDE_SOURCES);
+		}
+
+		[Test]
+		public function testJSCompilerOption():void
+		{
+			var value:Array =
+			[
+				"--compilation_level WHITESPACE_ONLY"
+			];
+			var args:Object = {};
+			args[CompilerOptions.JS_COMPILER_OPTION] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.JS_EXTERNAL_LIBRARY_PATH);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.JS_COMPILER_OPTION + "+=\"" + value[0] + "\"",
+				"Incorrect argument 0 value for " + CompilerOptions.JS_COMPILER_OPTION);
+		}
+
+		[Test]
+		public function testJSExternalLibraryPath():void
+		{
+			var value:Array =
+			[
+				"./test1",
+				"./test2/test.swc"
+			];
+			var args:Object = {};
+			args[CompilerOptions.JS_EXTERNAL_LIBRARY_PATH] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 2,
+				"Incorrect argument count for " + CompilerOptions.JS_EXTERNAL_LIBRARY_PATH);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.JS_EXTERNAL_LIBRARY_PATH + "+=" + value[0],
+				"Incorrect argument 0 value for " + CompilerOptions.JS_EXTERNAL_LIBRARY_PATH);
+			Assert.strictEqual(result[1], "--" + CompilerOptions.JS_EXTERNAL_LIBRARY_PATH + "+=" + value[1],
+				"Incorrect argument 1 value for " + CompilerOptions.JS_EXTERNAL_LIBRARY_PATH);
+		}
+
+		[Test]
+		public function testJSLibraryPath():void
+		{
+			var value:Array =
+			[
+				"./test1/file.swc"
+			];
+			var args:Object = {};
+			args[CompilerOptions.JS_LIBRARY_PATH] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.JS_LIBRARY_PATH);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.JS_LIBRARY_PATH + "+=" + value[0],
+				"Incorrect argument value for " + CompilerOptions.JS_LIBRARY_PATH);
 		}
 
 		[Test]
@@ -397,6 +474,18 @@ package tests
 		}
 
 		[Test]
+		public function testRemoveCirculars():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.REMOVE_CIRCULARS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.REMOVE_CIRCULARS);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.REMOVE_CIRCULARS + "=true",
+				"Incorrect argument value for " + CompilerOptions.REMOVE_CIRCULARS);
+		}
+
+		[Test]
 		public function testStrict():void
 		{
 			var args:Object = {};
@@ -453,6 +542,41 @@ package tests
 				"Incorrect argument count for " + CompilerOptions.SOURCE_PATH);
 			Assert.strictEqual(result[0], "--" + CompilerOptions.SOURCE_PATH + "+=\"" + value[0] + "\"",
 				"Incorrect argument 0 value for " + CompilerOptions.SOURCE_PATH);
+		}
+
+		[Test]
+		public function testSWFExternalLibraryPath():void
+		{
+			var value:Array =
+			[
+				"./test1",
+				"./test2/test.swc"
+			];
+			var args:Object = {};
+			args[CompilerOptions.SWF_EXTERNAL_LIBRARY_PATH] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 2,
+				"Incorrect argument count for " + CompilerOptions.SWF_EXTERNAL_LIBRARY_PATH);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.SWF_EXTERNAL_LIBRARY_PATH + "+=" + value[0],
+				"Incorrect argument 0 value for " + CompilerOptions.SWF_EXTERNAL_LIBRARY_PATH);
+			Assert.strictEqual(result[1], "--" + CompilerOptions.SWF_EXTERNAL_LIBRARY_PATH + "+=" + value[1],
+				"Incorrect argument 1 value for " + CompilerOptions.SWF_EXTERNAL_LIBRARY_PATH);
+		}
+
+		[Test]
+		public function testSWFLibraryPath():void
+		{
+			var value:Array =
+			[
+				"./test1/file.swc"
+			];
+			var args:Object = {};
+			args[CompilerOptions.SWF_LIBRARY_PATH] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.SWF_LIBRARY_PATH);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.SWF_LIBRARY_PATH + "+=" + value[0],
+				"Incorrect argument value for " + CompilerOptions.SWF_LIBRARY_PATH);
 		}
 
 		[Test]
