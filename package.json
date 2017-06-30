@@ -30,6 +30,6 @@
   "devDependencies": {},
   "scripts": {
     "build": "asnodec --source-map=true --external-library-path+=typedefs src/ASConfigC.as",
-    "test": "npm run build && asconfigc -p test && cd ./test/fixtures && node ../bin/js-debug/index.js"
+    "test": "npm run build && ./asconfigc -p test && cd ./test/fixtures && node ../bin/js-debug/index.js"
   }
 }
