@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - 8
+  - 7
+  - 6
+install:
+  - yes | npm install -g flexjs
+  - npm install -g asconfigc
+  - npm install
