@@ -5,5 +5,4 @@ node_js:
   - 6
 install:
   - yes | npm install -g flexjs
-  - npm install -g asconfigc
   - npm install
