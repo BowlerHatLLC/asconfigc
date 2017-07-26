@@ -43,7 +43,6 @@ package com.nextgenactionscript.asconfigc.utils
 			var sourcePath:String = sourcePaths[i];
 			//get the absolute path for each of the source paths
 			sourcePath = path.resolve(sourcePath);
-			console.log()
 			if(assetPath.startsWith(sourcePath))
 			{
 				relativePath = path.relative(sourcePath, assetPath);
