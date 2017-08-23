@@ -42,9 +42,9 @@ The source code for the `asconfigc` utility is written in ActionScript. That's r
 
 ## Support this project
 
-Want to see more ActionScript transpiler tools and utilities like `asconfigc`? How about in-depth articles and step-by-step video tutorials that teach you how to use ActionScript with libraries like jQuery, CreateJS, and Pixi.js? Please [become a patron](http://patreon.com/josht) and support the next generation of ActionScript development on the web -- without a plugin!
+The [ActionScript and MXML extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=bowlerhatllc.vscode-nextgenas) and [`asconfigc`](https://www.npmjs.com/package/asconfigc) are developed by Josh Tynjala with the support of community members like you.
 
-[NextGen ActionScript by Josh Tynjala on Patreon](http://patreon.com/josht)
+[Support Josh Tynjala on Patreon](http://patreon.com/josht)
 
 Special thanks to the following sponsors for their generous support:
 
