@@ -74,8 +74,9 @@ package
 				else
 				{
 					//asconfig.json not found
+					console.error("asconfig.json not found in directory: " + process.cwd());
 					this.printUsage();
-					process.exit(0);
+					process.exit(1);
 				}
 			}
 			process.chdir(path.dirname(this._configFilePath));
