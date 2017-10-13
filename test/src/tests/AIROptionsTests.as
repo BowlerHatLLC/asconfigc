@@ -68,6 +68,32 @@ package tests
 		}
 
 		[Test]
+		public function testFiles():void
+		{
+			var file1:Object = {};
+			file1[AIROptions.FILES_FILE] = "path/to/file1.png";
+			file1[AIROptions.FILES_PATH] = "file1.png";
+			var file2:Object = {};
+			file2[AIROptions.FILES_FILE] = "path/to/file2.png";
+			file2[AIROptions.FILES_PATH] = "other/file2.png";
+			var value:Array = [
+				file1,
+				file2
+			];
+			var args:Object = {};
+			args[AIROptions.FILES] = value;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
+			var optionIndex1:int = result.indexOf("-e");
+			Assert.notStrictEqual(optionIndex1, -1);
+			Assert.strictEqual(result.indexOf(file1[AIROptions.FILES_FILE]), optionIndex1 + 1);
+			Assert.strictEqual(result.indexOf(file1[AIROptions.FILES_PATH]), optionIndex1 + 2);
+			var optionIndex2:int = result.indexOf("-e", optionIndex1 + 1);
+			Assert.notStrictEqual(optionIndex2, -1);
+			Assert.strictEqual(result.indexOf(file2[AIROptions.FILES_FILE]), optionIndex2 + 1);
+			Assert.strictEqual(result.indexOf(file2[AIROptions.FILES_PATH]), optionIndex2 + 2);
+		}
+
+		[Test]
 		public function testHideAneLibSymbols():void
 		{
 			var value:Boolean = true;

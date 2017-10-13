@@ -19,11 +19,18 @@ package com.nextgenactionscript.asconfigc
 	{
 		public static const EXTDIR:String = "extdir";
 		public static const FILES:String = "files";
+		public static const OUTPUT:String = "output";
+		public static const PACKAGE:String = "package";
 		public static const SIGNING_OPTIONS:String = "signingOptions";
 		public static const TARGET:String = "target";
-		public static const OUTPUT:String = "output";
 
 		public static const PLATFORMSDK:String = "platformsdk";
+
+		public static const FILES_FILE:String = "file";
+		public static const FILES_PATH:String = "path";
+
+		public static const CONNECT:String = "connect";
+		public static const LISTEN:String = "listen";
 
 		//ios
 		public static const SAMPLER:String = "sampler";

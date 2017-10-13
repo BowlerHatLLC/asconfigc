@@ -351,6 +351,11 @@ package
 			}
 			if(ASConfigFields.AIR_OPTIONS in configData)
 			{
+				if(this._airDescriptor === null)
+				{
+					console.error("Adobe AIR packaging options found, but the \"application\" field is empty.");
+					process.exit(1);
+				}
 				var airOptions:Object = configData[ASConfigFields.AIR_OPTIONS];
 				this.readAIROptions(airOptions);
 			}

@@ -23,12 +23,16 @@ package com.nextgenactionscript.asconfigc
 			{
 				result = [];
 			}
-			result.push("-package");
+			result.push("-" + AIROptions.PACKAGE);
+
+			//AIR_SIGNING_OPTIONS begin
 			if(AIROptions.SIGNING_OPTIONS in options &&
 				!overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
 			{
 				parseSigningOptions(options[AIROptions.SIGNING_OPTIONS], result);
 			}
+			//AIR_SIGNING_OPTIONS end
+
 			if(overridesOptionForPlatform(options, AIROptions.TARGET, platform))
 			{
 				setValueWithoutAssignment(AIROptions.TARGET, options[platform][AIROptions.TARGET], result);
@@ -84,14 +88,25 @@ package com.nextgenactionscript.asconfigc
 			{
 				setValueWithoutAssignment(AIROptions.EMBED_BITCODE, options[platform][AIROptions.EMBED_BITCODE], result);
 			}
+
+			//DEBUGGER_CONNECTION_OPTIONS begin
+			if(debug && (platform === AIRPlatformType.ANDROID || platform === AIRPlatformType.IOS))
+			{
+				result.push("-" + AIROptions.CONNECT);
+			}
+			//DEBUGGER_CONNECTION_OPTIONS end
+
 			if(overridesOptionForPlatform(options, AIROptions.AIR_DOWNLOAD_URL, platform))
 			{
 				setValueWithoutAssignment(AIROptions.AIR_DOWNLOAD_URL, options[platform][AIROptions.AIR_DOWNLOAD_URL], result);
 			}
+
+			//NATIVE_SIGNING_OPTIONS begin
 			if(overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
 			{
 				parseSigningOptions(options[platform][AIROptions.SIGNING_OPTIONS], result);
 			}
+			//NATIVE_SIGNING_OPTIONS end
 
 			if(overridesOptionForPlatform(options, AIROptions.OUTPUT, platform))
 			{
@@ -101,7 +116,27 @@ package com.nextgenactionscript.asconfigc
 			{
 				result.push(options[AIROptions.OUTPUT]);
 			}
+			
 			result.push(applicationDescriptorPath);
+
+			if(overridesOptionForPlatform(options, AIROptions.PLATFORMSDK, platform))
+			{
+				setValueWithoutAssignment(AIROptions.PLATFORMSDK, options[platform][AIROptions.PLATFORMSDK], result);
+			}
+			if(overridesOptionForPlatform(options, AIROptions.ARCH, platform))
+			{
+				setValueWithoutAssignment(AIROptions.ARCH, options[platform][AIROptions.ARCH], result);
+			}
+
+			//FILE_OPTIONS begin
+			if(overridesOptionForPlatform(options, AIROptions.FILES, platform))
+			{
+				parseFiles(options[platform][AIROptions.FILES], result);
+			}
+			else if(AIROptions.FILES in options)
+			{
+				parseFiles(options[AIROptions.FILES], result);
+			}
 			if(swfPath !== path.basename(swfPath))
 			{
 				result.push("-C");
@@ -113,16 +148,6 @@ package com.nextgenactionscript.asconfigc
 				result.push(swfPath);
 			}
 
-			if(overridesOptionForPlatform(options, AIROptions.PLATFORMSDK, platform))
-			{
-				setValueWithoutAssignment(AIROptions.PLATFORMSDK, options[platform][AIROptions.PLATFORMSDK], result);
-			}
-			if(overridesOptionForPlatform(options, AIROptions.ARCH, platform))
-			{
-				setValueWithoutAssignment(AIROptions.ARCH, options[platform][AIROptions.ARCH], result);
-			}
-
-			//FILE_OPTIONS
 			if(overridesOptionForPlatform(options, AIROptions.EXTDIR, platform))
 			{
 				parseExtdir(options[platform][AIROptions.EXTDIR], result);
@@ -131,8 +156,10 @@ package com.nextgenactionscript.asconfigc
 			{
 				parseExtdir(options[AIROptions.EXTDIR], result);
 			}
+			//FILE_OPTIONS end
 			
-			//ANE_OPTIONS
+			//ANE_OPTIONS begin
+			//ANE_OPTIONS end
 
 			for(var key:String in options)
 			{
@@ -189,6 +216,27 @@ package com.nextgenactionscript.asconfigc
 			{
 				var current:String = extdir[i];
 				setValueWithoutAssignment(AIROptions.EXTDIR, current, result);
+			}
+		}
+
+		protected static function parseFiles(files:Array, result:Array):void
+		{
+			var count:int = files.length;
+			for(var i:int = 0; i < count; i++)
+			{
+				var file:Object = files[i];
+				if(typeof file === "string")
+				{
+					result.push(file);
+				}
+				else
+				{
+					var srcFile:String = file[AIROptions.FILES_FILE];
+					var destPath:String = file[AIROptions.FILES_PATH];
+					result.push("-e");
+					result.push(srcFile);
+					result.push(destPath);
+				}
 			}
 		}
 
