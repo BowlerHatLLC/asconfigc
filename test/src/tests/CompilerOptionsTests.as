@@ -1,7 +1,8 @@
 package tests
 {
-	import com.nextgenactionscript.asconfigc.CompilerOptionsParser;
 	import com.nextgenactionscript.asconfigc.CompilerOptions;
+	import com.nextgenactionscript.asconfigc.CompilerOptionsParser;
+
 	import nextgenas.test.assert.Assert;
 
 	public class CompilerOptionsTests

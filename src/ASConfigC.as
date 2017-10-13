@@ -15,6 +15,8 @@ limitations under the License.
 */
 package
 {
+	import com.nextgenactionscript.asconfigc.AIROptionsParser;
+	import com.nextgenactionscript.asconfigc.AIRPlatformType;
 	import com.nextgenactionscript.asconfigc.ASConfigFields;
 	import com.nextgenactionscript.asconfigc.CompilerOptions;
 	import com.nextgenactionscript.asconfigc.CompilerOptionsParser;
@@ -50,6 +52,8 @@ package
 			"compc-cli.jar",
 			"compc.jar",
 		];
+
+		private static const ADT_JAR:String = "adt.jar";
 
 		public function ASConfigC()
 		{
@@ -88,6 +92,10 @@ package
 			this.compileProject();
 			this.copySourcePathAssets();
 			this.processDescriptor();
+			if(this._airPlatform !== null)
+			{
+				this.packageAIR();
+			}
 			process.exit(0);
 		}
 
@@ -99,7 +107,7 @@ package
 		private var _isSWFTargetOnly:Boolean;
 		private var _outputIsJS:Boolean;
 		private var _jsOutputType:String;
-		private var _args:Array;
+		private var _compilerArgs:Array;
 		private var _additionalOptions:String;
 		private var _airDescriptor:String = null;
 		private var _outputPath:String = null;
@@ -108,6 +116,8 @@ package
 		private var _debugBuild:Boolean = false;
 		private var _sourcePaths:Vector.<String> = null;
 		private var _copySourcePathAssets:Boolean = false;
+		private var _airPlatform:String = null;
+		private var _airArgs:Array;
 
 		private function printVersion():void
 		{
@@ -199,6 +209,19 @@ package
 						}
 						break;
 					}
+					case "air":
+					{
+						var airPlatformValue:Object = args[key];
+						if(typeof airPlatformValue === "string")
+						{
+							this._airPlatform = airPlatformValue as String;
+						}
+						else
+						{
+							this._airPlatform = AIRPlatformType.AIR;
+						}
+						break;
+					}
 					case "v":
 					case "version":
 					{
@@ -276,14 +299,15 @@ package
 
 		private function parseConfig():void
 		{
-			this._args = [];
+			this._compilerArgs = [];
+			this._airArgs = [];
 			var configData:Object = this.loadConfig();
 			this._projectType = this.readProjectType(configData);
 			if(ASConfigFields.CONFIG in configData)
 			{
 				var configName:String = configData[ASConfigFields.CONFIG] as String;
 				this.detectJavaScript(configName);
-				this._args.push("+configname=" + configName);
+				this._compilerArgs.push("+configname=" + configName);
 			}
 			if(ASConfigFields.COMPILER_OPTIONS in configData)
 			{
@@ -293,7 +317,7 @@ package
 					//ignore the debug option when it is specified on the
 					//command line
 					delete compilerOptions["debug"];
-					this._args.push("--debug=" + this._forceDebug);
+					this._compilerArgs.push("--debug=" + this._forceDebug);
 				}
 				this.readCompilerOptions(compilerOptions);
 				if(this._forceDebug === true || compilerOptions.debug)
@@ -325,6 +349,11 @@ package
 					process.exit(1);
 				}
 			}
+			if(ASConfigFields.AIR_OPTIONS in configData)
+			{
+				var airOptions:Object = configData[ASConfigFields.AIR_OPTIONS];
+				this.readAIROptions(airOptions);
+			}
 			if(ASConfigFields.COPY_SOURCE_PATH_ASSETS in configData)
 			{
 				this._copySourcePathAssets = configData[ASConfigFields.COPY_SOURCE_PATH_ASSETS];
@@ -337,7 +366,7 @@ package
 					CompilerOptionsParser.parse(
 					{
 						"include-sources": files
-					}, this._args);
+					}, this._compilerArgs);
 				}
 				else
 				{
@@ -345,7 +374,7 @@ package
 					for(var i:int = 0; i < filesCount; i++)
 					{
 						var file:String = files[i];
-						this._args.push(file);
+						this._compilerArgs.push(file);
 					}
 					if(filesCount > 0)
 					{
@@ -357,7 +386,7 @@ package
 			//swf projects won't have a js-output-type
 			if(this._jsOutputType)
 			{
-				this._args.push("--" + CompilerOptions.JS_OUTPUT_TYPE + "=" + this._jsOutputType);
+				this._compilerArgs.push("--" + CompilerOptions.JS_OUTPUT_TYPE + "=" + this._jsOutputType);
 			}
 		}
 
@@ -376,7 +405,7 @@ package
 		{
 			try
 			{
-				CompilerOptionsParser.parse(options, this._args);
+				CompilerOptionsParser.parse(options, this._compilerArgs);
 			}
 			catch(error:Error)
 			{
@@ -402,6 +431,25 @@ package
 			if(CompilerOptions.SOURCE_MAP in options)
 			{
 				this._configRequiresFlexJS = true;
+			}
+		}
+
+		private function readAIROptions(options:Object):void
+		{
+			try
+			{
+				AIROptionsParser.parse(
+					this._airPlatform,
+					this._debugBuild,
+					findAIRDescriptorOutputPath(),
+					this._outputPath,
+					options,
+					this._airArgs);
+			}
+			catch(error:Error)
+			{
+				console.error(error.message);
+				process.exit(1);
 			}
 		}
 
@@ -455,7 +503,7 @@ package
 			this._outputIsJS = sdkIsFlexJS && !this._isSWFTargetOnly;
 		}
 
-		private function findJarPath():String
+		private function findCompilerJarPath():String
 		{
 			var jarPath:String = null;
 			var jarNames:Vector.<String> = MXMLC_JARS;
@@ -484,6 +532,16 @@ package
 			return jarPath;
 		}
 
+		private function findAIRPackagerJarPath():String
+		{
+			var jarPath:String = path.join(this._flexHome, "lib", ADT_JAR);
+			if(fs.existsSync(jarPath))
+			{
+				return jarPath;
+			}
+			return null;
+		}
+
 		private function escapePath(path:String):String
 		{
 			//we don't want spaces in paths or they will be interpreted as new
@@ -504,21 +562,21 @@ package
 
 		private function compileProject():void
 		{
-			var jarPath:String = this.findJarPath();
+			var jarPath:String = this.findCompilerJarPath();
 			if(!jarPath)
 			{
 				console.error("Compiler not found in SDK. Expected: " + jarPath);
 				process.exit(1);
 			}
 			var frameworkPath:String = path.join(this._flexHome, "frameworks");
-			this._args.unshift("+flexlib=" + escapePath(frameworkPath));
-			this._args.unshift(escapePath(jarPath));
-			this._args.unshift("-jar");
-			this._args.unshift("-Dflexlib=" + escapePath(frameworkPath));
-			this._args.unshift("-Dflexcompiler=" + escapePath(this._flexHome));
+			this._compilerArgs.unshift("+flexlib=" + escapePath(frameworkPath));
+			this._compilerArgs.unshift(escapePath(jarPath));
+			this._compilerArgs.unshift("-jar");
+			this._compilerArgs.unshift("-Dflexlib=" + escapePath(frameworkPath));
+			this._compilerArgs.unshift("-Dflexcompiler=" + escapePath(this._flexHome));
 			try
 			{
-				var command:String = escapePath(this._javaExecutable) + " " + this._args.join(" ");
+				var command:String = escapePath(this._javaExecutable) + " " + this._compilerArgs.join(" ");
 				if(this._additionalOptions)
 				{
 					command += " " + this._additionalOptions;
@@ -593,6 +651,12 @@ package
 			}
 		}
 
+		private function findAIRDescriptorOutputPath():String
+		{
+			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
+			return path.resolve(outputDir, path.basename(this._airDescriptor));
+		}
+
 		private function processDescriptor():void
 		{
 			if(!this._airDescriptor)
@@ -622,8 +686,43 @@ package
 			}
 			else //swf
 			{
-				var descriptorOutputPath:String = path.resolve(outputDir, path.basename(this._airDescriptor));
+				var descriptorOutputPath:String = findAIRDescriptorOutputPath();
 				fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
+			}
+		}
+
+		private function packageAIR():void
+		{
+			var jarPath:String = this.findAIRPackagerJarPath();
+			if(!jarPath)
+			{
+				console.error("AIR ADT not found in SDK. Expected: " + jarPath);
+				process.exit(1);
+			}
+			this._airArgs.unshift(escapePath(jarPath));
+			this._airArgs.unshift("-jar");
+			try
+			{
+				var joinedArgs:String = this._airArgs.join(" ");
+				var command:String = escapePath(this._javaExecutable) + " " + joinedArgs;
+				console.info("adt " + joinedArgs);
+				var result:Object = child_process.execSync(command,
+				{
+					stdio: "inherit",
+					encoding: "utf8"
+				});
+			}
+			catch(error:Object)
+			{
+				if(error.status === null)
+				{
+					//this means something went wrong running the executable
+					console.error("Failed to execute AIR packager: " + error.code);
+					process.exit(1);
+				}
+				//while this means there was an error code from the executable,
+				//probably from compilation errors
+				process.exit(error.status);
 			}
 		}
 	}

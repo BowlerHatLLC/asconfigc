@@ -15,15 +15,23 @@ limitations under the License.
 */
 package com.nextgenactionscript.asconfigc
 {
-	public class ASConfigFields
+	public class AIROptions
 	{
-		public static const TYPE:String = "type";
-		public static const CONFIG:String = "config";
-		public static const COMPILER_OPTIONS:String = "compilerOptions";
-		public static const ADDITIONAL_OPTIONS:String = "additionalOptions";
+		public static const EXTDIR:String = "extdir";
 		public static const FILES:String = "files";
-		public static const APPLICATION:String = "application";
-		public static const COPY_SOURCE_PATH_ASSETS:String = "copySourcePathAssets";
-		public static const AIR_OPTIONS:String = "airOptions";
+		public static const SIGNING_OPTIONS:String = "signingOptions";
+		public static const TARGET:String = "target";
+		public static const OUTPUT:String = "output";
+
+		public static const PLATFORMSDK:String = "platformsdk";
+
+		//ios
+		public static const SAMPLER:String = "sampler";
+		public static const HIDE_ANE_LIB_SYMBOLS:String = "hideAneLibSymbols"
+		public static const EMBED_BITCODE:String = "embedBitcode"
+
+		//android
+		public static const AIR_DOWNLOAD_URL:String = "airDownloadURL";
+		public static const ARCH:String = "arch";
 	}
 }

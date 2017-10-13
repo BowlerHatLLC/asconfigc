@@ -1,6 +1,7 @@
 package tests
 {
 	import com.nextgenactionscript.asconfigc.utils.findApplicationContent;
+
 	import nextgenas.test.assert.Assert;
 
 	public class FindApplicationContentTests
