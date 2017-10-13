@@ -19,3 +19,5 @@ node_modules/
 typings/
 .vscode/
 asconfigc-*.tgz
+npm-debug.log
+package-lock.json
