@@ -13,12 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package com.nextgenactionscript.flexjs.utils
+package com.nextgenactionscript.royale.utils
 {
 	/**
-	 * Utilities for finding and running executables from an Apache FlexJS SDK.
+	 * Utilities for finding and running executables from an Apache Royale SDK.
 	 */
-	public class ApacheFlexJSUtils
+	public class ApacheRoyaleUtils
 	{
 		/**
 		 * @private
@@ -26,7 +26,7 @@ package com.nextgenactionscript.flexjs.utils
 		private static const ASJSC:String = "asjsc";
 
 		/**
-		 * Determines if a directory contains a valid Apache FlexJS SDK.
+		 * Determines if a directory contains a valid Apache Royale SDK.
 		 */
 		public static function isValidSDK(absolutePath:String):Boolean
 		{
@@ -34,7 +34,10 @@ package com.nextgenactionscript.flexjs.utils
 			{
 				return false;
 			}
-			var sdkDescriptionPath:String = path.join(absolutePath, "flex-sdk-description.xml");	
+			var sdkDescriptionPath:String = path.join(absolutePath, "flex-sdk-description.xml");
+			if(!fs.existsSync(sdkDescriptionPath))
+				sdkDescriptionPath = path.join(absolutePath, "royale-sdk-description.xml");
+			
 			if(!fs.existsSync(sdkDescriptionPath) || fs.statSync(sdkDescriptionPath).isDirectory())
 			{
 				return false;
@@ -49,8 +52,8 @@ package com.nextgenactionscript.flexjs.utils
 		}
 
 		/**
-		 * Attempts to find a valid Apache FlexJS SDK by searching for the
-		 * flexjs NPM module, testing the FLEX_HOME environment variable, and
+		 * Attempts to find a valid Apache Royale SDK by searching for the
+		 * royale NPM module, testing the FLEX_HOME environment variable, and
 		 * finally, testing the PATH environment variable.
 		 */
 		public static function findSDK():String
@@ -60,6 +63,11 @@ package com.nextgenactionscript.flexjs.utils
 			{
 				//look for an npm module
 				sdkPath = require["resolve"]("flexjs");
+				if(isValidSDK(sdkPath))
+				{
+					return sdkPath;
+				}
+				sdkPath = require["resolve"]("royale");
 				if(isValidSDK(sdkPath))
 				{
 					return sdkPath;
@@ -93,12 +101,17 @@ package com.nextgenactionscript.flexjs.utils
 						{
 							return sdkPath;
 						}
+						sdkPath = path.join(path.dirname(asjscPath), "node_modules", "royale");
+						if(isValidSDK(sdkPath))
+						{
+							return sdkPath;
+						}
 					}
 					asjscPath = path.join(currentPath, ASJSC);
 					if(fs.existsSync(asjscPath))
 					{
 						//this may a symbolic link rather than the actual file,
-						//such as when Apache FlexJS is installed with NPM on
+						//such as when Apache Royale is installed with NPM on
 						//Mac, so get the real path.
 						asjscPath = fs.realpathSync(asjscPath);
 						sdkPath = path.join(path.dirname(asjscPath), "..", "..");

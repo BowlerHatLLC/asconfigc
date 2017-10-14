@@ -19,6 +19,6 @@ package com.nextgenactionscript.asconfigc
 	{
 		public static const JSC:String = "jsc";
 		public static const NODE:String = "node";
-		public static const FLEXJS:String = "flexjs";
+		public static const ROYALE:String = "royale";
 	}
 }

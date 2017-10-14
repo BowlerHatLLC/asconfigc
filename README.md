@@ -1,6 +1,6 @@
 # asconfigc
 
-A command line utility that compiles an ActionScript project configured with an [`asconfig.json`](https://github.com/BowlerHatLLC/vscode-nextgenas/wiki/asconfig.json) file. This utility parses the configuration file and runs the compiler with the appropriate options. Supports a variety of ActionScript SDKs, including the Apache FlexJS SDK and the Adobe AIR SDK & Compiler.
+A command line utility that compiles an ActionScript project configured with an [`asconfig.json`](https://github.com/BowlerHatLLC/vscode-nextgenas/wiki/asconfig.json) file. This utility parses the configuration file and runs the compiler with the appropriate options. Supports a variety of ActionScript SDKs, including the Apache Royale SDK and the Adobe AIR SDK & Compiler.
 
 ## Installation
 
@@ -20,9 +20,9 @@ The following options are available:
 
 	Compile the `asconfig.json` project in the given directory. If omitted, will look for `asconfig.json` in current directory.
 
-* `--flexHome DIRECTORY`
+* `--royaleHome DIRECTORY`
 
-	Specify the directory where Apache FlexJS, or another supported SDK, is located. If omitted, defaults to checking `FLEX_HOME` and `PATH` environment variables for a supported SDK.
+	Specify the directory where Apache Royale, or another supported SDK, is located. If omitted, defaults to checking `FLEX_HOME` and `PATH` environment variables for a supported SDK.
 
 * `--debug=true` or `--debug=false`
 
@@ -36,9 +36,9 @@ The following options are available:
 
 	Print the version of `asconfigc`.
 
-## Made with Apache FlexJS
+## Made with Apache Royale
 
-The source code for the `asconfigc` utility is written in ActionScript. That's right, a utility that runs on Node.js — written in ActionScript and compiled with Apache FlexJS. Pretty cool, right?
+The source code for the `asconfigc` utility is written in ActionScript. That's right, a utility that runs on Node.js — written in ActionScript and compiled with Apache Royale. Pretty cool, right?
 
 ## Support this project
 
