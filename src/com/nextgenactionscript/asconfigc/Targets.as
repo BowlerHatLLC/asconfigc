@@ -19,7 +19,9 @@ package com.nextgenactionscript.asconfigc
 	{
 		public static const JS:String = "JS";
 		public static const JS_FLEX:String = "JSFlex";
+		public static const JS_ROYALE:String = "JSRoyale";
 		public static const JS_FLEX_CORDOVA:String = "JSFlexCordova";
+		public static const JS_ROYALE_CORDOVA:String = "JSRoyaleCordova";
 		public static const JS_NODE:String = "JSNode";
 		public static const SWF:String = "SWF";
 	}

@@ -26,7 +26,7 @@ package com.nextgenactionscript.utils
 		private static const MXMLC:String = "mxmlc";
 
 		/**
-		 * Determines if a directory contains a valid Flex SDK.
+		 * Determines if a directory contains a valid SDK.
 		 */
 		public static function isValidSDK(absolutePath:String):Boolean
 		{
@@ -52,7 +52,7 @@ package com.nextgenactionscript.utils
 		}
 
 		/**
-		 * Attempts to find a valid Flex SDK by searching for the FLEX_HOME
+		 * Attempts to find a valid SDK by searching for the FLEX_HOME
 		 * environment variable and testing the PATH environment variable.
 		 */
 		public static function findSDK():String

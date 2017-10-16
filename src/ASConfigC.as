@@ -28,12 +28,12 @@ package
 	import com.nextgenactionscript.asconfigc.utils.findApplicationContent;
 	import com.nextgenactionscript.asconfigc.utils.findOutputDirectory;
 	import com.nextgenactionscript.asconfigc.utils.findSourcePathAssets;
-	import com.nextgenactionscript.flexjs.utils.ApacheFlexJSUtils;
+	import com.nextgenactionscript.royale.utils.ApacheRoyaleUtils;
 	import com.nextgenactionscript.utils.ActionScriptSDKUtils;
 
 	/**
 	 * A command line utility to build a project defined with an asconfig.json
-	 * file using the Apache FlexJS SDK.
+	 * file using the Apache Royale SDK.
 	 */
 	public class ASConfigC
 	{
@@ -60,7 +60,7 @@ package
 			this.parseArguments();
 			if(!this._javaExecutable)
 			{
-				this._javaExecutable = ApacheFlexJSUtils.findJava();
+				this._javaExecutable = ApacheRoyaleUtils.findJava();
 				if(!this._javaExecutable)
 				{
 					console.error("Java not found. Cannot run compiler without Java.");
@@ -99,11 +99,12 @@ package
 			process.exit(0);
 		}
 
-		private var _flexHome:String;
+		private var _royaleHome:String;
 		private var _javaExecutable:String;
 		private var _configFilePath:String;
 		private var _projectType:String;
-		private var _configRequiresFlexJS:Boolean;
+		private var _configRequiresRoyale:Boolean;
+		private var _isLegacyFlex:Boolean;
 		private var _isSWFTargetOnly:Boolean;
 		private var _outputIsJS:Boolean;
 		private var _jsOutputType:String;
@@ -138,7 +139,7 @@ package
 			console.info(" -h, --help                          Print this help message.");
 			console.info(" -v, --version                       Print the version.");
 			console.info(" -p DIRECTORY, --project DIRECTORY   Compile the asconfig.json project in the given directory. If omitted, will look for asconfig.json in current directory.");
-			console.info(" --flexHome DIRECTORY                Specify the directory where Apache FlexJS, or another supported SDK, is located. If omitted, defaults to checking FLEX_HOME and PATH environment variables.");
+			console.info(" --royaleHome DIRECTORY              Specify the directory where Apache Royale, or another supported SDK, is located. If omitted, defaults to checking FLEX_HOME and PATH environment variables.");
 			console.info(" --debug=true, --debug=false         Overrides the debug compiler option specified in asconfig.json.");
 		}
 
@@ -167,8 +168,9 @@ package
 						break;
 					}
 					case "flexHome":
+					case "royaleHome":
 					{
-						this._flexHome = args[key] as String;
+						this._royaleHome = args[key] as String;
 						break;
 					}
 					case "p":
@@ -296,7 +298,7 @@ package
 			}
 			return configData;
 		}
-
+		
 		private function parseConfig():void
 		{
 			this._compilerArgs = [];
@@ -417,16 +419,16 @@ package
 				console.error(error.message);
 				process.exit(1);
 			}
-			//make sure that we require FlexJS when these options are specified
+			//make sure that we require Royale when these options are specified
 			if(CompilerOptions.JS_OUTPUT_TYPE in options)
 			{
-				this._configRequiresFlexJS = true;
+				this._configRequiresRoyale = true;
 				//if it is set explicitly, then clear the default
 				this._jsOutputType = null;
 			}
 			if(CompilerOptions.TARGETS in options)
 			{
-				this._configRequiresFlexJS = true;
+				this._configRequiresRoyale = true;
 				var targets:Array = options[CompilerOptions.TARGETS];
 				this._isSWFTargetOnly = targets.length === 1 && targets.indexOf(Targets.SWF) !== -1;
 				//if targets is set explicitly, then we're using a newer SDK
@@ -435,7 +437,7 @@ package
 			}
 			if(CompilerOptions.SOURCE_MAP in options)
 			{
-				this._configRequiresFlexJS = true;
+				this._configRequiresRoyale = true;
 			}
 		}
 
@@ -465,47 +467,50 @@ package
 				case ConfigName.JS:
 				{
 					this._jsOutputType = JSOutputType.JSC;
-					this._configRequiresFlexJS = true;
+					this._configRequiresRoyale = true;
 					break;
 				}
 				case ConfigName.NODE:
 				{
 					this._jsOutputType = JSOutputType.NODE;
-					this._configRequiresFlexJS = true;
+					this._configRequiresRoyale = true;
 					break;
 				}
+				case ConfigName.FLEX:
+					_isLegacyFlex = true;
+					break;
 			}
 		}
 
 		private function validateSDK():void
 		{
-			//the --flexHome argument wasn't passed in, try to find an SDK
-			if(!this._flexHome)
+			//the --royaleHome argument wasn't passed in, try to find an SDK
+			if(!this._royaleHome)
 			{
-				this._flexHome = ApacheFlexJSUtils.findSDK();
+				this._royaleHome = ApacheRoyaleUtils.findSDK();
 			}
-			if(!this._flexHome && !this._configRequiresFlexJS)
+			if(!this._royaleHome && !this._configRequiresRoyale)
 			{
-				//asconfigc prefers to use FlexJS, but if the specified
-				//configuration options don't require FlexJS, it will use any
+				//asconfigc prefers to use Royale, but if the specified
+				//configuration options don't require Royale, it will use any
 				//valid SDK
-				this._flexHome = ActionScriptSDKUtils.findSDK();
+				this._royaleHome = ActionScriptSDKUtils.findSDK();
 			}
-			if(!this._flexHome)
+			if(!this._royaleHome)
 			{
-				console.error("SDK not found. Set FLEX_HOME, add to PATH, or use --flexHome option.");
+				console.error("SDK not found. Set FLEX_HOME, add to PATH, or use --royaleHome option.");
 				process.exit(1);
 			}
-			var sdkIsFlexJS:Boolean = ApacheFlexJSUtils.isValidSDK(this._flexHome);
-			if(this._configRequiresFlexJS)
+			var sdkIsRoyale:Boolean = ApacheRoyaleUtils.isValidSDK(this._royaleHome);
+			if(this._configRequiresRoyale)
 			{
-				if(!sdkIsFlexJS)
+				if(!sdkIsRoyale)
 				{
-					console.error("Configuration options in asconfig.json require Apache FlexJS. Path to SDK is not valid: " + this._flexHome);
+					console.error("Configuration options in asconfig.json require Apache Royale. Path to SDK is not valid: " + this._royaleHome);
 					process.exit(1);
 				}
 			}
-			this._outputIsJS = sdkIsFlexJS && !this._isSWFTargetOnly;
+			this._outputIsJS = sdkIsRoyale && !this._isSWFTargetOnly;
 		}
 
 		private function findCompilerJarPath():String
@@ -522,11 +527,11 @@ package
 				var jarName:String = jarNames[i];
 				if(this._outputIsJS)
 				{
-					jarPath = path.join(this._flexHome, "js", "lib", jarName);
+					jarPath = path.join(this._royaleHome, "js", "lib", jarName);
 				}
 				else
 				{
-					jarPath = path.join(this._flexHome, "lib", jarName);
+					jarPath = path.join(this._royaleHome, "lib", jarName);
 				}
 				if(fs.existsSync(jarPath))
 				{
@@ -539,7 +544,7 @@ package
 
 		private function findAIRPackagerJarPath():String
 		{
-			var jarPath:String = path.join(this._flexHome, "lib", ADT_JAR);
+			var jarPath:String = path.join(this._royaleHome, "lib", ADT_JAR);
 			if(fs.existsSync(jarPath))
 			{
 				return jarPath;
@@ -573,12 +578,22 @@ package
 				console.error("Compiler not found in SDK. Expected: " + jarPath);
 				process.exit(1);
 			}
-			var frameworkPath:String = path.join(this._flexHome, "frameworks");
-			this._compilerArgs.unshift("+flexlib=" + escapePath(frameworkPath));
-			this._compilerArgs.unshift(escapePath(jarPath));
-			this._compilerArgs.unshift("-jar");
-			this._compilerArgs.unshift("-Dflexlib=" + escapePath(frameworkPath));
-			this._compilerArgs.unshift("-Dflexcompiler=" + escapePath(this._flexHome));
+			var frameworkPath:String = path.join(this._royaleHome, "frameworks");
+			if(_isLegacyFlex)
+			{
+				this._compilerArgs.unshift("+flexlib=" + escapePath(frameworkPath));
+				this._compilerArgs.unshift(escapePath(jarPath));
+				this._compilerArgs.unshift("-jar");
+				this._compilerArgs.unshift("-Dflexlib=" + escapePath(frameworkPath));
+				this._compilerArgs.unshift("-Dflexcompiler=" + escapePath(this._royaleHome));
+			} else
+			{
+				this._compilerArgs.unshift("+royalelib=" + escapePath(frameworkPath));
+				this._compilerArgs.unshift(escapePath(jarPath));
+				this._compilerArgs.unshift("-jar");
+				this._compilerArgs.unshift("-Droyalelib=" + escapePath(frameworkPath));
+				this._compilerArgs.unshift("-Droyalecompiler=" + escapePath(this._royaleHome));
+			}
 			try
 			{
 				var command:String = escapePath(this._javaExecutable) + " " + this._compilerArgs.join(" ");

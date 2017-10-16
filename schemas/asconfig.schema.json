@@ -335,7 +335,7 @@
 				"js-external-library-path":
 				{
 					"type": "array",
-					"description": "In an Apache FlexJS project, specifies a list of SWC files, or directories containing SWC files, to exclude from linking in only the generated JavaScript output.",
+					"description": "In an Apache Royale project, specifies a list of SWC files, or directories containing SWC files, to exclude from linking in only the generated JavaScript output.",
 					"items":
 					{
 						"type": "string"
@@ -344,7 +344,7 @@
 				"swf-external-library-path":
 				{
 					"type": "array",
-					"description": "In an Apache FlexJS project, specifies a list of SWC files, or directories containing SWC files, to exclude from linking in only the generated SWF output.",
+					"description": "In an Apache Royale project, specifies a list of SWC files, or directories containing SWC files, to exclude from linking in only the generated SWF output.",
 					"items":
 					{
 						"type": "string"
@@ -371,12 +371,12 @@
 				"html-output-filename":
 				{
 					"type": "string",
-					"description": "In an Apache FlexJS project, specifies the name of the output file generated using the html-template."
+					"description": "In an Apache Royale project, specifies the name of the output file generated using the html-template."
 				},
 				"html-template":
 				{
 					"type": "string",
-					"description": "In an Apache FlexJS project, specifies a custom HTML template file."
+					"description": "In an Apache Royale project, specifies a custom HTML template file."
 				},
 				"include-sources":
 				{
@@ -390,7 +390,7 @@
 				"js-compiler-option":
 				{
 					"type": "array",
-					"description": "In an Apache FlexJS project, passes additional options to the Closure Compiler for a release build.",
+					"description": "In an Apache Royale project, passes additional options to the Closure Compiler for a release build.",
 					"items":
 					{
 						"type": "string"
@@ -417,7 +417,7 @@
 				"js-library-path":
 				{
 					"type": "array",
-					"description": "In an Apache FlexJS project, links SWC libraries to only the generated JavaScript output of the build.",
+					"description": "In an Apache Royale project, links SWC libraries to only the generated JavaScript output of the build.",
 					"items":
 					{
 						"type": "string"
@@ -426,7 +426,7 @@
 				"swf-library-path":
 				{
 					"type": "array",
-					"description": "In an Apache FlexJS project, links SWC libraries to only the generated SWF output of the build.",
+					"description": "In an Apache Royale project, links SWC libraries to only the generated SWF output of the build.",
 					"items":
 					{
 						"type": "string"
@@ -501,7 +501,7 @@
 				"remove-circulars":
 				{
 					"type": "boolean",
-					"description": "In an Apache FlexJS project, removes circular references for a release build."
+					"description": "In an Apache Royale project, removes circular references for a release build."
 				},
 				"strict":
 				{
@@ -511,7 +511,7 @@
 				"source-map":
 				{
 					"type": "boolean",
-					"description": "In an Apache FlexJS project, emits source maps in the debug build for each ActionScript and MXML file. The default value is false."
+					"description": "In an Apache Royale project, emits source maps in the debug build for each ActionScript and MXML file. The default value is false."
 				},
 				"source-path":
 				{
@@ -532,7 +532,7 @@
 				"targets":
 				{
 					"type": "array",
-					"description": "In an Apache FlexJS project, specifies one or more output targets. Supported values include \"JSFlex\", \"JS\", \"JSNode\", and \"SWF\".",
+					"description": "In an Apache Royale project, specifies one or more output targets. Supported values include \"JSRoyale\", \"JS\", \"JSNode\", and \"SWF\".",
 					"items":
 					{
 						"type": "string"
@@ -580,8 +580,8 @@
 		"config":
 		{
 			"type": "string",
-			"description": "The default configuration file to use from the SDK. Supported values include \"js\", \"node\", \"flex\", \"air\", and \"airmobile\". The default value is \"flex\".",
-			"pattern": "^(flex|air|airmobile|js|node)$"
+			"description": "The default configuration file to use from the SDK. Supported values include \"js\", \"node\", \"royale\", \"flex\", \"air\", and \"airmobile\". The default value is \"royale\".",
+			"pattern": "^(flex|royale|air|airmobile|js|node)$"
 		},
 		"copySourcePathAssets":
 		{

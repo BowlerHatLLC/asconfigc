@@ -10,7 +10,9 @@
     "ActionScript",
     "asconfig.json",
     "Apache FlexJS",
-    "FlexJS"
+    "Apache Royale",
+    "FlexJS",
+    "Royale"
   ],
   "bin": "./asconfigc",
   "files": [
