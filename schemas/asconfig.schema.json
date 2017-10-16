@@ -580,8 +580,8 @@
 		"config":
 		{
 			"type": "string",
-			"description": "The default configuration file to use from the SDK. Supported values include \"js\", \"node\", \"royale\", \"air\", and \"airmobile\". The default value is \"royale\".",
-			"pattern": "^(royale|air|airmobile|js|node)$"
+			"description": "The default configuration file to use from the SDK. Supported values include \"js\", \"node\", \"royale\", \"flex\", \"air\", and \"airmobile\". The default value is \"royale\".",
+			"pattern": "^(flex|royale|air|airmobile|js|node)$"
 		},
 		"copySourcePathAssets":
 		{
