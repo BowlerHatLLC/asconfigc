@@ -13,10 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package com.nextgenactionscript.flexjs.utils
+package com.nextgenactionscript.royale.utils
 {
 	/**
-	 * Utilities for finding and running executables from an Apache FlexJS SDK.
+	 * Utilities for finding and running executables from a legacy Apache FlexJS SDK.
 	 */
 	public class ApacheFlexJSUtils
 	{
@@ -26,7 +26,7 @@ package com.nextgenactionscript.flexjs.utils
 		private static const ASJSC:String = "asjsc";
 
 		/**
-		 * Determines if a directory contains a valid Apache FlexJS SDK.
+		 * Determines if a directory contains a valid legacy Apache FlexJS SDK.
 		 */
 		public static function isValidSDK(absolutePath:String):Boolean
 		{
@@ -34,12 +34,13 @@ package com.nextgenactionscript.flexjs.utils
 			{
 				return false;
 			}
-			var sdkDescriptionPath:String = path.join(absolutePath, "flex-sdk-description.xml");	
+			var sdkDescriptionPath:String = path.join(absolutePath, "flex-sdk-description.xml");
 			if(!fs.existsSync(sdkDescriptionPath) || fs.statSync(sdkDescriptionPath).isDirectory())
 			{
 				return false;
 			}
 			//if asjsc does not exist, it may be a legacy Flex SDK or an older version
+			//that is not supported
 			var asjscPath:String = path.join(absolutePath, "js", "bin", ASJSC);
 			if(!fs.existsSync(asjscPath) || fs.statSync(asjscPath).isDirectory())
 			{
@@ -106,45 +107,6 @@ package com.nextgenactionscript.flexjs.utils
 						{
 							return sdkPath;
 						}
-					}
-				}
-			}
-			return null;
-		}
-
-		/**
-		 * Attempts to find a Java executable by testing the JAVA_HOME
-		 * environment variable followed by the PATH environment variable.
-		 */
-		public static function findJava():String
-		{
-			var executableFile:String = "java";
-			if(process.platform === "win32")
-			{
-				executableFile += ".exe";
-			}
-
-			if("JAVA_HOME" in process.env)
-			{
-				var javaHome:String = process.env["JAVA_HOME"];
-				var javaPath:String = path.join(javaHome, "bin", executableFile);
-				if(fs.existsSync(javaPath))
-				{
-					return javaPath;
-				}
-			}
-
-			if("PATH" in process.env)
-			{
-				var paths:Array = process.env["PATH"].split(path.delimiter);
-				var pathCount:int = paths.length;
-				for(var i:int = 0; i < pathCount; i++)
-				{
-					var currentPath:String = paths[i];
-					javaPath = path.join(currentPath, executableFile);
-					if(fs.existsSync(javaPath))
-					{
-						return javaPath;
 					}
 				}
 			}

@@ -1,6 +1,6 @@
 # asconfigc
 
-A command line utility that compiles an ActionScript project configured with an [`asconfig.json`](https://github.com/BowlerHatLLC/vscode-nextgenas/wiki/asconfig.json) file. This utility parses the configuration file and runs the compiler with the appropriate options. Supports a variety of ActionScript SDKs, including the Apache FlexJS SDK and the Adobe AIR SDK & Compiler.
+A command line utility that compiles an ActionScript project configured with an [*asconfig.json*](https://github.com/BowlerHatLLC/vscode-nextgenas/wiki/asconfig.json) file. This utility parses the configuration file and runs the compiler with the appropriate options. Supports a variety of ActionScript SDKs, including [Apache Royale](https://royale.apache.org/), the [Feathers SDK](https://feathersui.com/sdk/) and the [Adobe AIR SDK & Compiler](http://www.adobe.com/devnet/air/air-sdk-download.html).
 
 ## Installation
 
@@ -12,17 +12,17 @@ npm install -g asconfigc
 
 ## Usage
 
-Run `asconfigc` in a directory containing an [`asconfig.json`](https://github.com/BowlerHatLLC/vscode-nextgenas/wiki/asconfig.json) file.
+Run *asconfigc* in a directory containing an [*asconfig.json*](https://github.com/BowlerHatLLC/vscode-nextgenas/wiki/asconfig.json) file.
 
 The following options are available:
 
 * `-p DIRECTORY` or `--project DIRECTORY`
 
-	Compile the `asconfig.json` project in the given directory. If omitted, will look for `asconfig.json` in current directory.
+	Compile a project in the given directory using the *asconfig.json* file. If omitted, will look for *asconfig.json* in current working directory.
 
-* `--flexHome DIRECTORY`
+* `--sdk DIRECTORY`
 
-	Specify the directory where Apache FlexJS, or another supported SDK, is located. If omitted, defaults to checking `FLEX_HOME` and `PATH` environment variables for a supported SDK.
+	Specify the directory where the ActionScript SDK is located. If omitted, defaults to checking `FLEX_HOME` and `PATH` environment variables for a supported SDK.
 
 * `--debug=true` or `--debug=false`
 
@@ -36,13 +36,13 @@ The following options are available:
 
 	Print the version of `asconfigc`.
 
-## Made with Apache FlexJS
+## Made with Apache Royale
 
-The source code for the `asconfigc` utility is written in ActionScript. That's right, a utility that runs on Node.js — written in ActionScript and compiled with Apache FlexJS. Pretty cool, right?
+The source code for the `asconfigc` utility is written in ActionScript. That's right, a utility that runs on Node.js — written in ActionScript and compiled with [Apache Royale](https://royale.apache.org/). Pretty cool, right?
 
 ## Support this project
 
-The [ActionScript and MXML extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=bowlerhatllc.vscode-nextgenas) and [`asconfigc`](https://www.npmjs.com/package/asconfigc) are developed by Josh Tynjala with the support of community members like you.
+The [ActionScript and MXML extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=bowlerhatllc.vscode-nextgenas) and [*asconfigc*](https://www.npmjs.com/package/asconfigc) are developed by Josh Tynjala with the support of community members like you.
 
 [Support Josh Tynjala on Patreon](http://patreon.com/josht)
 

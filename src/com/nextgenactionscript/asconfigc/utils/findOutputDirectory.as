@@ -26,9 +26,11 @@ package com.nextgenactionscript.asconfigc.utils
 			var mainPath:String = path.resolve(path.dirname(mainFile));
 			if(!isSWF)
 			{
-				//FlexJS treats these directory structures as a special case
+				//Royale treats these directory structures as a special case
 				if(mainPath.endsWith("/src/main/flex") ||
 					mainPath.endsWith("\\src\\main\\flex") ||
+					mainPath.endsWith("/src/main/royale") ||
+					mainPath.endsWith("\\src\\main\\royale") ||
 					mainPath.endsWith("/src") ||
 					mainPath.endsWith("\\src"))
 				{

@@ -19,13 +19,14 @@ package com.nextgenactionscript.asconfigc
 	{
 		public static const JS:String = "js";
 		public static const NODE:String = "node";
+		public static const ROYALE:String = "royale";
 		public static const FLEX:String = "flex";
 		public static const AIR:String = "air";
 		public static const AIRMOBILE:String = "airmobile";
 
 		public static function validate(type:String):Boolean
 		{
-			if(type === JS || type === NODE || type === FLEX ||
+			if(type === JS || type === NODE || type === FLEX || type === ROYALE ||
 				type === AIR || type === AIRMOBILE)
 			{
 				return true;
