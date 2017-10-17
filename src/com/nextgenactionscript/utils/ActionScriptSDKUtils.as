@@ -39,6 +39,10 @@ package com.nextgenactionscript.utils
 			{
 				sdkDescriptionPath = path.join(absolutePath, "air-sdk-description.xml");
 			}
+			if(!fs.existsSync(sdkDescriptionPath))
+			{
+				sdkDescriptionPath = path.join(absolutePath, "royale-sdk-description.xml");
+			}
 			if(!fs.existsSync(sdkDescriptionPath) || fs.statSync(sdkDescriptionPath).isDirectory())
 			{
 				return false;

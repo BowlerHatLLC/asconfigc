@@ -424,17 +424,29 @@ package
 				console.error(error.message);
 				process.exit(1);
 			}
-			//make sure that we require Royale if any of these options are specified
+			//make sure that we require Royale (or FlexJS) depending on which options are specified
 			if(CompilerOptions.JS_OUTPUT_TYPE in options)
 			{
+				//this option was used in FlexJS 0.7, but it was replaced with
+				//targets in FlexJS 0.8.
 				this._configRequiresFlexJS = true;
 				//if it is set explicitly, then clear the default
 				this._jsOutputType = null;
 			}
 			if(CompilerOptions.TARGETS in options)
 			{
-				this._configRequiresRoyaleOrFlexJS = true;
 				var targets:Array = options[CompilerOptions.TARGETS];
+				if(targets.indexOf(Targets.JS_ROYALE) !== -1 ||
+					targets.indexOf(Targets.JS_ROYALE_CORDOVA))
+				{
+					//these targets definitely don't work with FlexJS
+					this._configRequiresRoyale = true;
+				}
+				else
+				{
+					//remaining targets are supported by both Royale and FlexJS
+					this._configRequiresRoyaleOrFlexJS = true;
+				}
 				this._isSWFTargetOnly = targets.length === 1 && targets.indexOf(Targets.SWF) !== -1;
 				//if targets is set explicitly, then we're using a newer SDK
 				//that doesn't need js-output-type
@@ -447,6 +459,7 @@ package
 			}
 			if(CompilerOptions.SOURCE_MAP in options)
 			{
+				//source-map compiler option is supported by both Royale and FlexJS
 				this._configRequiresRoyaleOrFlexJS = true;
 			}
 		}
@@ -488,6 +501,7 @@ package
 				}
 				case ConfigName.ROYALE:
 				{
+					//this option is not supported by FlexJS
 					this._configRequiresRoyale = true;
 					break;
 				}
@@ -530,11 +544,19 @@ package
 				}
 			}
 			var sdkIsFlexJS:Boolean = ApacheFlexJSUtils.isValidSDK(this._sdkHome);
-			if(this._configRequiresRoyaleOrFlexJS || this._configRequiresFlexJS)
+			if(this._configRequiresRoyaleOrFlexJS)
 			{
 				if(!this._sdkIsRoyale && !sdkIsFlexJS)
 				{
 					console.error("Configuration options in asconfig.json require Apache Royale or FlexJS. Path to SDK is not valid: " + this._sdkHome);
+					process.exit(1);
+				}
+			}
+			if(this._configRequiresFlexJS)
+			{
+				if(!sdkIsFlexJS)
+				{
+					console.error("Configuration options in asconfig.json require Apache FlexJS. Path to SDK is not valid: " + this._sdkHome);
 					process.exit(1);
 				}
 			}
