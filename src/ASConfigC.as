@@ -122,14 +122,14 @@ package
 			console.info("Syntax:   asconfigc [options]");
 			console.info();
 			console.info("Examples: asconfigc -p .");
-			console.info("          asconfigc -p path/to/project");
+			console.info("          asconfigc -p path/to/custom.json");
 			console.info();
 			console.info("Options:");
-			console.info(" -h, --help                          Print this help message.");
-			console.info(" -v, --version                       Print the version.");
-			console.info(" -p DIRECTORY, --project DIRECTORY   Compile the asconfig.json project in the given directory. If omitted, will look for asconfig.json in current directory.");
-			console.info(" --flexHome DIRECTORY                Specify the directory where Apache FlexJS, or another supported SDK, is located. If omitted, defaults to checking FLEX_HOME and PATH environment variables.");
-			console.info(" --debug=true, --debug=false         Overrides the debug compiler option specified in asconfig.json.");
+			console.info(" -h, --help                                          Print this help message.");
+			console.info(" -v, --version                                       Print the version.");
+			console.info(" -p FILE OR DIRECTORY, --project FILE OR DIRECTORY   Compile a project with the path to its configuration file or a directory containing asconfig.json. If omitted, will look for asconfig.json in current directory.");
+			console.info(" --flexHome DIRECTORY                                Specify the directory where the ActionScript SDK is located. If omitted, defaults to checking FLEX_HOME and PATH environment variables.");
+			console.info(" --debug=true, --debug=false                         Specify debug or release mode. Overrides the debug compiler option, if specified in asconfig.json.");
 		}
 
 		private function parseArguments():void
@@ -164,25 +164,27 @@ package
 					case "p":
 					case "project":
 					{
-						var projectDirectoryPath:String = args[key] as String;
-						projectDirectoryPath = path.resolve(process.cwd(), projectDirectoryPath);
-						if(!fs.existsSync(projectDirectoryPath))
+						var projectPath:String = args[key] as String;
+						projectPath = path.resolve(process.cwd(), projectPath);
+						if(!fs.existsSync(projectPath))
 						{
-							console.error("Project directory not found: " + projectDirectoryPath);
+							console.error("Project directory or JSON file not found: " + projectPath);
 							process.exit(1);
 						}
-						if(!fs.statSync(projectDirectoryPath).isDirectory())
+						if(fs.statSync(projectPath).isDirectory())
 						{
-							console.error("Project must be a directory: " + projectDirectoryPath);
-							process.exit(1);
+							var configFilePath:String = path.resolve(projectPath, ASCONFIG_JSON);
+							if(!fs.existsSync(configFilePath))
+							{
+								console.error("asconfig.json not found in directory: " + projectPath);
+								process.exit(1);
+							}
+							this._configFilePath = configFilePath;
 						}
-						var configFilePath:String = path.resolve(projectDirectoryPath, ASCONFIG_JSON);
-						if(!fs.existsSync(configFilePath))
+						else
 						{
-							console.error("asconfig.json not found in directory: " + projectDirectoryPath);
-							process.exit(1);
+							this._configFilePath = projectPath;
 						}
-						this._configFilePath = configFilePath;
 						break;
 					}
 					case "debug":
