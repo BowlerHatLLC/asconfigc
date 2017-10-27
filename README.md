@@ -16,9 +16,9 @@ Run *asconfigc* in a directory containing an [*asconfig.json*](https://github.co
 
 The following options are available:
 
-* `-p DIRECTORY` or `--project DIRECTORY`
+* `-p FILE OR DIRECTORY` or `--project FILE OR DIRECTORY`
 
-	Compile a project in the given directory using the *asconfig.json* file. If omitted, will look for *asconfig.json* in current working directory.
+	Compile a project with the path to its configuration file or a directory containing *asconfig.json*. If omitted, will look for *asconfig.json* in current working directory.
 
 * `--sdk DIRECTORY`
 
@@ -26,7 +26,7 @@ The following options are available:
 
 * `--debug=true` or `--debug=false`
 
-	Specify debug or release mode. Overrides the `debug` compiler option, if specified in `asconfig.json`.
+	Specify debug or release mode. Overrides the `debug` compiler option, if specified in *asconfig.json*.
 
 * `--air PLATFORM`
 
