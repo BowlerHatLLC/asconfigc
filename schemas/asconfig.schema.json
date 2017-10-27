@@ -47,7 +47,7 @@
 			"type": "string",
 			"description": "Additional options to send to the compiler, formatted as command line arguments. Useful for testing new options that are not yet supported by the compilerOptions field of asconfig.json."
 		},
-		"signingOptions":
+		"singleSigningOptions":
 		{
 			"type": "object",
 			"description": "Options for code signing an Adobe AIR application.",
@@ -85,6 +85,19 @@
 					"description": "The path to a provisioning profile for iOS."
 				}
 			}
+		},
+		"dualSigningOptions":
+		{
+			"debug": { "$ref": "#/definitions/singleSigningOptions" },
+			"release": { "$ref": "#/definitions/singleSigningOptions" }
+		},
+		"signingOptions":
+		{
+			"oneOf":
+			[
+				{ "$ref": "#/definitions/singleSigningOptions" },
+				{ "$ref": "#/definitions/dualSigningOptions" }
+			]
 		},
 		"airOptionsOutput":
 		{

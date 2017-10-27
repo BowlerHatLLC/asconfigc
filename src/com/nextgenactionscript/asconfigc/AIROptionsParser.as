@@ -29,7 +29,7 @@ package com.nextgenactionscript.asconfigc
 			if(AIROptions.SIGNING_OPTIONS in options &&
 				!overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
 			{
-				parseSigningOptions(options[AIROptions.SIGNING_OPTIONS], result);
+				parseSigningOptions(options[AIROptions.SIGNING_OPTIONS], debug, result);
 			}
 			//AIR_SIGNING_OPTIONS end
 
@@ -104,7 +104,7 @@ package com.nextgenactionscript.asconfigc
 			//NATIVE_SIGNING_OPTIONS begin
 			if(overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
 			{
-				parseSigningOptions(options[platform][AIROptions.SIGNING_OPTIONS], result);
+				parseSigningOptions(options[platform][AIROptions.SIGNING_OPTIONS], debug, result);
 			}
 			//NATIVE_SIGNING_OPTIONS end
 
@@ -240,8 +240,19 @@ package com.nextgenactionscript.asconfigc
 			}
 		}
 
-		protected static function parseSigningOptions(signingOptions:Object, result:Array):void
+		protected static function parseSigningOptions(signingOptions:Object, debug:Boolean, result:Array):void
 		{
+			if(SigningOptions.DEBUG in signingOptions && debug)
+			{
+				parseSigningOptions(signingOptions[SigningOptions.DEBUG], debug, result);
+				return;
+			}
+			if(SigningOptions.RELEASE in signingOptions && !debug)
+			{
+				parseSigningOptions(signingOptions[SigningOptions.RELEASE], debug, result);
+				return;
+			}
+
 			if(SigningOptions.PROVISIONING_PROFILE in signingOptions)
 			{
 				setValueWithoutAssignment(SigningOptions.PROVISIONING_PROFILE, signingOptions[SigningOptions.PROVISIONING_PROFILE], result);

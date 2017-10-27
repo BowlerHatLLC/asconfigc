@@ -23,5 +23,10 @@ package com.nextgenactionscript.asconfigc
 		public static const PROVIDER_NAME:String = "providerName";
 		public static const TSA:String = "tsa";
 		public static const PROVISIONING_PROFILE:String = "provisioning-profile";
+
+		//these aren't real options, but they might exist to provide separate
+		//options for debug and relesae builds
+		public static const DEBUG:String = "debug";
+		public static const RELEASE:String = "release";
 	}
 }

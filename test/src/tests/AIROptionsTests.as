@@ -394,5 +394,51 @@ package tests
 			//this one doesn't exist in the android signing options
 			Assert.strictEqual(result.indexOf(defaultValue[SigningOptions.TSA]), -1);
 		}
+
+		[Test]
+		public function testSigningOptionsDebug():void
+		{
+			var value:Object = {};
+			var debugSigningOptions:Object = {};
+			debugSigningOptions[SigningOptions.KEYSTORE] = "debug.p12";
+			debugSigningOptions[SigningOptions.STORETYPE] = "pkcs12";
+			value.debug = debugSigningOptions;
+			var releaseSigningOptions:Object = {};
+			releaseSigningOptions[SigningOptions.KEYSTORE] = "release.keystore";
+			releaseSigningOptions[SigningOptions.STORETYPE] = "jks";
+			value.release = releaseSigningOptions;
+			var args:Object = {};
+			args[AIROptions.SIGNING_OPTIONS] = value;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
+			var optionIndex1:int = result.indexOf("-" + SigningOptions.KEYSTORE);
+			Assert.notStrictEqual(optionIndex1, -1);
+			Assert.strictEqual(result.indexOf(debugSigningOptions[SigningOptions.KEYSTORE]), optionIndex1 + 1);
+			var optionIndex2:int = result.indexOf("-" + SigningOptions.STORETYPE);
+			Assert.notStrictEqual(optionIndex2, -1);
+			Assert.strictEqual(result.indexOf(debugSigningOptions[SigningOptions.STORETYPE]), optionIndex2 + 1);
+		}
+
+		[Test]
+		public function testSigningOptionsRelease():void
+		{
+			var value:Object = {};
+			var debugSigningOptions:Object = {};
+			debugSigningOptions[SigningOptions.KEYSTORE] = "debug.p12";
+			debugSigningOptions[SigningOptions.STORETYPE] = "pkcs12";
+			value.debug = debugSigningOptions;
+			var releaseSigningOptions:Object = {};
+			releaseSigningOptions[SigningOptions.KEYSTORE] = "release.keystore";
+			releaseSigningOptions[SigningOptions.STORETYPE] = "jks";
+			value.release = releaseSigningOptions;
+			var args:Object = {};
+			args[AIROptions.SIGNING_OPTIONS] = value;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
+			var optionIndex1:int = result.indexOf("-" + SigningOptions.KEYSTORE);
+			Assert.notStrictEqual(optionIndex1, -1);
+			Assert.strictEqual(result.indexOf(releaseSigningOptions[SigningOptions.KEYSTORE]), optionIndex1 + 1);
+			var optionIndex2:int = result.indexOf("-" + SigningOptions.STORETYPE);
+			Assert.notStrictEqual(optionIndex2, -1);
+			Assert.strictEqual(result.indexOf(releaseSigningOptions[SigningOptions.STORETYPE]), optionIndex2 + 1);
+		}
 	}
 }
