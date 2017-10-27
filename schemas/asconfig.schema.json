@@ -89,11 +89,16 @@
 		"dualSigningOptions":
 		{
 			"debug": { "$ref": "#/definitions/singleSigningOptions" },
-			"release": { "$ref": "#/definitions/singleSigningOptions" }
+			"release": { "$ref": "#/definitions/singleSigningOptions" },
+			"required":
+			[
+				"debug",
+				"release"
+			]
 		},
 		"signingOptions":
 		{
-			"oneOf":
+			"anyOf":
 			[
 				{ "$ref": "#/definitions/singleSigningOptions" },
 				{ "$ref": "#/definitions/dualSigningOptions" }

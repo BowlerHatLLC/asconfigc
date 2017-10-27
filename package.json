@@ -27,7 +27,7 @@
     "node": ">=6.0.0"
   },
   "dependencies": {
-    "jsen": "^0.6.1",
+    "jsen": "^0.6.6",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1"
   },

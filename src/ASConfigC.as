@@ -781,9 +781,7 @@ package
 			this._airArgs.unshift("-jar");
 			try
 			{
-				var joinedArgs:String = this._airArgs.join(" ");
-				var command:String = escapePath(this._javaExecutable) + " " + joinedArgs;
-				console.info("adt " + joinedArgs);
+				var command:String = escapePath(this._javaExecutable) + " " + this._airArgs.join(" ");
 				var result:Object = child_process.execSync(command,
 				{
 					stdio: "inherit",
