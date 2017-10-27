@@ -145,7 +145,8 @@ package
 			console.info(" -v, --version                       Print the version.");
 			console.info(" -p DIRECTORY, --project DIRECTORY   Compile the asconfig.json project in the given directory. If omitted, will look for asconfig.json in current directory.");
 			console.info(" --sdk DIRECTORY                     Specify the directory where the ActionScript SDK is located. If omitted, defaults to checking FLEX_HOME and PATH environment variables.");
-			console.info(" --debug=true, --debug=false         Overrides the debug compiler option specified in asconfig.json.");
+			console.info(" --debug=true, --debug=false         Specify debug or release mode. Overrides the debug compiler option, if specified in asconfig.json.");
+			console.info(" --air PLATFORM                      Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, and `air`.");
 		}
 
 		private function parseArguments():void

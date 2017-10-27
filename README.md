@@ -26,7 +26,11 @@ The following options are available:
 
 * `--debug=true` or `--debug=false`
 
-	Overrides the `debug` compiler option specified in `asconfig.json`.
+	Specify debug or release mode. Overrides the `debug` compiler option, if specified in `asconfig.json`.
+
+* `--air PLATFORM`
+
+	Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, and `air`.
 
 * `-h` or `--help`
 
