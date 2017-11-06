@@ -1,7 +1,7 @@
 {
 	"title": "JSON schema for the ActionScript configuration file",
 	"type": "object",
-	"oneOf": [
+	"anyOf": [
 		{
 			"properties":
 			{
