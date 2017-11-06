@@ -31,7 +31,6 @@
 					"pattern": "^lib$"
 				},
 				"additionalOptions": { "$ref": "#/definitions/additionalOptions" },
-				"application": { "$ref": "#/definitions/application" },
 				"compilerOptions": { "$ref": "#/definitions/compilerOptions" },
 				"copySourcePathAssets": { "$ref": "#/definitions/copySourcePathAssets" },
 				"config": { "$ref": "#/definitions/config" },
