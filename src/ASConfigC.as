@@ -440,7 +440,7 @@ package
 			{
 				var targets:Array = options[CompilerOptions.TARGETS];
 				if(targets.indexOf(Targets.JS_ROYALE) !== -1 ||
-					targets.indexOf(Targets.JS_ROYALE_CORDOVA))
+					targets.indexOf(Targets.JS_ROYALE_CORDOVA) !== -1)
 				{
 					//these targets definitely don't work with FlexJS
 					this._configRequiresRoyale = true;
