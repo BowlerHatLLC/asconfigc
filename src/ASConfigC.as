@@ -499,7 +499,7 @@ package
 			{
 				//on other platforms, a backslash preceding a string will
 				//include the space in the path
-				path = path.replace(/\ /g, "\\ ");
+				path = path.replace(/[ ]/g, "\\ ");
 			}
 			return path;
 		}
