@@ -92,7 +92,7 @@ package com.nextgenactionscript.asconfigc
 			//DEBUGGER_CONNECTION_OPTIONS begin
 			if(debug && (platform === AIRPlatformType.ANDROID || platform === AIRPlatformType.IOS))
 			{
-				result.push("-" + AIROptions.CONNECT);
+				parseDebugOptions(options, platform, result);
 			}
 			//DEBUGGER_CONNECTION_OPTIONS end
 
@@ -207,6 +207,49 @@ package com.nextgenactionscript.asconfigc
 		{
 			result.push("-" + optionName);
 			result.push(value.toString());
+		}
+
+		protected static function parseDebugOptions(airOptions:Object, platform:String, result:Array):void
+		{
+			var useDefault:Boolean = true;
+			if(platform in airOptions)
+			{
+				var platformOptions:Object = airOptions[platform];
+				if(AIROptions.CONNECT in platformOptions)
+				{
+					useDefault = false;
+					var connectValue:Object = platformOptions[AIROptions.CONNECT];
+					if(connectValue === true)
+					{
+						result.push("-" + AIROptions.CONNECT);
+					}
+					else if(connectValue !== false)
+					{
+						result.push("-" + AIROptions.CONNECT);
+						result.push(connectValue);
+					}
+				}
+				if(AIROptions.LISTEN in platformOptions)
+				{
+					useDefault = false
+					var listenValue:Object = platformOptions[AIROptions.LISTEN];
+					if(listenValue === true)
+					{
+						result.push("-" + AIROptions.LISTEN);
+					}
+					else if(listenValue !== false)
+					{
+						result.push("-" + AIROptions.LISTEN);
+						result.push(listenValue);
+					}
+				}
+			}
+			if(useDefault)
+			{
+				//if both connect and listen options are omitted, use the
+				//connect as the default with no host name.
+				result.push("-" + AIROptions.CONNECT);
+			}
 		}
 
 		protected static function parseExtdir(extdir:Array, result:Array):void

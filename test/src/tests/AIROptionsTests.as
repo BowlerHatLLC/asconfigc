@@ -440,5 +440,124 @@ package tests
 			Assert.notStrictEqual(optionIndex2, -1);
 			Assert.strictEqual(result.indexOf(releaseSigningOptions[SigningOptions.STORETYPE]), optionIndex2 + 1);
 		}
+
+		[Test]
+		public function testConnectDebugAndroid():void
+		{
+			var connect:Boolean = true;
+			var args:Object = {};
+			args[AIRPlatformType.ANDROID] = {};
+			args[AIRPlatformType.ANDROID][AIROptions.CONNECT] = connect;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
+			var optionIndex:int = result.indexOf("-" + AIROptions.CONNECT);
+			Assert.notStrictEqual(optionIndex, -1);
+		}
+
+		[Test]
+		public function testConnectHostStringDebugAndroid():void
+		{
+			var connect:String = "192.16.1.100";
+			var args:Object = {};
+			args[AIRPlatformType.ANDROID] = {};
+			args[AIRPlatformType.ANDROID][AIROptions.CONNECT] = connect;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
+			var optionIndex:int = result.indexOf("-" + AIROptions.CONNECT);
+			Assert.notStrictEqual(optionIndex, -1);
+			Assert.strictEqual(result.indexOf(connect), optionIndex + 1);
+		}
+
+		[Test]
+		public function testNoConnectDebugAndroid():void
+		{
+			var connect:Boolean = false;
+			var args:Object = {};
+			args[AIRPlatformType.ANDROID] = {};
+			args[AIRPlatformType.ANDROID][AIROptions.CONNECT] = connect;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
+			var optionIndex:int = result.indexOf("-" + AIROptions.CONNECT);
+			Assert.strictEqual(optionIndex, -1);
+		}
+
+		[Test]
+		public function testConnectReleaseAndroid():void
+		{
+			var connect:Boolean = true;
+			var args:Object = {};
+			args[AIRPlatformType.ANDROID] = {};
+			args[AIRPlatformType.ANDROID][AIROptions.CONNECT] = connect;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
+			var optionIndex:int = result.indexOf("-" + AIROptions.CONNECT);
+			Assert.strictEqual(optionIndex, -1);
+		}
+
+		[Test]
+		public function testListenDebugAndroid():void
+		{
+			var listen:Boolean = true;
+			var args:Object = {};
+			args[AIRPlatformType.ANDROID] = {};
+			args[AIRPlatformType.ANDROID][AIROptions.LISTEN] = listen;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
+			var listenIndex:int = result.indexOf("-" + AIROptions.LISTEN);
+			Assert.notStrictEqual(listenIndex, -1);
+			var connectIndex:int = result.indexOf("-" + AIROptions.CONNECT);
+			Assert.strictEqual(connectIndex, -1);
+		}
+
+		[Test]
+		public function testListenReleaseAndroid():void
+		{
+			var listen:Boolean = true;
+			var args:Object = {};
+			args[AIRPlatformType.ANDROID] = {};
+			args[AIRPlatformType.ANDROID][AIROptions.CONNECT] = listen;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
+			var listenIndex:int = result.indexOf("-" + AIROptions.LISTEN);
+			Assert.strictEqual(listenIndex, -1);
+			var connectIndex:int = result.indexOf("-" + AIROptions.CONNECT);
+			Assert.strictEqual(connectIndex, -1);
+		}
+
+		[Test]
+		public function testNoListenDebugAndroid():void
+		{
+			var listen:Boolean = false;
+			var args:Object = {};
+			args[AIRPlatformType.ANDROID] = {};
+			args[AIRPlatformType.ANDROID][AIROptions.LISTEN] = listen;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
+			var listenIndex:int = result.indexOf("-" + AIROptions.LISTEN);
+			Assert.strictEqual(listenIndex, -1);
+			var connectIndex:int = result.indexOf("-" + AIROptions.CONNECT);
+			Assert.strictEqual(connectIndex, -1);
+		}
+
+		[Test]
+		public function testListenPortDebugAndroid():void
+		{
+			var listen:Number = 9000;
+			var args:Object = {};
+			args[AIRPlatformType.ANDROID] = {};
+			args[AIRPlatformType.ANDROID][AIROptions.LISTEN] = listen;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
+			var listenIndex:int = result.indexOf("-" + AIROptions.LISTEN);
+			Assert.notStrictEqual(listenIndex, -1);
+			Assert.strictEqual(result.indexOf(listen), listenIndex + 1);
+			var connectIndex:int = result.indexOf("-" + AIROptions.CONNECT);
+			Assert.strictEqual(connectIndex, -1);
+		}
+
+		[Test]
+		public function testDefaultsDebugAndroid():void
+		{
+			var args:Object = {};
+			//no listen or connect
+			args[AIRPlatformType.ANDROID] = {};
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
+			var connectIndex:int = result.indexOf("-" + AIROptions.CONNECT);
+			Assert.notStrictEqual(connectIndex, -1);
+			var listenIndex:int = result.indexOf("-" + AIROptions.LISTEN);
+			Assert.strictEqual(listenIndex, -1);
+		}
 	}
 }
