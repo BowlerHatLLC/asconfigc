@@ -225,6 +225,18 @@ package
 						if(typeof airPlatformValue === "string")
 						{
 							this._airPlatform = airPlatformValue as String;
+							if(this._airPlatform === AIRPlatformType.MAC &&
+								process.platform !== "darwin")
+							{
+								console.error("Error: Adobe AIR applications for macOS cannot be packaged on this platorm.");
+								process.exit(1);
+							}
+							else if(this._airPlatform === AIRPlatformType.WINDOWS &&
+								process.platform !== "win32")
+							{
+								console.error("Error: Adobe AIR applications for Windows cannot be packaged on this platform.");
+								process.exit(1);
+							}
 						}
 						else
 						{
