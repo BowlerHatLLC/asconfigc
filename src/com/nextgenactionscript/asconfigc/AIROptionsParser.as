@@ -26,10 +26,32 @@ package com.nextgenactionscript.asconfigc
 			result.push("-" + AIROptions.PACKAGE);
 
 			//AIR_SIGNING_OPTIONS begin
+			//desktop signing options
+			//mobile signing options must be specified later!
 			if(AIROptions.SIGNING_OPTIONS in options &&
 				!overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
 			{
 				parseSigningOptions(options[AIROptions.SIGNING_OPTIONS], debug, result);
+			}
+			else if((platform === AIRPlatformType.WINDOWS || platform === AIRPlatformType.MAC) &&
+				overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
+			{
+				//desktop captive runtime
+				parseSigningOptions(options[platform][AIROptions.SIGNING_OPTIONS], debug, result);
+			}
+			else if(!(AIROptions.SIGNING_OPTIONS in options))
+			{
+				//desktop shared runtime, but signing options overridden for windows or mac
+				if(process.platform === "darwin" &&
+					overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, AIRPlatformType.MAC))
+				{
+					parseSigningOptions(options[AIRPlatformType.MAC][AIROptions.SIGNING_OPTIONS], debug, result);
+				}
+				else if(process.platform === "win3d" &&
+					overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, AIRPlatformType.WINDOWS))
+				{
+					parseSigningOptions(options[AIRPlatformType.WINDOWS][AIROptions.SIGNING_OPTIONS], debug, result);
+				}
 			}
 			//AIR_SIGNING_OPTIONS end
 
@@ -115,8 +137,11 @@ package com.nextgenactionscript.asconfigc
 			}
 
 			//NATIVE_SIGNING_OPTIONS begin
-			if(overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
+			if((platform === AIRPlatformType.ANDROID || platform === AIRPlatformType.IOS) &&
+				overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
 			{
+				//mobile signing options
+				//desktop signing options must be specified earlier!
 				parseSigningOptions(options[platform][AIROptions.SIGNING_OPTIONS], debug, result);
 			}
 			//NATIVE_SIGNING_OPTIONS end
