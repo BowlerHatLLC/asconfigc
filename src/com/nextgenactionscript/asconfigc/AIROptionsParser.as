@@ -69,8 +69,21 @@ package com.nextgenactionscript.asconfigc
 						}
 						break;
 					}
+					case AIRPlatformType.WINDOWS:
+					{
+						//captive runtime
+						setValueWithoutAssignment(AIROptions.TARGET, AIRTarget.BUNDLE, result);
+						break;
+					}
+					case AIRPlatformType.MAC:
+					{
+						//captive runtime
+						setValueWithoutAssignment(AIROptions.TARGET, AIRTarget.BUNDLE, result);
+						break;
+					}
 					default:
 					{
+						//shared runtime
 						setValueWithoutAssignment(AIROptions.TARGET, AIRTarget.AIR, result);
 						break;
 					}
