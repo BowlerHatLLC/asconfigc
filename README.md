@@ -1,6 +1,6 @@
 # asconfigc
 
-A command line utility that compiles an ActionScript project configured with an [*asconfig.json*](https://github.com/BowlerHatLLC/vscode-nextgenas/wiki/asconfig.json) file. This utility parses the configuration file and runs the compiler with the appropriate options. Supports a variety of ActionScript SDKs, including [Apache Royale](https://royale.apache.org/), the [Feathers SDK](https://feathersui.com/sdk/) and the [Adobe AIR SDK & Compiler](http://www.adobe.com/devnet/air/air-sdk-download.html).
+A command line utility that compiles an ActionScript project configured with an [*asconfig.json*](https://github.com/BowlerHatLLC/vscode-nextgenas/wiki/asconfig.json) file. This utility parses the configuration file and runs the compiler with the appropriate options. It can also package an Adobe AIR application. Supports a variety of ActionScript SDKs, including [Adobe AIR SDK & Compiler](http://www.adobe.com/devnet/air/air-sdk-download.html), [Apache Flex](https://flex.apache.org), the [Feathers SDK](https://feathersui.com/sdk/), and [Apache Royale](https://royale.apache.org/).
 
 ## Installation
 
