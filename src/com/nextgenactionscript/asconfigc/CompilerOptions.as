@@ -18,6 +18,8 @@ package com.nextgenactionscript.asconfigc
 	public class CompilerOptions
 	{
 		public static const ACCESSIBLE:String = "accessible";
+		public static const ADVANCED_TELEMETRY:String = "advanced-telemetry";
+		public static const BENCHMARK:String = "benchmark";
 		public static const DEBUG:String = "debug";
 		public static const DEBUG_PASSWORD:String = "debug-password";
 		public static const DEFAULT_FRAME_RATE:String = "default-frame-rate";
@@ -32,6 +34,7 @@ package com.nextgenactionscript.asconfigc
 		public static const JS_LIBRARY_PATH:String = "js-library-path";
 		public static const JS_OUTPUT_TYPE:String = "js-output-type";
 		public static const KEEP_AS3_METADATA:String = "keep-as3-metadata";
+		public static const KEEP_GENERATED_ACTIONSCRIPT:String = "keep-generated-actionscript";
 		public static const LIBRARY_PATH:String = "library-path";
 		public static const LINK_REPORT:String = "link-report";
 		public static const LOAD_CONFIG:String = "load-config";

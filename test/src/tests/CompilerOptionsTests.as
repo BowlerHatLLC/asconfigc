@@ -20,6 +20,30 @@ package tests
 		}
 
 		[Test]
+		public function testAdvancedTelemetry():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.ADVANCED_TELEMETRY] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.ADVANCED_TELEMETRY);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.ADVANCED_TELEMETRY + "=true",
+				"Incorrect argument value for " + CompilerOptions.ADVANCED_TELEMETRY);
+		}
+
+		[Test]
+		public function testBenchmark():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.BENCHMARK] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.BENCHMARK);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.BENCHMARK + "=true",
+				"Incorrect argument value for " + CompilerOptions.BENCHMARK);
+		}
+
+		[Test]
 		public function testDebug():void
 		{
 			var args:Object = {};
@@ -322,6 +346,18 @@ package tests
 				"Incorrect argument 0 value for " + CompilerOptions.KEEP_AS3_METADATA);
 			Assert.strictEqual(result[1], "--" + CompilerOptions.KEEP_AS3_METADATA + "+=" + value[1],
 				"Incorrect argument 1 value for " + CompilerOptions.KEEP_AS3_METADATA);
+		}
+
+		[Test]
+		public function testKeepGeneratedActionScript():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.KEEP_GENERATED_ACTIONSCRIPT] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.KEEP_GENERATED_ACTIONSCRIPT);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.KEEP_GENERATED_ACTIONSCRIPT + "=true",
+				"Incorrect argument value for " + CompilerOptions.KEEP_GENERATED_ACTIONSCRIPT);
 		}
 
 		[Test]

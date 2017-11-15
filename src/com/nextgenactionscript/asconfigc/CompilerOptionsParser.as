@@ -34,6 +34,16 @@ package com.nextgenactionscript.asconfigc
 						OptionsFormatter.setBoolean(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.ADVANCED_TELEMETRY:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.BENCHMARK:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.DEBUG:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
@@ -117,6 +127,11 @@ package com.nextgenactionscript.asconfigc
 					case CompilerOptions.KEEP_AS3_METADATA:
 					{
 						OptionsFormatter.appendValues(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.KEEP_GENERATED_ACTIONSCRIPT:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.LIBRARY_PATH:
