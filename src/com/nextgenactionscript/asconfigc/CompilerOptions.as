@@ -43,9 +43,12 @@ package com.nextgenactionscript.asconfigc
 		public static const OPTIMIZE:String = "optimize";
 		public static const OMIT_TRACE_STATEMENTS:String = "omit-trace-statements";
 		public static const OUTPUT:String = "output";
+		public static const PRELOADER:String = "preloader";
 		public static const REMOVE_CIRCULARS:String = "remove-circulars";
+		public static const SIZE_REPORT:String = "size-report";
 		public static const SOURCE_MAP:String = "source-map";
 		public static const SOURCE_PATH:String = "source-path";
+		public static const STATIC_LINK_RUNTIME_SHARED_LIBRARIES:String = "static-link-runtime-shared-libraries";
 		public static const STRICT:String = "strict";
 		public static const SWF_EXTERNAL_LIBRARY_PATH:String = "swf-external-library-path";
 		public static const SWF_LIBRARY_PATH:String = "swf-library-path";
@@ -58,6 +61,7 @@ package com.nextgenactionscript.asconfigc
 		public static const USE_NETWORK:String = "use-network";
 		public static const USE_RESOURCE_BUNDLE_METADATA:String = "use-resource-bundle-metadata";
 		public static const VERBOSE_STACKTRACES:String = "verbose-stacktraces";
+		public static const WARNINGS:String = "warnings";
 
 		//library options
 		public static const INCLUDE_CLASSES:String = "include-classes";

@@ -511,6 +511,19 @@ package tests
 		}
 
 		[Test]
+		public function testPreloader():void
+		{
+			var value:String = "mx.preloaders.SparkDownloadProgressBar";
+			var args:Object = {};
+			args[CompilerOptions.PRELOADER] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PRELOADER);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.PRELOADER + "=" + value,
+				"Incorrect argument value for " + CompilerOptions.PRELOADER);
+		}
+
+		[Test]
 		public function testRemoveCirculars():void
 		{
 			var args:Object = {};
@@ -523,15 +536,16 @@ package tests
 		}
 
 		[Test]
-		public function testStrict():void
+		public function testSizeReport():void
 		{
+			var value:String = "path/to/size-report.xml";
 			var args:Object = {};
-			args[CompilerOptions.STRICT] = true;
+			args[CompilerOptions.SIZE_REPORT] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
 			Assert.strictEqual(result.length, 1,
-				"Incorrect argument count for " + CompilerOptions.STRICT);
-			Assert.strictEqual(result[0], "--" + CompilerOptions.STRICT + "=true",
-				"Incorrect argument value for " + CompilerOptions.STRICT);
+				"Incorrect argument count for " + CompilerOptions.SIZE_REPORT);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.SIZE_REPORT + "=" + value,
+				"Incorrect argument value for " + CompilerOptions.SIZE_REPORT);
 		}
 
 		[Test]
@@ -579,6 +593,30 @@ package tests
 				"Incorrect argument count for " + CompilerOptions.SOURCE_PATH);
 			Assert.strictEqual(result[0], "--" + CompilerOptions.SOURCE_PATH + "+=\"" + value[0] + "\"",
 				"Incorrect argument 0 value for " + CompilerOptions.SOURCE_PATH);
+		}
+
+		[Test]
+		public function testStaticLinkRuntimeSharedLibraries():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.STATIC_LINK_RUNTIME_SHARED_LIBRARIES] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.STATIC_LINK_RUNTIME_SHARED_LIBRARIES);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.STATIC_LINK_RUNTIME_SHARED_LIBRARIES + "=true",
+				"Incorrect argument value for " + CompilerOptions.STATIC_LINK_RUNTIME_SHARED_LIBRARIES);
+		}
+
+		[Test]
+		public function testStrict():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.STRICT] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.STRICT);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.STRICT + "=true",
+				"Incorrect argument value for " + CompilerOptions.STRICT);
 		}
 
 		[Test]
@@ -739,6 +777,18 @@ package tests
 				"Incorrect argument count for " + CompilerOptions.VERBOSE_STACKTRACES);
 			Assert.strictEqual(result[0], "--" + CompilerOptions.VERBOSE_STACKTRACES + "=true",
 				"Incorrect argument value for " + CompilerOptions.VERBOSE_STACKTRACES);
+		}
+
+		[Test]
+		public function testWarnings():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.WARNINGS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.WARNINGS);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.WARNINGS + "=true",
+				"Incorrect argument value for " + CompilerOptions.WARNINGS);
 		}
 	}
 }

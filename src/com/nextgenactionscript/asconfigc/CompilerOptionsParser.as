@@ -174,9 +174,19 @@ package com.nextgenactionscript.asconfigc
 						OptionsFormatter.setValue(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.PRELOADER:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.REMOVE_CIRCULARS:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.SIZE_REPORT:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.SOURCE_MAP:
@@ -187,6 +197,11 @@ package com.nextgenactionscript.asconfigc
 					case CompilerOptions.SOURCE_PATH:
 					{
 						OptionsFormatter.appendPaths(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.STATIC_LINK_RUNTIME_SHARED_LIBRARIES:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.STRICT:
@@ -245,6 +260,11 @@ package com.nextgenactionscript.asconfigc
 						break;
 					}
 					case CompilerOptions.VERBOSE_STACKTRACES:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.WARNINGS:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
 						break;
