@@ -1,6 +1,6 @@
 {
   "name": "asconfigc",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Compiles an ActionScript/MXML project configured with asconfig.json",
   "author": "Josh Tynjala",
   "repository": "BowlerHatLLC/asconfigc",
