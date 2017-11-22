@@ -15,6 +15,8 @@ limitations under the License.
 */
 package com.nextgenactionscript.asconfigc
 {
+	import com.nextgenactionscript.asconfigc.utils.escapePath;
+
 	public class AIROptionsParser
 	{
 		public static function parse(platform:String, debug:Boolean, applicationDescriptorPath:String, applicationContentPath:String, options:Object, result:Array = null):Array
@@ -26,31 +28,35 @@ package com.nextgenactionscript.asconfigc
 			result.push("-" + AIROptions.PACKAGE);
 
 			//AIR_SIGNING_OPTIONS begin
-			//desktop signing options
+			//these are *desktop* signing options only
 			//mobile signing options must be specified later!
-			if(AIROptions.SIGNING_OPTIONS in options &&
-				!overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
+			if(platform === AIRPlatformType.AIR ||
+				platform === AIRPlatformType.WINDOWS ||
+				platform === AIRPlatformType.MAC)
 			{
-				parseSigningOptions(options[AIROptions.SIGNING_OPTIONS], debug, result);
-			}
-			else if((platform === AIRPlatformType.WINDOWS || platform === AIRPlatformType.MAC) &&
-				overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
-			{
-				//desktop captive runtime
-				parseSigningOptions(options[platform][AIROptions.SIGNING_OPTIONS], debug, result);
-			}
-			else if(!(AIROptions.SIGNING_OPTIONS in options))
-			{
-				//desktop shared runtime, but signing options overridden for windows or mac
-				if(process.platform === "darwin" &&
-					overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, AIRPlatformType.MAC))
+				if(AIROptions.SIGNING_OPTIONS in options &&
+					!overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
 				{
-					parseSigningOptions(options[AIRPlatformType.MAC][AIROptions.SIGNING_OPTIONS], debug, result);
+					parseSigningOptions(options[AIROptions.SIGNING_OPTIONS], debug, result);
 				}
-				else if(process.platform === "win3d" &&
-					overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, AIRPlatformType.WINDOWS))
+				else if(overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
 				{
-					parseSigningOptions(options[AIRPlatformType.WINDOWS][AIROptions.SIGNING_OPTIONS], debug, result);
+					//desktop captive runtime
+					parseSigningOptions(options[platform][AIROptions.SIGNING_OPTIONS], debug, result);
+				}
+				else if(!(AIROptions.SIGNING_OPTIONS in options))
+				{
+					//desktop shared runtime, but signing options overridden for windows or mac
+					if(process.platform === "darwin" &&
+						overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, AIRPlatformType.MAC))
+					{
+						parseSigningOptions(options[AIRPlatformType.MAC][AIROptions.SIGNING_OPTIONS], debug, result);
+					}
+					else if(process.platform === "win3d" &&
+						overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, AIRPlatformType.WINDOWS))
+					{
+						parseSigningOptions(options[AIRPlatformType.WINDOWS][AIROptions.SIGNING_OPTIONS], debug, result);
+					}
 				}
 			}
 			//AIR_SIGNING_OPTIONS end
@@ -137,29 +143,39 @@ package com.nextgenactionscript.asconfigc
 			}
 
 			//NATIVE_SIGNING_OPTIONS begin
-			if((platform === AIRPlatformType.ANDROID || platform === AIRPlatformType.IOS) &&
-				overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
+			//these are *mobile* signing options only
+			//desktop signing options were already handled earlier
+			if(platform === AIRPlatformType.ANDROID || platform === AIRPlatformType.IOS)
 			{
-				//mobile signing options
-				//desktop signing options must be specified earlier!
-				parseSigningOptions(options[platform][AIROptions.SIGNING_OPTIONS], debug, result);
+				if(overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
+				{
+					parseSigningOptions(options[platform][AIROptions.SIGNING_OPTIONS], debug, result);
+				}
+				else if(AIROptions.SIGNING_OPTIONS in options)
+				{
+					parseSigningOptions(options[AIROptions.SIGNING_OPTIONS], debug, result);
+				}
 			}
 			//NATIVE_SIGNING_OPTIONS end
 
 			if(overridesOptionForPlatform(options, AIROptions.OUTPUT, platform))
 			{
-				result.push(options[platform][AIROptions.OUTPUT]);
+				var outputPath:String = options[platform][AIROptions.OUTPUT];
+				outputPath = escapePath(outputPath, false);
+				result.push(outputPath);
 			}
 			else if(AIROptions.OUTPUT in options)
 			{
-				result.push(options[AIROptions.OUTPUT]);
+				outputPath = options[AIROptions.OUTPUT];
+				outputPath = escapePath(outputPath, false);
+				result.push(outputPath);
 			}
 			
-			result.push(applicationDescriptorPath);
+			result.push(escapePath(applicationDescriptorPath, false));
 
 			if(overridesOptionForPlatform(options, AIROptions.PLATFORMSDK, platform))
 			{
-				setValueWithoutAssignment(AIROptions.PLATFORMSDK, options[platform][AIROptions.PLATFORMSDK], result);
+				setPathValueWithoutAssignment(AIROptions.PLATFORMSDK, options[platform][AIROptions.PLATFORMSDK], result);
 			}
 			if(overridesOptionForPlatform(options, AIROptions.ARCH, platform))
 			{
@@ -178,12 +194,16 @@ package com.nextgenactionscript.asconfigc
 			if(applicationContentPath !== path.basename(applicationContentPath))
 			{
 				result.push("-C");
-				result.push(path.dirname(applicationContentPath));
-				result.push(path.basename(applicationContentPath));
+				var dirname:String = path.dirname(applicationContentPath);
+				dirname = escapePath(dirname, false);
+				result.push(dirname);
+				var basename:String = path.basename(applicationContentPath);
+				basename = escapePath(basename, false);
+				result.push(basename);
 			}
 			else
 			{
-				result.push(applicationContentPath);
+				result.push(escapePath(applicationContentPath, false));
 			}
 
 			if(overridesOptionForPlatform(options, AIROptions.EXTDIR, platform))
@@ -246,6 +266,13 @@ package com.nextgenactionscript.asconfigc
 			result.push("-" + optionName);
 			result.push(value.toString());
 		}
+		
+		public static function setPathValueWithoutAssignment(optionName:String, value:Object, result:Array):void
+		{
+			var pathValue:String = escapePath(value.toString(), false);
+			result.push("-" + optionName);
+			result.push(pathValue);
+		}
 
 		protected static function parseDebugOptions(airOptions:Object, platform:String, result:Array):void
 		{
@@ -296,7 +323,7 @@ package com.nextgenactionscript.asconfigc
 			for(var i:int = 0; i < count; i++)
 			{
 				var current:String = extdir[i];
-				setValueWithoutAssignment(AIROptions.EXTDIR, current, result);
+				setPathValueWithoutAssignment(AIROptions.EXTDIR, current, result);
 			}
 		}
 
@@ -315,8 +342,8 @@ package com.nextgenactionscript.asconfigc
 					var srcFile:String = file[AIROptions.FILES_FILE];
 					var destPath:String = file[AIROptions.FILES_PATH];
 					result.push("-e");
-					result.push(srcFile);
-					result.push(destPath);
+					result.push(escapePath(srcFile, false));
+					result.push(escapePath(destPath, false));
 				}
 			}
 		}
@@ -336,7 +363,7 @@ package com.nextgenactionscript.asconfigc
 
 			if(SigningOptions.PROVISIONING_PROFILE in signingOptions)
 			{
-				setValueWithoutAssignment(SigningOptions.PROVISIONING_PROFILE, signingOptions[SigningOptions.PROVISIONING_PROFILE], result);
+				setPathValueWithoutAssignment(SigningOptions.PROVISIONING_PROFILE, signingOptions[SigningOptions.PROVISIONING_PROFILE], result);
 			}
 			if(SigningOptions.ALIAS in signingOptions)
 			{
@@ -348,7 +375,7 @@ package com.nextgenactionscript.asconfigc
 			}
 			if(SigningOptions.KEYSTORE in signingOptions)
 			{
-				setValueWithoutAssignment(SigningOptions.KEYSTORE, signingOptions[SigningOptions.KEYSTORE], result);
+				setPathValueWithoutAssignment(SigningOptions.KEYSTORE, signingOptions[SigningOptions.KEYSTORE], result);
 			}
 			if(SigningOptions.PROVIDER_NAME in signingOptions)
 			{

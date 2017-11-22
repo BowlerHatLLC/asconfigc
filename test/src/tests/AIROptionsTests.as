@@ -3,13 +3,67 @@ package tests
 	import com.nextgenactionscript.asconfigc.AIROptions;
 	import com.nextgenactionscript.asconfigc.AIROptionsParser;
 	import com.nextgenactionscript.asconfigc.AIRPlatformType;
+	import com.nextgenactionscript.asconfigc.AIRTarget;
+	import com.nextgenactionscript.asconfigc.SigningOptions;
+	import com.nextgenactionscript.asconfigc.utils.escapePath;
 
 	import nextgenas.test.assert.Assert;
-	import com.nextgenactionscript.asconfigc.SigningOptions;
-	import com.nextgenactionscript.asconfigc.AIRTarget;
 
 	public class AIROptionsTests
 	{
+		[Test]
+		public function testApplicationContent():void
+		{
+			var filename:String = "content.swf";
+			var dirPath:String = "path/to"
+			var value:String = dirPath + "/" + filename;
+			var args:Object = {};
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", value, args);
+			Assert.strictEqual(result.indexOf(value), -1);
+			var optionIndex:int = result.indexOf("-C");
+			Assert.notStrictEqual(optionIndex, -1);
+			Assert.strictEqual(result.indexOf(dirPath), optionIndex + 1);
+			Assert.strictEqual(result.indexOf(filename), optionIndex + 2);
+		}
+
+		[Test]
+		public function testApplicationContentWithSpacesInPath():void
+		{
+			var filename:String = "my content.swf";
+			var dirPath:String = "path to"
+			var value:String = dirPath + "/" + filename;
+			var formattedValue:String = escapePath(value);
+			var formattedDirPath:String = escapePath(dirPath);
+			var formattedFilename:String = escapePath(filename);
+			var args:Object = {};
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", value, args);
+			Assert.strictEqual(result.indexOf(value), -1);
+			Assert.strictEqual(result.indexOf(formattedValue), -1);
+			var optionIndex:int = result.indexOf("-C");
+			Assert.notStrictEqual(optionIndex, -1);
+			Assert.strictEqual(result.indexOf(formattedDirPath), optionIndex + 1);
+			Assert.strictEqual(result.indexOf(formattedFilename), optionIndex + 2);
+		}
+
+		[Test]
+		public function testDescriptor():void
+		{
+			var value:String = "path/to/application.xml";
+			var args:Object = {};
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, value, "test.swf", args);
+			Assert.notStrictEqual(result.indexOf(value), -1);
+		}
+
+		[Test]
+		public function testDescriptorWithSpacesInPath():void
+		{
+			var value:String = "path to/application.xml";
+			var formattedValue:String = escapePath(value);
+			var args:Object = {};
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, value, "test.swf", args);
+			Assert.notStrictEqual(result.indexOf(formattedValue), -1);
+		}
+
 		[Test]
 		public function testAIRDownloadURL():void
 		{
@@ -68,6 +122,21 @@ package tests
 		}
 
 		[Test]
+		public function testExtdirWithSpacesInPath():void
+		{
+			var value:Array = [
+				"path to/subpath1"
+			];
+			var formattedValue:String = escapePath(value[0]);
+			var args:Object = {};
+			args[AIROptions.EXTDIR] = value;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
+			var optionIndex1:int = result.indexOf("-" + AIROptions.EXTDIR);
+			Assert.notStrictEqual(optionIndex1, -1);
+			Assert.strictEqual(result.indexOf(formattedValue), optionIndex1 + 1);
+		}
+
+		[Test]
 		public function testFiles():void
 		{
 			var file1:Object = {};
@@ -116,6 +185,19 @@ package tests
 			//no -output, just the path without anything else
 			Assert.strictEqual(result.indexOf("-" + AIROptions.OUTPUT), -1);
 			Assert.notStrictEqual(result.indexOf(value.toString()), -1);
+		}
+
+		[Test]
+		public function testOutputWithSpacesInPath():void
+		{
+			var value:String = "path to/file.air";
+			var formattedValue:String = escapePath(value);
+			var args:Object = {};
+			args[AIROptions.OUTPUT] = value;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.AIR, false, "application.xml", "test.swf", args);
+			//no -output, just the path without anything else
+			Assert.strictEqual(result.indexOf("-" + AIROptions.OUTPUT), -1);
+			Assert.notStrictEqual(result.indexOf(formattedValue), -1);
 		}
 
 		[Test]
@@ -180,6 +262,34 @@ package tests
 			Assert.notStrictEqual(optionIndex, -1);
 			Assert.strictEqual(result.indexOf(iOSValue), optionIndex + 1);
 			Assert.strictEqual(result.indexOf(androidValue), -1);
+		}
+
+		[Test]
+		public function testAndroidPlatformSDKWithSpacesInPath():void
+		{
+			var value:String = "path to/android_sdk";
+			var formattedValue:String = escapePath(value);
+			var args:Object = {};
+			args[AIRPlatformType.ANDROID] = {}
+			args[AIRPlatformType.ANDROID][AIROptions.PLATFORMSDK] = value;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
+			var optionIndex:int = result.indexOf("-" + AIROptions.PLATFORMSDK);
+			Assert.notStrictEqual(optionIndex, -1);
+			Assert.strictEqual(result.indexOf(formattedValue), optionIndex + 1);
+		}
+
+		[Test]
+		public function testIOSPlatformSDKWithSpacesInPath():void
+		{
+			var value:String = "path to/ios_sdk";
+			var formattedValue:String = escapePath(value);
+			var args:Object = {};
+			args[AIRPlatformType.IOS] = {}
+			args[AIRPlatformType.IOS][AIROptions.PLATFORMSDK] = value;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
+			var optionIndex:int = result.indexOf("-" + AIROptions.PLATFORMSDK);
+			Assert.notStrictEqual(optionIndex, -1);
+			Assert.strictEqual(result.indexOf(formattedValue), optionIndex + 1);
 		}
 
 		[Test]
@@ -263,6 +373,20 @@ package tests
 			var optionIndex:int = result.indexOf("-" + SigningOptions.KEYSTORE);
 			Assert.notStrictEqual(optionIndex, -1);
 			Assert.strictEqual(result.indexOf(value), optionIndex + 1);
+		}
+
+		[Test]
+		public function testSigningOptionsKeystoreWithSpacesInPath():void
+		{
+			var value:String = "path to/keystore.p12";
+			var formattedValue:String = escapePath(value, true);
+			var args:Object = {};
+			args[AIROptions.SIGNING_OPTIONS] = {};
+			args[AIROptions.SIGNING_OPTIONS][SigningOptions.KEYSTORE] = value;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.AIR, false, "application.xml", "test.swf", args);
+			var optionIndex:int = result.indexOf("-" + SigningOptions.KEYSTORE);
+			Assert.notStrictEqual(optionIndex, -1);
+			Assert.strictEqual(result.indexOf(formattedValue), optionIndex + 1);
 		}
 
 		[Test]

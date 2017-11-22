@@ -25,6 +25,7 @@ package
 	import com.nextgenactionscript.asconfigc.ProjectType;
 	import com.nextgenactionscript.asconfigc.Targets;
 	import com.nextgenactionscript.asconfigc.utils.assetPathToOutputPath;
+	import com.nextgenactionscript.asconfigc.utils.escapePath;
 	import com.nextgenactionscript.asconfigc.utils.findAIRDescriptorOutputPath;
 	import com.nextgenactionscript.asconfigc.utils.findApplicationContent;
 	import com.nextgenactionscript.asconfigc.utils.findApplicationContentOutputPath;
@@ -622,24 +623,6 @@ package
 				return jarPath;
 			}
 			return null;
-		}
-
-		private function escapePath(path:String):String
-		{
-			//we don't want spaces in paths or they will be interpreted as new
-			//command line options
-			if(process.platform === "win32")
-			{
-				//on windows, paths may be wrapped in quotes to include spaces
-				path = "\"" + path + "\"";
-			}
-			else
-			{
-				//on other platforms, a backslash preceding a string will
-				//include the space in the path
-				path = path.replace(/[ ]/g, "\\ ");
-			}
-			return path;
 		}
 
 		private function compileProject():void

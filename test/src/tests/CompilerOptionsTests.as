@@ -4,6 +4,7 @@ package tests
 	import com.nextgenactionscript.asconfigc.CompilerOptionsParser;
 
 	import nextgenas.test.assert.Assert;
+	import com.nextgenactionscript.asconfigc.utils.escapePath;
 
 	public class CompilerOptionsTests
 	{
@@ -164,6 +165,20 @@ package tests
 		}
 
 		[Test]
+		public function testDumpConfigWithSpacesInPath():void
+		{
+			var value:String = "./path to/file.xml";
+			var formattedValue:String = escapePath(value);
+			var args:Object = {};
+			args[CompilerOptions.DUMP_CONFIG] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.DUMP_CONFIG);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.DUMP_CONFIG + "=" + formattedValue,
+				"Incorrect argument value for " + CompilerOptions.DUMP_CONFIG);
+		}
+
+		[Test]
 		public function testExternalLibraryPath():void
 		{
 			var value:Array =
@@ -198,7 +213,7 @@ package tests
 		[Test]
 		public function testHTMLTemplate():void
 		{
-			var value:String = ".path/to/template.html";
+			var value:String = "test1/html-template-file.html";
 			var args:Object = {};
 			args[CompilerOptions.HTML_TEMPLATE] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
@@ -377,18 +392,19 @@ package tests
 		}
 
 		[Test]
-		public function testLibraryPathWithSpace():void
+		public function testLibraryPathWithSpacesInPath():void
 		{
 			var value:Array =
 			[
 				"./test 3"
 			];
+			var formattedPath:String = escapePath(value[0], true);
 			var args:Object = {};
 			args[CompilerOptions.LIBRARY_PATH] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
 			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.LIBRARY_PATH);
-			Assert.strictEqual(result[0], "--" + CompilerOptions.LIBRARY_PATH + "+=\"" + value[0] + "\"",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.LIBRARY_PATH + "+=" + formattedPath,
 				"Incorrect argument value for " + CompilerOptions.LIBRARY_PATH);
 		}
 
@@ -402,6 +418,20 @@ package tests
 			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.LINK_REPORT);
 			Assert.strictEqual(result[0], "--" + CompilerOptions.LINK_REPORT + "=" + value,
+				"Incorrect argument value for " + CompilerOptions.LINK_REPORT);
+		}
+
+		[Test]
+		public function testLinkReportWithSpacesInPath():void
+		{
+			var value:String = "path to/link-report.xml";
+			var formattedValue:String = escapePath(value);
+			var args:Object = {};
+			args[CompilerOptions.LINK_REPORT] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.LINK_REPORT);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.LINK_REPORT + "=" + formattedValue,
 				"Incorrect argument value for " + CompilerOptions.LINK_REPORT);
 		}
 
@@ -511,6 +541,20 @@ package tests
 		}
 
 		[Test]
+		public function testOutputWithSpacesInPath():void
+		{
+			var value:String = "path to/Output.swf";
+			var formattedValue:String = escapePath(value);
+			var args:Object = {};
+			args[CompilerOptions.OUTPUT] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.OUTPUT);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.OUTPUT + "=" + formattedValue,
+				"Incorrect argument value for " + CompilerOptions.OUTPUT);
+		}
+
+		[Test]
 		public function testPreloader():void
 		{
 			var value:String = "mx.preloaders.SparkDownloadProgressBar";
@@ -549,6 +593,20 @@ package tests
 		}
 
 		[Test]
+		public function testSizeReportWithSpacesInPath():void
+		{
+			var value:String = "path to/size-report.xml";
+			var formattedValue:String = escapePath(value);
+			var args:Object = {};
+			args[CompilerOptions.SIZE_REPORT] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.SIZE_REPORT);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.SIZE_REPORT + "=" + formattedValue,
+				"Incorrect argument value for " + CompilerOptions.SIZE_REPORT);
+		}
+
+		[Test]
 		public function testSourceMap():void
 		{
 			var args:Object = {};
@@ -580,18 +638,19 @@ package tests
 		}
 
 		[Test]
-		public function testSourcePathWithSpace():void
+		public function testSourcePathWithSpacesInPath():void
 		{
 			var value:Array =
 			[
 				"./test 3"
 			];
+			var formattedPath:String = escapePath(value[0], true);
 			var args:Object = {};
 			args[CompilerOptions.SOURCE_PATH] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
 			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.SOURCE_PATH);
-			Assert.strictEqual(result[0], "--" + CompilerOptions.SOURCE_PATH + "+=\"" + value[0] + "\"",
+			Assert.strictEqual(result[0], "--" + CompilerOptions.SOURCE_PATH + "+=" + formattedPath,
 				"Incorrect argument 0 value for " + CompilerOptions.SOURCE_PATH);
 		}
 

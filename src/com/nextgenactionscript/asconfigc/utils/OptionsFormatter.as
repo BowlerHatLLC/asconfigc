@@ -28,22 +28,16 @@ package com.nextgenactionscript.asconfigc.utils
 			result.push("--" + optionName + "=" + boolString);
 		}
 
-		public static function setPathValue(optionName:String, value:Object, result:Array):void
+		public static function setPathValue(optionName:String, value:Object, checkIfExists:Boolean, result:Array):void
 		{
 			var pathValue:String = value.toString();
-			if(!fs.existsSync(pathValue))
+			if(checkIfExists && !fs.existsSync(pathValue))
 			{
 				console.error("Path for option \"" + optionName + "\" not found: " + pathValue);
 				process.exit(1);
 			}
-			if(pathValue.indexOf(" ") !== -1)
-			{
-				result.push("--" + optionName + "=\"" + pathValue + "\"");
-			}
-			else
-			{
-				result.push("--" + optionName + "=" + pathValue);
-			}
+			pathValue = escapePath(pathValue, false);
+			result.push("--" + optionName + "=" + pathValue);
 		}
 
 		public static function setValues(optionName:String, values:Array, result:Array):void
@@ -86,25 +80,19 @@ package com.nextgenactionscript.asconfigc.utils
 			}
 		}
 
-		public static function appendPaths(optionName:String, paths:Array, result:Array):void
+		public static function appendPaths(optionName:String, paths:Array, checkIfExists:Boolean, result:Array):void
 		{
 			var pathsCount:int = paths.length;
 			for(var i:int = 0; i < pathsCount; i++)
 			{
 				var currentPath:String = paths[i];
-				if(!fs.existsSync(currentPath))
+				if(checkIfExists && !fs.existsSync(currentPath))
 				{
 					console.error("Path for option \"" + optionName + "\" not found: " + currentPath);
 					process.exit(1);
 				}
-				if(currentPath.indexOf(" ") !== -1)
-				{
-					result.push("--" + optionName + "+=\"" + currentPath + "\"");
-				}
-				else
-				{
-					result.push("--" + optionName + "+=" + currentPath);
-				}
+				currentPath = escapePath(currentPath, false);
+				result.push("--" + optionName + "+=" + currentPath);
 			}
 		}
 	}
