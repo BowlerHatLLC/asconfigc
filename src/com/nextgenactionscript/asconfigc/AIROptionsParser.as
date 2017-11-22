@@ -17,7 +17,7 @@ package com.nextgenactionscript.asconfigc
 {
 	public class AIROptionsParser
 	{
-		public static function parse(platform:String, debug:Boolean, applicationDescriptorPath:String, swfPath:String, options:Object, result:Array = null):Array
+		public static function parse(platform:String, debug:Boolean, applicationDescriptorPath:String, applicationContentPath:String, options:Object, result:Array = null):Array
 		{
 			if(result === null)
 			{
@@ -175,15 +175,15 @@ package com.nextgenactionscript.asconfigc
 			{
 				parseFiles(options[AIROptions.FILES], result);
 			}
-			if(swfPath !== path.basename(swfPath))
+			if(applicationContentPath !== path.basename(applicationContentPath))
 			{
 				result.push("-C");
-				result.push(path.dirname(swfPath));
-				result.push(path.basename(swfPath));
+				result.push(path.dirname(applicationContentPath));
+				result.push(path.basename(applicationContentPath));
 			}
 			else
 			{
-				result.push(swfPath);
+				result.push(applicationContentPath);
 			}
 
 			if(overridesOptionForPlatform(options, AIROptions.EXTDIR, platform))

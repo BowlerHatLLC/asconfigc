@@ -25,13 +25,15 @@ package
 	import com.nextgenactionscript.asconfigc.ProjectType;
 	import com.nextgenactionscript.asconfigc.Targets;
 	import com.nextgenactionscript.asconfigc.utils.assetPathToOutputPath;
+	import com.nextgenactionscript.asconfigc.utils.findAIRDescriptorOutputPath;
 	import com.nextgenactionscript.asconfigc.utils.findApplicationContent;
+	import com.nextgenactionscript.asconfigc.utils.findApplicationContentOutputPath;
 	import com.nextgenactionscript.asconfigc.utils.findOutputDirectory;
 	import com.nextgenactionscript.asconfigc.utils.findSourcePathAssets;
+	import com.nextgenactionscript.royale.utils.ApacheFlexJSUtils;
 	import com.nextgenactionscript.royale.utils.ApacheRoyaleUtils;
 	import com.nextgenactionscript.utils.ActionScriptSDKUtils;
 	import com.nextgenactionscript.utils.findJava;
-	import com.nextgenactionscript.royale.utils.ApacheFlexJSUtils;
 
 	/**
 	 * A command line utility to build a project defined with an asconfig.json
@@ -371,20 +373,8 @@ package
 					process.exit(1);
 				}
 			}
-			if(ASConfigFields.AIR_OPTIONS in configData)
-			{
-				if(this._airDescriptor === null)
-				{
-					console.error("Adobe AIR packaging options found, but the \"application\" field is empty.");
-					process.exit(1);
-				}
-				var airOptions:Object = configData[ASConfigFields.AIR_OPTIONS];
-				this.readAIROptions(airOptions);
-			}
-			if(ASConfigFields.COPY_SOURCE_PATH_ASSETS in configData)
-			{
-				this._copySourcePathAssets = configData[ASConfigFields.COPY_SOURCE_PATH_ASSETS];
-			}
+			//parse files before airOptions because the mainFile may be
+			//needed to generate some file paths
 			if(ASConfigFields.FILES in configData)
 			{
 				var files:Array = configData[ASConfigFields.FILES] as Array;
@@ -408,6 +398,20 @@ package
 						this._mainFile = files[filesCount - 1];
 					}
 				}
+			}
+			if(ASConfigFields.AIR_OPTIONS in configData)
+			{
+				if(this._airDescriptor === null)
+				{
+					console.error("Adobe AIR packaging options found, but the \"application\" field is empty.");
+					process.exit(1);
+				}
+				var airOptions:Object = configData[ASConfigFields.AIR_OPTIONS];
+				this.readAIROptions(airOptions);
+			}
+			if(ASConfigFields.COPY_SOURCE_PATH_ASSETS in configData)
+			{
+				this._copySourcePathAssets = configData[ASConfigFields.COPY_SOURCE_PATH_ASSETS];
 			}
 			//if js-output-type was not specified, use the default
 			//swf projects won't have a js-output-type
@@ -436,7 +440,8 @@ package
 			}
 			catch(error:Error)
 			{
-				console.error(error.message);
+				console.error("Error: Failed to parse compiler options.");
+				console.error(error.stack);
 				process.exit(1);
 			}
 			//make sure that we require Royale (or FlexJS) depending on which options are specified
@@ -486,14 +491,15 @@ package
 				AIROptionsParser.parse(
 					this._airPlatform,
 					this._debugBuild,
-					findAIRDescriptorOutputPath(),
-					this._outputPath,
+					findAIRDescriptorOutputPath(this._mainFile, this._airDescriptor, this._outputPath, !this._outputIsJS),
+					findApplicationContentOutputPath(this._mainFile, this._outputPath, !this._outputIsJS),
 					options,
 					this._airArgs);
 			}
 			catch(error:Error)
 			{
-				console.error(error.message);
+				console.error("Error: Failed to parse Adobe AIR options.");
+				console.error(error.stack);
 				process.exit(1);
 			}
 		}
@@ -741,12 +747,6 @@ package
 			}
 		}
 
-		private function findAIRDescriptorOutputPath():String
-		{
-			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
-			return path.resolve(outputDir, path.basename(this._airDescriptor));
-		}
-
 		private function processDescriptor():void
 		{
 			if(!this._airDescriptor)
@@ -776,7 +776,7 @@ package
 			}
 			else //swf
 			{
-				var descriptorOutputPath:String = findAIRDescriptorOutputPath();
+				var descriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, this._airDescriptor, this._outputPath, true);
 				fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
 			}
 		}
