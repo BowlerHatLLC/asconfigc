@@ -28,6 +28,24 @@ package com.nextgenactionscript.asconfigc.utils
 			result.push("--" + optionName + "=" + boolString);
 		}
 
+		public static function setPathValue(optionName:String, value:Object, result:Array):void
+		{
+			var pathValue:String = value.toString();
+			if(!fs.existsSync(pathValue))
+			{
+				console.error("Path for option \"" + optionName + "\" not found: " + pathValue);
+				process.exit(1);
+			}
+			if(pathValue.indexOf(" ") !== -1)
+			{
+				result.push("--" + optionName + "=\"" + pathValue + "\"");
+			}
+			else
+			{
+				result.push("--" + optionName + "=" + pathValue);
+			}
+		}
+
 		public static function setValues(optionName:String, values:Array, result:Array):void
 		{
 			if(values.length === 0)
