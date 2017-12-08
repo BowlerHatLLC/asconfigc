@@ -140,7 +140,8 @@ package
 			this.printVersion();
 			console.info("Syntax:   asconfigc [options]");
 			console.info();
-			console.info("Examples: asconfigc -p .");
+			console.info("Examples: asconfigc");
+			console.info("          asconfigc -p .");
 			console.info("          asconfigc -p path/to/custom.json");
 			console.info();
 			console.info("Options:");
