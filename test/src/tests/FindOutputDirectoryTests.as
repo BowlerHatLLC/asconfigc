@@ -31,7 +31,40 @@ package tests
 		[Test]
 		public function testOutputDirectoryWithMainFileForJS():void
 		{
+			var mainFile:String = "./path/to/Main.as";
+			var outputPath:String = null;
+			var isSWF:Boolean = false;
+			var outputDirectory:String = findOutputDirectory(mainFile, outputPath, isSWF);
+			Assert.strictEqual(outputDirectory, path.resolve("./path/to"),
+				"Incorrect output directory with main file for JS: " + mainFile);
+		}
+
+		[Test]
+		public function testOutputDirectoryWithMainFileInSrcForJS():void
+		{
 			var mainFile:String = "./source-path-assets/src/Main.as";
+			var outputPath:String = null;
+			var isSWF:Boolean = false;
+			var outputDirectory:String = findOutputDirectory(mainFile, outputPath, isSWF);
+			Assert.strictEqual(outputDirectory, path.resolve("./source-path-assets"),
+				"Incorrect output directory with main file for JS: " + mainFile);
+		}
+
+		[Test]
+		public function testOutputDirectoryWithMainFileInSrcMainRoyaleForJS():void
+		{
+			var mainFile:String = "./source-path-assets/src/main/royale/Main.as";
+			var outputPath:String = null;
+			var isSWF:Boolean = false;
+			var outputDirectory:String = findOutputDirectory(mainFile, outputPath, isSWF);
+			Assert.strictEqual(outputDirectory, path.resolve("./source-path-assets"),
+				"Incorrect output directory with main file for JS: " + mainFile);
+		}
+
+		[Test]
+		public function testOutputDirectoryWithMainFileInSrcMainFlexForJS():void
+		{
+			var mainFile:String = "./source-path-assets/src/main/flex/Main.as";
 			var outputPath:String = null;
 			var isSWF:Boolean = false;
 			var outputDirectory:String = findOutputDirectory(mainFile, outputPath, isSWF);

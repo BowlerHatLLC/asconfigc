@@ -27,14 +27,17 @@ package com.nextgenactionscript.asconfigc.utils
 			if(!isSWF)
 			{
 				//Royale treats these directory structures as a special case
-				if(mainPath.endsWith("/src/main/flex") ||
-					mainPath.endsWith("\\src\\main\\flex") ||
-					mainPath.endsWith("/src/main/royale") ||
-					mainPath.endsWith("\\src\\main\\royale") ||
-					mainPath.endsWith("/src") ||
+				if(mainPath.endsWith("/src") ||
 					mainPath.endsWith("\\src"))
 				{
 					return path.resolve(mainPath, "../");
+				}
+				else if(mainPath.endsWith("/src/main/flex") ||
+					mainPath.endsWith("\\src\\main\\flex") ||
+					mainPath.endsWith("/src/main/royale") ||
+					mainPath.endsWith("\\src\\main\\royale"))
+				{
+					return path.resolve(mainPath, "../../../");
 				}
 			}
 			return mainPath;
