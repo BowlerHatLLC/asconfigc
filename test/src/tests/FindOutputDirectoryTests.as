@@ -20,6 +20,17 @@ package tests
 		[Test]
 		public function testOutputDirectoryWithMainFileForSWF():void
 		{
+			var mainFile:String = "./source-path-assets/Main.as";
+			var outputPath:String = null;
+			var isSWF:Boolean = true;
+			var outputDirectory:String = findOutputDirectory(mainFile, outputPath, isSWF);
+			Assert.strictEqual(outputDirectory, path.resolve("./source-path-assets"),
+				"Incorrect output directory with main file for SWF: " + mainFile);
+		}
+
+		[Test]
+		public function testOutputDirectoryWithMainFileInSrcForSWF():void
+		{
 			var mainFile:String = "./source-path-assets/src/Main.as";
 			var outputPath:String = null;
 			var isSWF:Boolean = true;
