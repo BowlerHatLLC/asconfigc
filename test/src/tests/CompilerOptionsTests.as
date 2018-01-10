@@ -716,7 +716,7 @@ package tests
 		[Test]
 		public function testSWFVersion():void
 		{
-			var value:String = "30";
+			var value:int = 30;
 			var args:Object = {};
 			args[CompilerOptions.SWF_VERSION] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
