@@ -52,7 +52,7 @@ package com.nextgenactionscript.asconfigc
 					{
 						parseSigningOptions(options[AIRPlatformType.MAC][AIROptions.SIGNING_OPTIONS], debug, result);
 					}
-					else if(process.platform === "win3d" &&
+					else if(process.platform === "win32" &&
 						overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, AIRPlatformType.WINDOWS))
 					{
 						parseSigningOptions(options[AIRPlatformType.WINDOWS][AIROptions.SIGNING_OPTIONS], debug, result);
