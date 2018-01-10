@@ -171,9 +171,9 @@ package tests
 			var value:Array = [
 				file1
 			];
-			var fileInDir1:String = file1[AIROptions.FILES_FILE] + "/file2.txt";
-			var fileInDir2:String = file1[AIROptions.FILES_FILE] + "/file3.txt";
-			var dirPath:String = file1[AIROptions.FILES_PATH] + "/subdir";
+			var fileInDir1:String = path.join(file1[AIROptions.FILES_FILE], "file2.txt");
+			var fileInDir2:String = path.join(file1[AIROptions.FILES_FILE], "file3.txt");
+			var dirPath:String = path.join(file1[AIROptions.FILES_PATH], "subdir");
 			var args:Object = {};
 			args[AIROptions.FILES] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
