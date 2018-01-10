@@ -168,7 +168,7 @@ package tests
 		public function testDumpConfigWithSpacesInPath():void
 		{
 			var value:String = "./path to/file.xml";
-			var formattedValue:String = escapePath(value);
+			var formattedValue:String = escapePath(value, true);
 			var args:Object = {};
 			args[CompilerOptions.DUMP_CONFIG] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
@@ -425,7 +425,7 @@ package tests
 		public function testLinkReportWithSpacesInPath():void
 		{
 			var value:String = "path to/link-report.xml";
-			var formattedValue:String = escapePath(value);
+			var formattedValue:String = escapePath(value, true);
 			var args:Object = {};
 			args[CompilerOptions.LINK_REPORT] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
@@ -481,9 +481,10 @@ package tests
 				},
 				{
 					uri: "library://example.com/library",
-					manifest: "path/to/manifest.xml"
+					manifest: "path/with spaces/to/manifest.xml"
 				}
 			];
+			var formattedManifest:String = escapePath(value[1].manifest, true);
 			var args:Object = {};
 			args[CompilerOptions.NAMESPACE] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
@@ -499,7 +500,7 @@ package tests
 				"Incorrect argument 3 value for " + CompilerOptions.NAMESPACE);
 			Assert.strictEqual(result[4], value[1].uri,
 				"Incorrect argument 4 value for " + CompilerOptions.NAMESPACE);
-			Assert.strictEqual(result[5], value[1].manifest,
+			Assert.strictEqual(result[5], formattedManifest,
 				"Incorrect argument 5 value for " + CompilerOptions.NAMESPACE);
 		}
 
@@ -544,7 +545,7 @@ package tests
 		public function testOutputWithSpacesInPath():void
 		{
 			var value:String = "path to/Output.swf";
-			var formattedValue:String = escapePath(value);
+			var formattedValue:String = escapePath(value, true);
 			var args:Object = {};
 			args[CompilerOptions.OUTPUT] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
@@ -596,7 +597,7 @@ package tests
 		public function testSizeReportWithSpacesInPath():void
 		{
 			var value:String = "path to/size-report.xml";
-			var formattedValue:String = escapePath(value);
+			var formattedValue:String = escapePath(value, true);
 			var args:Object = {};
 			args[CompilerOptions.SIZE_REPORT] = value;
 			var result:Array = CompilerOptionsParser.parse(args);

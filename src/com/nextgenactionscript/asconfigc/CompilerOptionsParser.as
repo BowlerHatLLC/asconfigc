@@ -16,6 +16,7 @@ limitations under the License.
 package com.nextgenactionscript.asconfigc
 {
 	import com.nextgenactionscript.asconfigc.utils.OptionsFormatter;
+	import com.nextgenactionscript.asconfigc.utils.escapePath;
 
 	public class CompilerOptionsParser
 	{
@@ -293,9 +294,11 @@ package com.nextgenactionscript.asconfigc
 					console.error("Value for option \"" + CompilerOptions.NAMESPACE + "\" not valid: " + currentValue);
 					process.exit(1);
 				}
+
+				var manifest:String = escapePath(currentValue.manifest.toString(), false);
 				result.push("--" + CompilerOptions.NAMESPACE);
 				result.push(currentValue.uri.toString());
-				result.push(currentValue.manifest.toString());
+				result.push(manifest);
 			}
 		}
 
