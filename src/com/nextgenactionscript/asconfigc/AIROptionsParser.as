@@ -341,11 +341,31 @@ package com.nextgenactionscript.asconfigc
 				{
 					var srcFile:String = file[AIROptions.FILES_FILE];
 					var destPath:String = file[AIROptions.FILES_PATH];
-					result.push("-e");
-					result.push(escapePath(srcFile, false));
-					result.push(escapePath(destPath, false));
+					addFile(srcFile, destPath, result);
 				}
 			}
+		}
+
+		protected static function addFile(srcFile:String, destPath:String, result:Array):void
+		{
+			if(fs.statSync(srcFile).isDirectory())
+			{
+				//Adobe's documentation for adt says that the -e option can
+				//accept a directory, but it only seems to work with files, so
+				//we read the directory contents to add the files individually
+				destPath = path.join(destPath, path.basename(srcFile));
+				var files:Array = fs.readdirSync(srcFile);
+				var fileCount:int = files.length;
+				for(var i:int = 0; i < fileCount; i++)
+				{
+					var file:String = path.join(srcFile, files[i]);
+					addFile(file, destPath, result);
+				}
+				return;
+			}
+			result.push("-e");
+			result.push(escapePath(srcFile, false));
+			result.push(escapePath(destPath, false));
 		}
 
 		protected static function parseSigningOptions(signingOptions:Object, debug:Boolean, result:Array):void

@@ -140,11 +140,11 @@ package tests
 		public function testFiles():void
 		{
 			var file1:Object = {};
-			file1[AIROptions.FILES_FILE] = "path/to/file1.png";
-			file1[AIROptions.FILES_PATH] = "file1.png";
+			file1[AIROptions.FILES_FILE] = "air-files/file1.txt";
+			file1[AIROptions.FILES_PATH] = ".";
 			var file2:Object = {};
-			file2[AIROptions.FILES_FILE] = "path/to/file2.png";
-			file2[AIROptions.FILES_PATH] = "other/file2.png";
+			file2[AIROptions.FILES_FILE] = "air-files/subdir/file2.txt";
+			file2[AIROptions.FILES_PATH] = "other";
 			var value:Array = [
 				file1,
 				file2
@@ -160,6 +160,31 @@ package tests
 			Assert.notStrictEqual(optionIndex2, -1);
 			Assert.strictEqual(result.indexOf(file2[AIROptions.FILES_FILE]), optionIndex2 + 1);
 			Assert.strictEqual(result.indexOf(file2[AIROptions.FILES_PATH]), optionIndex2 + 2);
+		}
+
+		[Test]
+		public function testFilesWithDirectory():void
+		{
+			var file1:Object = {};
+			file1[AIROptions.FILES_FILE] = "air-files/subdir";
+			file1[AIROptions.FILES_PATH] = "other";
+			var value:Array = [
+				file1
+			];
+			var fileInDir1:String = file1[AIROptions.FILES_FILE] + "/file2.txt";
+			var fileInDir2:String = file1[AIROptions.FILES_FILE] + "/file3.txt";
+			var dirPath:String = file1[AIROptions.FILES_PATH] + "/subdir";
+			var args:Object = {};
+			args[AIROptions.FILES] = value;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
+			var optionIndex1:int = result.indexOf("-e");
+			Assert.notStrictEqual(optionIndex1, -1);
+			Assert.strictEqual(result.indexOf(fileInDir1), optionIndex1 + 1);
+			Assert.strictEqual(result.indexOf(dirPath), optionIndex1 + 2);
+			var optionIndex2:int = result.indexOf("-e", optionIndex1 + 1);
+			Assert.notStrictEqual(optionIndex2, -1);
+			Assert.strictEqual(result.indexOf(fileInDir2), optionIndex2 + 1);
+			Assert.strictEqual(result.indexOf(dirPath, optionIndex2), optionIndex2 + 2);
 		}
 
 		[Test]
