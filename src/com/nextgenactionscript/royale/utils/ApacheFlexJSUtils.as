@@ -57,10 +57,11 @@ package com.nextgenactionscript.royale.utils
 		public static function findSDK():String
 		{
 			var sdkPath:String = null;
+
+			//look for an npm module
 			try
 			{
-				//look for an npm module
-				sdkPath = require["resolve"]("flexjs");
+				sdkPath = path.join(process.cwd(), "node_modules", "flexjs");
 				if(isValidSDK(sdkPath))
 				{
 					return sdkPath;

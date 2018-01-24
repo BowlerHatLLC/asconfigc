@@ -148,7 +148,7 @@ package
 			console.info(" -h, --help                                          Print this help message.");
 			console.info(" -v, --version                                       Print the version.");
 			console.info(" -p FILE OR DIRECTORY, --project FILE OR DIRECTORY   Compile a project with the path to its configuration file or a directory containing asconfig.json. If omitted, will look for asconfig.json in current directory.");
-			console.info(" --sdk DIRECTORY                                     Specify the directory where the ActionScript SDK is located. If omitted, defaults to checking FLEX_HOME and PATH environment variables.");
+			console.info(" --sdk DIRECTORY                                     Specify the directory where the ActionScript SDK is located. If omitted, defaults to checking ROYALE_HOME, FLEX_HOME and PATH environment variables.");
 			console.info(" --debug=true, --debug=false                         Specify debug or release mode. Overrides the debug compiler option, if specified in asconfig.json.");
 			console.info(" --air PLATFORM                                      Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, and `air`.");
 		}
@@ -554,10 +554,24 @@ package
 			}
 			if(!this._sdkHome)
 			{
-				console.error("SDK not found. Set FLEX_HOME, add to PATH, or use --sdk option.");
+				var envHome:String = "FLEX_HOME";
+				if(this._configRequiresRoyale)
+				{
+					envHome = "ROYALE_HOME";
+				}
+				else if(this._configRequiresRoyaleOrFlexJS)
+				{
+					envHome = "ROYALE_HOME for Apache Royale, FLEX_HOME for Apache FlexJS";
+				}
+				console.error("SDK not found. Set " + envHome + ", add to PATH, or use --sdk option.");
 				process.exit(1);
 			}
-			this._sdkIsRoyale = ApacheRoyaleUtils.isValidSDK(this._sdkHome);
+			var royaleHome:String = ApacheRoyaleUtils.isValidSDK(this._sdkHome);
+			if(royaleHome !== null)
+			{
+				this._sdkHome = royaleHome;
+				this._sdkIsRoyale = true;
+			}
 			if(this._configRequiresRoyale)
 			{
 				if(!this._sdkIsRoyale)
