@@ -764,17 +764,20 @@ package
 			{
 				var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
 				var debugDescriptorOutputPath:String = path.resolve(debugOutputDir, path.basename(this._airDescriptor));
+				mkdirp["sync"](path.dirname(debugDescriptorOutputPath));
 				fs.writeFileSync(debugDescriptorOutputPath, descriptor, "utf8");
 				if(!this._debugBuild)
 				{
 					var releaseOutputDir:String = path.join(outputDir, "bin", "js-release");
 					var releaseDescriptorOutputPath:String = path.resolve(releaseOutputDir, path.basename(this._airDescriptor));
+					mkdirp["sync"](path.dirname(releaseDescriptorOutputPath));
 					fs.writeFileSync(releaseDescriptorOutputPath, descriptor, "utf8");
 				}
 			}
 			else //swf
 			{
 				var descriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, this._airDescriptor, this._outputPath, true);
+				mkdirp["sync"](path.dirname(descriptorOutputPath));
 				fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
 			}
 		}
