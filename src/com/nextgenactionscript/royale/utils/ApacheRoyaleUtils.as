@@ -26,6 +26,46 @@ package com.nextgenactionscript.royale.utils
 		private static const ASJSC:String = "asjsc";
 
 		/**
+		 * @private
+		 */
+		private static const ENV_ROYALE_HOME:String = "ROYALE_HOME";
+
+		/**
+		 * @private
+		 */
+		private static const ENV_PATH:String = "PATH";
+
+		/**
+		 * @private
+		 */
+		private static const ROYALE_ASJS:String = "royale-asjs";
+
+		/**
+		 * @private
+		 */
+		private static const NODE_MODULES:String = "node_modules";
+
+		/**
+		 * @private
+		 */
+		private static const NPM_ORG_ROYALE:String = "@apache-royale";
+
+		/**
+		 * @private
+		 */
+		private static const NPM_PACKAGE_ROYALE_JS:String = "royale-js";
+
+		/**
+		 * @private
+		 */
+		private static const NPM_PACKAGE_ROYALE_SWF:String = "royale-js-swf";
+
+		/**
+		 * @private
+		 */
+		private static const ROYALE_SDK_DESCRIPTION:String = "royale-sdk-description.xml";
+
+		/**
 		 * Determines if a directory contains a valid Apache Royale SDK.
 		 */
 		public static function isValidSDK(absolutePath:String):String
@@ -38,7 +78,7 @@ package com.nextgenactionscript.royale.utils
 			{
 				return absolutePath;
 			}
-			var royalePath:String = path.join(absolutePath, "royale-asjs");
+			var royalePath:String = path.join(absolutePath, ROYALE_ASJS);
 			if(isValidSDKInternal(royalePath))
 			{
 				return royalePath;
@@ -52,7 +92,7 @@ package com.nextgenactionscript.royale.utils
 			{
 				return false;
 			}
-			var sdkDescriptionPath:String = path.join(absolutePath, "royale-sdk-description.xml");
+			var sdkDescriptionPath:String = path.join(absolutePath, ROYALE_SDK_DESCRIPTION);
 			if(!fs.existsSync(sdkDescriptionPath) || fs.statSync(sdkDescriptionPath).isDirectory())
 			{
 				return false;
@@ -72,7 +112,7 @@ package com.nextgenactionscript.royale.utils
 			//look for an npm module
 			try
 			{
-				sdkPath = path.join(process.cwd(), "node_modules", "apache-royale");
+				sdkPath = path.join(process.cwd(), NODE_MODULES, NPM_ORG_ROYALE, NPM_PACKAGE_ROYALE_JS);
 				sdkPath = isValidSDK(sdkPath)
 				if(sdkPath != null)
 				{
@@ -82,7 +122,7 @@ package com.nextgenactionscript.royale.utils
 			catch(error) {};
 			try
 			{
-				sdkPath = path.join(process.cwd(), "node_modules", "apache-royale-swf");
+				sdkPath = path.join(process.cwd(), NODE_MODULES, NPM_ORG_ROYALE, NPM_PACKAGE_ROYALE_SWF);
 				sdkPath = isValidSDK(sdkPath)
 				if(sdkPath != null)
 				{
@@ -91,9 +131,9 @@ package com.nextgenactionscript.royale.utils
 			}
 			catch(error) {};
 
-			if("ROYALE_HOME" in process.env)
+			if(ENV_ROYALE_HOME in process.env)
 			{
-				sdkPath = process.env["ROYALE_HOME"];
+				sdkPath = process.env[ENV_ROYALE_HOME];
 				sdkPath = isValidSDK(sdkPath)
 				if(sdkPath != null)
 				{
@@ -101,9 +141,9 @@ package com.nextgenactionscript.royale.utils
 				}
 			}
 
-			if("PATH" in process.env)
+			if(ENV_PATH in process.env)
 			{
-				var paths:Array = process.env["PATH"].split(path.delimiter);
+				var paths:Array = process.env[ENV_PATH].split(path.delimiter);
 				var pathCount:int = paths.length;
 				for(var i:int = 0; i < pathCount; i++)
 				{
@@ -113,13 +153,13 @@ package com.nextgenactionscript.royale.utils
 					var asjscPath:String = path.join(currentPath, ASJSC + ".cmd");
 					if(fs.existsSync(asjscPath))
 					{
-						sdkPath = path.join(path.dirname(asjscPath), "node_modules", "apache-royale");
+						sdkPath = path.join(path.dirname(asjscPath), NODE_MODULES, NPM_ORG_ROYALE, NPM_PACKAGE_ROYALE_JS);
 						sdkPath = isValidSDK(sdkPath)
 						if(sdkPath != null)
 						{
 							return sdkPath;
 						}
-						sdkPath = path.join(path.dirname(asjscPath), "node_modules", "apache-royale-swf");
+						sdkPath = path.join(path.dirname(asjscPath), NODE_MODULES, NPM_ORG_ROYALE, NPM_PACKAGE_ROYALE_SWF);
 						sdkPath = isValidSDK(sdkPath)
 						if(sdkPath != null)
 						{
