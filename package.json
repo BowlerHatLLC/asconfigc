@@ -33,8 +33,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build": "/Users/joshtynjala/Development/Flex/sdks/flexjs-0.8.0/js/bin/asnodec --source-map=true --external-library-path+=typedefs src/ASConfigC.as",
-    "test": "npm run build && node ./bin/js-release/index.js --sdk /Users/joshtynjala/Development/Flex/sdks/flexjs-0.8.0 -p test && cd ./test/fixtures && node ../bin/js-debug/index.js",
+    "build": "asnodec --source-map=true --external-library-path+=typedefs src/ASConfigC.as",
+    "test": "npm run build && node ./bin/js-release/index.js -p test && cd ./test/fixtures && node ../bin/js-debug/index.js",
     "prepublish": "npm test"
   }
 }
