@@ -4,5 +4,5 @@ node_js:
   - 8
   - 6
 install:
-  - yes | npm install -g flexjs
+  - yes | npm install -g @apache-royale/royale-js
   - npm install
