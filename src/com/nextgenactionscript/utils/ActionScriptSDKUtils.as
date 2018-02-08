@@ -26,6 +26,31 @@ package com.nextgenactionscript.utils
 		private static const MXMLC:String = "mxmlc";
 
 		/**
+		 * @private
+		 */
+		private static const ENV_FLEX_HOME:String = "FLEX_HOME";
+
+		/**
+		 * @private
+		 */
+		private static const ENV_PATH:String = "PATH";
+
+		/**
+		 * @private
+		 */
+		private static const FLEX_SDK_DESCRIPTION:String = "flex-sdk-description.xml";
+
+		/**
+		 * @private
+		 */
+		private static const AIR_SDK_DESCRIPTION:String = "air-sdk-description.xml";
+
+		/**
+		 * @private
+		 */
+		private static const ROYALE_SDK_DESCRIPTION:String = "royale-sdk-description.xml";
+
+		/**
 		 * Determines if a directory contains a valid SDK.
 		 */
 		public static function isValidSDK(absolutePath:String):Boolean
@@ -34,14 +59,14 @@ package com.nextgenactionscript.utils
 			{
 				return false;
 			}
-			var sdkDescriptionPath:String = path.join(absolutePath, "flex-sdk-description.xml");
+			var sdkDescriptionPath:String = path.join(absolutePath, FLEX_SDK_DESCRIPTION);
 			if(!fs.existsSync(sdkDescriptionPath))
 			{
-				sdkDescriptionPath = path.join(absolutePath, "air-sdk-description.xml");
+				sdkDescriptionPath = path.join(absolutePath, AIR_SDK_DESCRIPTION);
 			}
 			if(!fs.existsSync(sdkDescriptionPath))
 			{
-				sdkDescriptionPath = path.join(absolutePath, "royale-sdk-description.xml");
+				sdkDescriptionPath = path.join(absolutePath, ROYALE_SDK_DESCRIPTION);
 			}
 			if(!fs.existsSync(sdkDescriptionPath) || fs.statSync(sdkDescriptionPath).isDirectory())
 			{
@@ -63,18 +88,18 @@ package com.nextgenactionscript.utils
 		{
 			var sdkPath:String = null;
 
-			if("FLEX_HOME" in process.env)
+			if(ENV_FLEX_HOME in process.env)
 			{
-				sdkPath = process.env["FLEX_HOME"];
+				sdkPath = process.env[ENV_FLEX_HOME];
 				if(isValidSDK(sdkPath))
 				{
 					return sdkPath;
 				}
 			}
 
-			if("PATH" in process.env)
+			if(ENV_PATH in process.env)
 			{
-				var paths:Array = process.env["PATH"].split(path.delimiter);
+				var paths:Array = process.env[ENV_PATH].split(path.delimiter);
 				var pathCount:int = paths.length;
 				for(var i:int = 0; i < pathCount; i++)
 				{

@@ -26,6 +26,31 @@ package com.nextgenactionscript.royale.utils
 		private static const ASJSC:String = "asjsc";
 
 		/**
+		 * @private
+		 */
+		private static const ENV_FLEX_HOME:String = "FLEX_HOME";
+
+		/**
+		 * @private
+		 */
+		private static const ENV_PATH:String = "PATH";
+
+		/**
+		 * @private
+		 */
+		private static const NODE_MODULES:String = "node_modules";
+
+		/**
+		 * @private
+		 */
+		private static const NPM_PACKAGE_FLEXJS:String = "flexjs";
+
+		/**
+		 * @private
+		 */
+		private static const FLEX_SDK_DESCRIPTION:String = "flex-sdk-description.xml";
+
+		/**
 		 * Determines if a directory contains a valid legacy Apache FlexJS SDK.
 		 */
 		public static function isValidSDK(absolutePath:String):Boolean
@@ -34,7 +59,7 @@ package com.nextgenactionscript.royale.utils
 			{
 				return false;
 			}
-			var sdkDescriptionPath:String = path.join(absolutePath, "flex-sdk-description.xml");
+			var sdkDescriptionPath:String = path.join(absolutePath, FLEX_SDK_DESCRIPTION);
 			if(!fs.existsSync(sdkDescriptionPath) || fs.statSync(sdkDescriptionPath).isDirectory())
 			{
 				return false;
@@ -61,7 +86,7 @@ package com.nextgenactionscript.royale.utils
 			//look for an npm module
 			try
 			{
-				sdkPath = path.join(process.cwd(), "node_modules", "flexjs");
+				sdkPath = path.join(process.cwd(), NODE_MODULES, NPM_PACKAGE_FLEXJS);
 				if(isValidSDK(sdkPath))
 				{
 					return sdkPath;
@@ -69,18 +94,18 @@ package com.nextgenactionscript.royale.utils
 			}
 			catch(error) {};
 
-			if("FLEX_HOME" in process.env)
+			if(ENV_FLEX_HOME in process.env)
 			{
-				sdkPath = process.env["FLEX_HOME"];
+				sdkPath = process.env[ENV_FLEX_HOME];
 				if(isValidSDK(sdkPath))
 				{
 					return sdkPath;
 				}
 			}
 
-			if("PATH" in process.env)
+			if(ENV_PATH in process.env)
 			{
-				var paths:Array = process.env["PATH"].split(path.delimiter);
+				var paths:Array = process.env[ENV_PATH].split(path.delimiter);
 				var pathCount:int = paths.length;
 				for(var i:int = 0; i < pathCount; i++)
 				{
@@ -90,7 +115,7 @@ package com.nextgenactionscript.royale.utils
 					var asjscPath:String = path.join(currentPath, ASJSC + ".cmd");
 					if(fs.existsSync(asjscPath))
 					{
-						sdkPath = path.join(path.dirname(asjscPath), "node_modules", "flexjs");
+						sdkPath = path.join(path.dirname(asjscPath), NODE_MODULES, NPM_PACKAGE_FLEXJS);
 						if(isValidSDK(sdkPath))
 						{
 							return sdkPath;
