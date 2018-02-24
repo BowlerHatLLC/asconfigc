@@ -671,6 +671,10 @@ package
 			try
 			{
 				var command:String = escapePath(this._javaExecutable) + " " + this._compilerArgs.join(" ");
+				if(process.platform !== "win32")
+				{
+					command = command.replace(/\$\{/g, "\\${");
+				}
 				if(this._additionalOptions)
 				{
 					command += " " + this._additionalOptions;
