@@ -72,22 +72,22 @@ package com.nextgenactionscript.asconfigc
 					}
 					case CompilerOptions.DUMP_CONFIG:
 					{
-						OptionsFormatter.setPathValue(key, options[key], false, result);
+						OptionsFormatter.setPathValue(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.EXTERNAL_LIBRARY_PATH:
 					{
-						OptionsFormatter.appendPaths(key, options[key], true, result);
+						OptionsFormatter.appendPaths(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.HTML_OUTPUT_FILENAME:
 					{
-						OptionsFormatter.setPathValue(key, options[key], false, result);
+						OptionsFormatter.setPathValue(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.HTML_TEMPLATE:
 					{
-						OptionsFormatter.setPathValue(key, options[key], true, result);
+						OptionsFormatter.setPathValue(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.INCLUDE_CLASSES:
@@ -102,7 +102,7 @@ package com.nextgenactionscript.asconfigc
 					}
 					case CompilerOptions.INCLUDE_SOURCES:
 					{
-						OptionsFormatter.appendPaths(key, options[key], true, result);
+						OptionsFormatter.appendPaths(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.JS_COMPILER_OPTION:
@@ -112,12 +112,12 @@ package com.nextgenactionscript.asconfigc
 					}
 					case CompilerOptions.JS_EXTERNAL_LIBRARY_PATH:
 					{
-						OptionsFormatter.appendPaths(key, options[key], true, result);
+						OptionsFormatter.appendPaths(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.JS_LIBRARY_PATH:
 					{
-						OptionsFormatter.appendPaths(key, options[key], true, result);
+						OptionsFormatter.appendPaths(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.JS_OUTPUT_TYPE:
@@ -137,17 +137,17 @@ package com.nextgenactionscript.asconfigc
 					}
 					case CompilerOptions.LIBRARY_PATH:
 					{
-						OptionsFormatter.appendPaths(key, options[key], true, result);
+						OptionsFormatter.appendPaths(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.LINK_REPORT:
 					{
-						OptionsFormatter.setPathValue(key, options[key], false, result);
+						OptionsFormatter.setPathValue(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.LOAD_CONFIG:
 					{
-						OptionsFormatter.appendPaths(key, options[key], true, result);
+						OptionsFormatter.appendPaths(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.LOCALE:
@@ -172,7 +172,7 @@ package com.nextgenactionscript.asconfigc
 					}
 					case CompilerOptions.OUTPUT:
 					{
-						OptionsFormatter.setPathValue(key, options[key], false, result);
+						OptionsFormatter.setPathValue(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.PRELOADER:
@@ -187,7 +187,7 @@ package com.nextgenactionscript.asconfigc
 					}
 					case CompilerOptions.SIZE_REPORT:
 					{
-						OptionsFormatter.setPathValue(key, options[key], false, result);
+						OptionsFormatter.setPathValue(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.SOURCE_MAP:
@@ -197,7 +197,7 @@ package com.nextgenactionscript.asconfigc
 					}
 					case CompilerOptions.SOURCE_PATH:
 					{
-						OptionsFormatter.appendPaths(key, options[key], true, result);
+						OptionsFormatter.appendPaths(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.STATIC_LINK_RUNTIME_SHARED_LIBRARIES:
@@ -212,12 +212,12 @@ package com.nextgenactionscript.asconfigc
 					}
 					case CompilerOptions.SWF_EXTERNAL_LIBRARY_PATH:
 					{
-						OptionsFormatter.appendPaths(key, options[key], true, result);
+						OptionsFormatter.appendPaths(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.SWF_LIBRARY_PATH:
 					{
-						OptionsFormatter.appendPaths(key, options[key], true, result);
+						OptionsFormatter.appendPaths(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.SWF_VERSION:

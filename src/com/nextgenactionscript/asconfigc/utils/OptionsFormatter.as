@@ -28,14 +28,9 @@ package com.nextgenactionscript.asconfigc.utils
 			result.push("--" + optionName + "=" + boolString);
 		}
 
-		public static function setPathValue(optionName:String, value:Object, checkIfExists:Boolean, result:Array):void
+		public static function setPathValue(optionName:String, value:Object, result:Array):void
 		{
 			var pathValue:String = value.toString();
-			if(checkIfExists && !fs.existsSync(pathValue))
-			{
-				console.error("Path for option \"" + optionName + "\" not found: " + pathValue);
-				process.exit(1);
-			}
 			pathValue = escapePath(pathValue, false);
 			result.push("--" + optionName + "=" + pathValue);
 		}
@@ -80,17 +75,12 @@ package com.nextgenactionscript.asconfigc.utils
 			}
 		}
 
-		public static function appendPaths(optionName:String, paths:Array, checkIfExists:Boolean, result:Array):void
+		public static function appendPaths(optionName:String, paths:Array, result:Array):void
 		{
 			var pathsCount:int = paths.length;
 			for(var i:int = 0; i < pathsCount; i++)
 			{
 				var currentPath:String = paths[i];
-				if(checkIfExists && !fs.existsSync(currentPath))
-				{
-					console.error("Path for option \"" + optionName + "\" not found: " + currentPath);
-					process.exit(1);
-				}
 				currentPath = escapePath(currentPath, false);
 				result.push("--" + optionName + "+=" + currentPath);
 			}
