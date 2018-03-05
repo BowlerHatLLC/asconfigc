@@ -34,6 +34,7 @@ package com.nextgenactionscript.asconfigc
 		public static const IPA_DEBUG:String = "ipa-debug";
 		public static const IPA_TEST:String = "ipa-test";
 		public static const IPA_DEBUG_INTERPRETER:String = "ipa-debug-interpreter";
+		public static const IPA_DEBUG_INTERPRETER_SIMULATOR:String = "ipa-debug-interpreter-simulator";
 		public static const IPA_TEST_INTERPRETER:String = "ipa-test-interpreter";
 		public static const IPA_TEST_INTERPRETER_SIMULATOR:String = "ipa-test-interpreter-simulator";
 

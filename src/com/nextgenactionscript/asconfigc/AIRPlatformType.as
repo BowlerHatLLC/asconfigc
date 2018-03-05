@@ -18,7 +18,8 @@ package com.nextgenactionscript.asconfigc
 	public class AIRPlatformType
 	{
 		public static const AIR:String = "air"; //shared runtime
-		public static const IOS:String = "ios";
+		public static const IOS:String = "ios"; //iOS device
+		public static const IOS_SIMULATOR:String = "ios_simulator"; //iOS simulator
 		public static const ANDROID:String = "android";
 		public static const WINDOWS:String = "windows"; //captive runtime
 		public static const MAC:String = "mac"; //captive runtime

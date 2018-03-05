@@ -97,6 +97,18 @@ package com.nextgenactionscript.asconfigc
 						}
 						break;
 					}
+					case AIRPlatformType.IOS_SIMULATOR:
+					{
+						if(debug)
+						{
+							setValueWithoutAssignment(AIROptions.TARGET, AIRTarget.IPA_DEBUG_INTERPRETER_SIMULATOR, result);
+						}
+						else
+						{
+							setValueWithoutAssignment(AIROptions.TARGET, AIRTarget.IPA_TEST_INTERPRETER_SIMULATOR, result);
+						}
+						break;
+					}
 					case AIRPlatformType.WINDOWS:
 					{
 						//captive runtime
@@ -131,7 +143,7 @@ package com.nextgenactionscript.asconfigc
 			}
 
 			//DEBUGGER_CONNECTION_OPTIONS begin
-			if(debug && (platform === AIRPlatformType.ANDROID || platform === AIRPlatformType.IOS))
+			if(debug && (platform === AIRPlatformType.ANDROID || platform === AIRPlatformType.IOS || platform === AIRPlatformType.IOS_SIMULATOR))
 			{
 				parseDebugOptions(options, platform, result);
 			}
@@ -145,7 +157,7 @@ package com.nextgenactionscript.asconfigc
 			//NATIVE_SIGNING_OPTIONS begin
 			//these are *mobile* signing options only
 			//desktop signing options were already handled earlier
-			if(platform === AIRPlatformType.ANDROID || platform === AIRPlatformType.IOS)
+			if(platform === AIRPlatformType.ANDROID || platform === AIRPlatformType.IOS || platform === AIRPlatformType.IOS_SIMULATOR)
 			{
 				if(overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
 				{
@@ -226,6 +238,7 @@ package com.nextgenactionscript.asconfigc
 					case AIRPlatformType.AIR:
 					case AIRPlatformType.ANDROID:
 					case AIRPlatformType.IOS:
+					case AIRPlatformType.IOS_SIMULATOR:
 					case AIRPlatformType.MAC:
 					case AIRPlatformType.WINDOWS:
 
