@@ -181,6 +181,12 @@ package
 					case "flexHome":
 					{
 						this._sdkHome = args[key] as String;
+						//on windows, don't let the path end with a backslash
+						//because resolving sub-directories may fail
+						if(this._sdkHome.endsWith("\\"))
+						{
+							this._sdkHome = this._sdkHome.substr(0, this._sdkHome.length - 1);
+						}
 						break;
 					}
 					case "p":
