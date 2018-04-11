@@ -349,6 +349,13 @@ class TestInfo
 		this.reference = reference;
 	}
 
+	/**
+	 * @royalesuppresspublicvarwarning
+	 */
 	public var name:String;
+
+	/**
+	 * @royalesuppresspublicvarwarning
+	 */
 	public var reference:Function;
 }
