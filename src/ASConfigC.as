@@ -664,6 +664,9 @@ package
 				this._compilerArgs.unshift("-jar");
 				this._compilerArgs.unshift("-Droyalelib=" + escapePath(frameworkPath));
 				this._compilerArgs.unshift("-Droyalecompiler=" + escapePath(this._sdkHome));
+				//Royale requires this so that it doesn't changing the encoding of
+				//UTF-8 characters and display ???? instead
+				this._compilerArgs.unshift("-Dfile.encoding=UTF8");
 			}
 			else
 			{
