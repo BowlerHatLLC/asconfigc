@@ -27,12 +27,6 @@ package com.nextgenactionscript.asconfigc
 		public static const DEFINE:String = "define";
 		public static const DUMP_CONFIG:String = "dump-config";
 		public static const EXTERNAL_LIBRARY_PATH:String = "external-library-path";
-		public static const HTML_OUTPUT_FILENAME:String = "html-output-filename";
-		public static const HTML_TEMPLATE:String = "html-template";
-		public static const JS_COMPILER_OPTION:String = "js-compiler-option";
-		public static const JS_EXTERNAL_LIBRARY_PATH:String = "js-external-library-path";
-		public static const JS_LIBRARY_PATH:String = "js-library-path";
-		public static const JS_OUTPUT_TYPE:String = "js-output-type";
 		public static const KEEP_AS3_METADATA:String = "keep-as3-metadata";
 		public static const KEEP_GENERATED_ACTIONSCRIPT:String = "keep-generated-actionscript";
 		public static const LIBRARY_PATH:String = "library-path";
@@ -44,16 +38,11 @@ package com.nextgenactionscript.asconfigc
 		public static const OMIT_TRACE_STATEMENTS:String = "omit-trace-statements";
 		public static const OUTPUT:String = "output";
 		public static const PRELOADER:String = "preloader";
-		public static const REMOVE_CIRCULARS:String = "remove-circulars";
 		public static const SIZE_REPORT:String = "size-report";
-		public static const SOURCE_MAP:String = "source-map";
 		public static const SOURCE_PATH:String = "source-path";
 		public static const STATIC_LINK_RUNTIME_SHARED_LIBRARIES:String = "static-link-runtime-shared-libraries";
 		public static const STRICT:String = "strict";
-		public static const SWF_EXTERNAL_LIBRARY_PATH:String = "swf-external-library-path";
-		public static const SWF_LIBRARY_PATH:String = "swf-library-path";
 		public static const SWF_VERSION:String = "swf-version";
-		public static const TARGETS:String = "targets";
 		public static const TARGET_PLAYER:String = "target-player";
 		public static const TOOLS_LOCALE:String = "tools-locale";
 		public static const USE_DIRECT_BLIT:String = "use-direct-blit";
@@ -62,6 +51,22 @@ package com.nextgenactionscript.asconfigc
 		public static const USE_RESOURCE_BUNDLE_METADATA:String = "use-resource-bundle-metadata";
 		public static const VERBOSE_STACKTRACES:String = "verbose-stacktraces";
 		public static const WARNINGS:String = "warnings";
+
+		//royale options
+		public static const HTML_OUTPUT_FILENAME:String = "html-output-filename";
+		public static const HTML_TEMPLATE:String = "html-template";
+		public static const JS_COMPILER_OPTION:String = "js-compiler-option";
+		public static const JS_DEFAULT_INITIALIZERS:String = "js-default-initializers";
+		public static const JS_EXTERNAL_LIBRARY_PATH:String = "js-external-library-path";
+		public static const JS_LIBRARY_PATH:String = "js-library-path";
+		public static const JS_OUTPUT:String = "js-output";
+		public static const JS_OUTPUT_TYPE:String = "js-output-type";
+		public static const REMOVE_CIRCULARS:String = "remove-circulars";
+		public static const SOURCE_MAP:String = "source-map";
+		public static const SWF_EXTERNAL_LIBRARY_PATH:String = "swf-external-library-path";
+		public static const SWF_LIBRARY_PATH:String = "swf-library-path";
+		public static const TARGETS:String = "targets";
+		public static const WARN_PUBLIC_VARS:String = "warn-public-vars";
 
 		//library options
 		public static const INCLUDE_CLASSES:String = "include-classes";

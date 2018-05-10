@@ -110,6 +110,11 @@ package com.nextgenactionscript.asconfigc
 						appendJSCompilerOptions(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.JS_DEFAULT_INITIALIZERS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.JS_EXTERNAL_LIBRARY_PATH:
 					{
 						OptionsFormatter.appendPaths(key, options[key], result);
@@ -118,6 +123,11 @@ package com.nextgenactionscript.asconfigc
 					case CompilerOptions.JS_LIBRARY_PATH:
 					{
 						OptionsFormatter.appendPaths(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.JS_OUTPUT:
+					{
+						OptionsFormatter.setPathValue(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.JS_OUTPUT_TYPE:
@@ -266,6 +276,11 @@ package com.nextgenactionscript.asconfigc
 						break;
 					}
 					case CompilerOptions.WARNINGS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.WARN_PUBLIC_VARS:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
 						break;

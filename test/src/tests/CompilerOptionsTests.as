@@ -297,6 +297,18 @@ package tests
 		}
 
 		[Test]
+		public function testJSDefaultInitializers():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.JS_DEFAULT_INITIALIZERS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.JS_DEFAULT_INITIALIZERS);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.JS_DEFAULT_INITIALIZERS + "=true",
+				"Incorrect argument value for " + CompilerOptions.JS_DEFAULT_INITIALIZERS);
+		}
+
+		[Test]
 		public function testJSExternalLibraryPath():void
 		{
 			var value:Array =
@@ -329,6 +341,19 @@ package tests
 				"Incorrect argument count for " + CompilerOptions.JS_LIBRARY_PATH);
 			Assert.strictEqual(result[0], "--" + CompilerOptions.JS_LIBRARY_PATH + "+=" + value[0],
 				"Incorrect argument value for " + CompilerOptions.JS_LIBRARY_PATH);
+		}
+
+		[Test]
+		public function testJSOutput():void
+		{
+			var value:String = "path/to/Output";
+			var args:Object = {};
+			args[CompilerOptions.JS_OUTPUT] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.JS_OUTPUT);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.JS_OUTPUT + "=" + value,
+				"Incorrect argument value for " + CompilerOptions.JS_OUTPUT);
 		}
 
 		[Test]
@@ -849,6 +874,18 @@ package tests
 				"Incorrect argument count for " + CompilerOptions.WARNINGS);
 			Assert.strictEqual(result[0], "--" + CompilerOptions.WARNINGS + "=true",
 				"Incorrect argument value for " + CompilerOptions.WARNINGS);
+		}
+
+		[Test]
+		public function testWarnPublicVars():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.WARN_PUBLIC_VARS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.WARN_PUBLIC_VARS);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.WARN_PUBLIC_VARS + "=true",
+				"Incorrect argument value for " + CompilerOptions.WARN_PUBLIC_VARS);
 		}
 	}
 }
