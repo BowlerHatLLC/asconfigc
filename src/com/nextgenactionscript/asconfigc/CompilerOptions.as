@@ -44,6 +44,7 @@ package com.nextgenactionscript.asconfigc
 		public static const STRICT:String = "strict";
 		public static const SWF_VERSION:String = "swf-version";
 		public static const TARGET_PLAYER:String = "target-player";
+		public static const THEME:String = "theme";
 		public static const TOOLS_LOCALE:String = "tools-locale";
 		public static const USE_DIRECT_BLIT:String = "use-direct-blit";
 		public static const USE_GPU:String = "use-gpu";

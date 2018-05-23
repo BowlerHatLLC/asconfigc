@@ -245,6 +245,11 @@ package com.nextgenactionscript.asconfigc
 						OptionsFormatter.setCommaArray(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.THEME:
+					{
+						OptionsFormatter.setPathValue(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.TOOLS_LOCALE:
 					{
 						OptionsFormatter.setValue(key, options[key], result);

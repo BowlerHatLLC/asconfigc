@@ -792,6 +792,19 @@ package tests
 		}
 
 		[Test]
+		public function testTheme():void
+		{
+			var value:String = "./path/to/file.swc";
+			var args:Object = {};
+			args[CompilerOptions.THEME] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.THEME);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.THEME + "=" + value,
+				"Incorrect argument value for " + CompilerOptions.THEME);
+		}
+
+		[Test]
 		public function testToolsLocale():void
 		{
 			var value:String = "fr_FR";
