@@ -222,7 +222,7 @@
 						"extdir": { "$ref": "#/definitions/airOptionsExtdir" },
 						"files": { "$ref": "#/definitions/airOptionsFiles" },
 						"output": { "$ref": "#/definitions/airOptionsOutput" },
-						"signingOptions": { "$ref": "#/definitions/signingOptions" },
+						"signingOptions": { "$ref": "#/definitions/signingOptions" }
 					}
 				},
 				"ios":
