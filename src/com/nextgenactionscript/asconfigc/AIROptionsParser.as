@@ -182,6 +182,25 @@ package com.nextgenactionscript.asconfigc
 				outputPath = escapePath(outputPath, false);
 				result.push(outputPath);
 			}
+			else
+			{
+				//output is not defined, so generate an appropriate file name based
+				//on the content's file name
+				outputPath = applicationContentPath;
+				var dotIndex:int = outputPath.lastIndexOf(".");
+				if(dotIndex != -1)
+				{
+					//remove the file extension, if it exists
+				//adt will automatically add an extension, if necessary
+					outputPath = outputPath.substring(0, dotIndex);
+				}
+				else
+				{
+					throw new Error("Cannot find Adobe AIR application output path.");
+				}
+				outputPath = escapePath(outputPath, false);
+				result.push(outputPath);
+			}
 			
 			result.push(escapePath(applicationDescriptorPath, false));
 
