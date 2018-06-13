@@ -385,13 +385,14 @@ package com.nextgenactionscript.asconfigc
 				//Adobe's documentation for adt says that the -e option can
 				//accept a directory, but it only seems to work with files, so
 				//we read the directory contents to add the files individually
-				destPath = path.join(destPath, path.basename(srcFile));
 				var files:Array = fs.readdirSync(srcFile);
 				var fileCount:int = files.length;
 				for(var i:int = 0; i < fileCount; i++)
 				{
-					var file:String = path.join(srcFile, files[i]);
-					addFile(file, destPath, result);
+					var fileName:String = files[i];
+					var file:String = path.join(srcFile, fileName);
+					var fileDestPath:String = path.join(destPath, fileName);
+					addFile(file, fileDestPath, result);
 				}
 				return;
 			}

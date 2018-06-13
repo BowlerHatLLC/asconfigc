@@ -173,18 +173,19 @@ package tests
 			];
 			var fileInDir1:String = path.join(file1[AIROptions.FILES_FILE], "file2.txt");
 			var fileInDir2:String = path.join(file1[AIROptions.FILES_FILE], "file3.txt");
-			var dirPath:String = path.join(file1[AIROptions.FILES_PATH], "subdir");
+			var dirPath1:String = path.join(file1[AIROptions.FILES_PATH], "file2.txt");
+			var dirPath2:String = path.join(file1[AIROptions.FILES_PATH], "file3.txt");
 			var args:Object = {};
 			args[AIROptions.FILES] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex1:int = result.indexOf("-e");
 			Assert.notStrictEqual(optionIndex1, -1);
 			Assert.strictEqual(result.indexOf(fileInDir1), optionIndex1 + 1);
-			Assert.strictEqual(result.indexOf(dirPath), optionIndex1 + 2);
+			Assert.strictEqual(result.indexOf(dirPath1), optionIndex1 + 2);
 			var optionIndex2:int = result.indexOf("-e", optionIndex1 + 1);
 			Assert.notStrictEqual(optionIndex2, -1);
-			Assert.strictEqual(result.indexOf(fileInDir2), optionIndex2 + 1);
-			Assert.strictEqual(result.indexOf(dirPath, optionIndex2), optionIndex2 + 2);
+			Assert.strictEqual(result.indexOf(fileInDir2, optionIndex2), optionIndex2 + 1);
+			Assert.strictEqual(result.indexOf(dirPath2, optionIndex2), optionIndex2 + 2);
 		}
 
 		[Test]
