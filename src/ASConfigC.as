@@ -772,7 +772,7 @@ package
 				process.exit(1);
 			}
 			var descriptor:String = fs.readFileSync(this._airDescriptor, "utf8") as String;
-			descriptor = descriptor.replace(/<content>.+<\/content>/, "<content>" + contentValue + "</content>");
+			descriptor = descriptor.replace(/<content>.*<\/content>/, "<content>" + contentValue + "</content>");
 			if(this._outputIsJS)
 			{
 				var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
