@@ -312,7 +312,7 @@ package
 			}
 			try
 			{
-				var configData:Object = JSON.parse(configText);
+				var configData:Object = json5.parse(configText);
 			}
 			catch(error:Error)
 			{
