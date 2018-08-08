@@ -1,6 +1,6 @@
 {
   "name": "asconfigc",
-  "version": "0.6.10",
+  "version": "0.7.0",
   "description": "Compiles an ActionScript/MXML project configured with asconfig.json",
   "author": "Josh Tynjala",
   "repository": "BowlerHatLLC/asconfigc",
@@ -9,12 +9,15 @@
   "keywords": [
     "ActionScript",
     "asconfig.json",
-    "Apache FlexJS",
     "Apache Royale",
-    "FlexJS",
     "Royale",
     "AS3",
-    "MXML"
+    "MXML",
+    "AIR",
+    "Flash",
+    "Apache FlexJS",
+    "FlexJS",
+    "Flash Player"
   ],
   "bin": "./asconfigc",
   "files": [
@@ -28,10 +31,10 @@
   },
   "dependencies": {
     "jsen": "^0.6.6",
+    "json5": "^1.0.1",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1"
   },
-  "devDependencies": {},
   "scripts": {
     "build": "asnodec --source-map=true --external-library-path+=typedefs src/ASConfigC.as",
     "test": "npm run build && node ./bin/js-release/index.js -p test && cd ./test/fixtures && node ../bin/js-debug/index.js",
