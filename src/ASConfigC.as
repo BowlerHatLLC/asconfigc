@@ -15,6 +15,7 @@ limitations under the License.
 */
 package
 {
+	import com.nextgenactionscript.asconfigc.AIROptions;
 	import com.nextgenactionscript.asconfigc.AIROptionsParser;
 	import com.nextgenactionscript.asconfigc.AIRPlatformType;
 	import com.nextgenactionscript.asconfigc.ASConfigFields;
@@ -98,6 +99,7 @@ package
 			this.compileProject();
 			this.copySourcePathAssets();
 			this.processDescriptor();
+			this.copyAIRFiles();
 			if(this._airPlatform !== null)
 			{
 				this.packageAIR();
@@ -127,6 +129,7 @@ package
 		private var _copySourcePathAssets:Boolean = false;
 		private var _airPlatform:String = null;
 		private var _airArgs:Array;
+		private var _airOptionsJSON:Object = null;
 
 		private function printVersion():void
 		{
@@ -333,6 +336,7 @@ package
 		{
 			this._compilerArgs = [];
 			this._airArgs = [];
+			this._airOptionsJSON = null;
 			var configData:Object = this.loadConfig();
 			this._projectType = this.readProjectType(configData);
 			if(ASConfigFields.CONFIG in configData)
@@ -414,8 +418,8 @@ package
 					console.error("Adobe AIR packaging options found, but the \"application\" field is empty.");
 					process.exit(1);
 				}
-				var airOptions:Object = configData[ASConfigFields.AIR_OPTIONS];
-				this.readAIROptions(airOptions);
+				this._airOptionsJSON = configData[ASConfigFields.AIR_OPTIONS];
+				this.readAIROptions(this._airOptionsJSON);
 			}
 			if(ASConfigFields.COPY_SOURCE_PATH_ASSETS in configData)
 			{
@@ -708,6 +712,14 @@ package
 			}
 		}
 
+		private function copySourcePathAssetToOutputDirectory(assetPath:String, mainFile:String, sourcePaths:Vector.<String>, outputDirectory:String):void
+		{
+			var content:Object = fs.readFileSync(assetPath);
+			var targetPath:String = assetPathToOutputPath(assetPath, mainFile, sourcePaths, outputDirectory);
+			mkdirp["sync"](path.dirname(targetPath));
+			fs.writeFileSync(targetPath, content);
+		}
+
 		private function copySourcePathAssets():void
 		{
 			if(!this._copySourcePathAssets)
@@ -734,26 +746,19 @@ package
 			for(var i:int = 0; i < assetCount; i++)
 			{
 				var assetPath:String = assetPaths[i];
-				var content:Object = fs.readFileSync(assetPath);
 				if(this._outputIsJS)
 				{
 					var debugOutputDir:String = path.join(outputDirectory, "bin", "js-debug");
-					var targetPath:String = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, debugOutputDir);
-					mkdirp["sync"](path.dirname(targetPath));
-					fs.writeFileSync(targetPath, content);
+					copySourcePathAssetToOutputDirectory(assetPath, this._mainFile, sourcePaths, debugOutputDir);
 					if(!this._debugBuild)
 					{
 						var releaseOutputDir:String = path.join(outputDirectory, "bin", "js-release");
-						targetPath = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, releaseOutputDir);
-						mkdirp["sync"](path.dirname(targetPath));
-						fs.writeFileSync(targetPath, content);
+						copySourcePathAssetToOutputDirectory(assetPath, this._mainFile, sourcePaths, releaseOutputDir);
 					}
 				}
 				else
 				{
-					targetPath = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, outputDirectory);
-					mkdirp["sync"](path.dirname(targetPath));
-					fs.writeFileSync(targetPath, content);
+					copySourcePathAssetToOutputDirectory(assetPath, this._mainFile, sourcePaths, outputDirectory);
 				}
 			}
 		}
@@ -792,6 +797,104 @@ package
 				var descriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, this._airDescriptor, this._outputPath, true);
 				mkdirp["sync"](path.dirname(descriptorOutputPath));
 				fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
+			}
+		}
+
+		private function copyAIRFiles():void
+		{
+			if(this._airPlatform !== null)
+			{
+				//don't copy anything when packaging an app. these files are
+				//used for debug builds only.
+				return;
+			}
+			if(this._airOptionsJSON === null)
+			{
+				//the airOptions field is not defined, so there's nothing to copy
+				return;
+			}
+			if(!this._airOptionsJSON.files)
+			{
+				//the files field is not defined, so there's nothing to copy
+				return;
+			}
+
+			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
+			var filesJSON:Array = this._airOptionsJSON.files as Array;
+			var fileCount:int = filesJSON.length;
+			for(var i:int = 0; i < fileCount; i++)
+			{
+				var fileJSON:Object = filesJSON[i];
+				if(fileJSON is String)
+				{
+					var srcFilePath:String = fileJSON as String;
+					srcFilePath = path.resolve(srcFilePath);
+
+					//copy directly to output directory
+					var destFilePath:String = path.basename(srcFilePath);
+				}
+				else //object with src and dest
+				{
+					srcFilePath = fileJSON[AIROptions.FILES_FILE];
+					srcFilePath = path.resolve(srcFilePath);
+					destFilePath = fileJSON[AIROptions.FILES_PATH];
+				}
+
+				if(fs.statSync(srcFilePath).isDirectory())
+				{
+					var assetDirList:Vector.<String> = new <String>[srcFilePath];
+					var assetPaths:Vector.<String> = findSourcePathAssets(null, assetDirList, outputDir, null);
+					assetDirList = new <String>[path.dirname(srcFilePath)];
+					var assetCount:int = assetPaths.length;
+					for(var j:int = 0; j < assetCount; j++)
+					{
+						var assetPath:String = assetPaths[j];
+						if(this._outputIsJS)
+						{
+							var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
+							copySourcePathAssetToOutputDirectory(assetPath, null, assetDirList, debugOutputDir);
+							if(!this._debugBuild)
+							{
+								var releaseOutputDir:String = path.join(outputDir, "bin", "js-release");
+								copySourcePathAssetToOutputDirectory(assetPath, null, assetDirList, releaseOutputDir);
+							}
+						}
+						else //swf
+						{
+							copySourcePathAssetToOutputDirectory(assetPath, null, assetDirList, outputDir);
+						}
+					}
+				}
+				else //src not a directory
+				{
+					try
+					{
+						var content:Object = fs.readFileSync(srcFilePath);
+					}
+					catch(error)
+					{
+						console.error("Failed to copy file: " + srcFilePath);
+						process.exit(1);
+					}
+					if(this._outputIsJS)
+					{
+						var targetPath:String = path.resolve(path.join(outputDir, "bin", "js-debug"), destFilePath);
+						mkdirp["sync"](path.dirname(targetPath));
+						fs.writeFileSync(targetPath, content);
+						if(!this._debugBuild)
+						{
+							targetPath = path.resolve(path.join(outputDir, "bin", "js-release"), destFilePath);
+							mkdirp["sync"](path.dirname(targetPath));
+							fs.writeFileSync(targetPath, content);
+						}
+					}
+					else //swf
+					{
+						targetPath = path.resolve(outputDir, destFilePath);
+						mkdirp["sync"](path.dirname(targetPath));
+						fs.writeFileSync(targetPath, content);
+					}
+				}
 			}
 		}
 
