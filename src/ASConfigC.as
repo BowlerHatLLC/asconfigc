@@ -36,6 +36,7 @@ package
 	import com.nextgenactionscript.royale.utils.ApacheRoyaleUtils;
 	import com.nextgenactionscript.utils.ActionScriptSDKUtils;
 	import com.nextgenactionscript.utils.findJava;
+	import com.nextgenactionscript.asconfigc.HTMLTemplateOptionsParser;
 
 	/**
 	 * A command line utility to build a project defined with an asconfig.json
@@ -98,6 +99,7 @@ package
 			this.validateSDK();
 			this.compileProject();
 			this.copySourcePathAssets();
+			this.copyHTMLTemplate();
 			this.processDescriptor();
 			this.copyAIRFiles();
 			if(this._airPlatform !== null)
@@ -130,6 +132,8 @@ package
 		private var _airPlatform:String = null;
 		private var _airArgs:Array;
 		private var _airOptionsJSON:Object = null;
+		private var _htmlTemplate:String = null;
+		private var _htmlTemplateOptions:Object = null;
 
 		private function printVersion():void
 		{
@@ -425,6 +429,19 @@ package
 			{
 				this._copySourcePathAssets = configData[ASConfigFields.COPY_SOURCE_PATH_ASSETS];
 			}
+			if(ASConfigFields.HTML_TEMPLATE in configData)
+			{
+				this._htmlTemplate = configData[ASConfigFields.HTML_TEMPLATE];
+
+				//the HTML template needs to be parsed after files and outputPath have
+				//both been parsed
+				var compilerOptionsJSON:Object = null;
+				if(ASConfigFields.COMPILER_OPTIONS in configData)
+				{
+					compilerOptionsJSON = configData[ASConfigFields.COMPILER_OPTIONS];
+				}
+				readHTMLTemplateOptions(compilerOptionsJSON);
+			}
 			//if js-output-type was not specified, use the default
 			//swf projects won't have a js-output-type
 			if(this._jsOutputType)
@@ -511,6 +528,23 @@ package
 			catch(error:Error)
 			{
 				console.error("Error: Failed to parse Adobe AIR options.");
+				console.error(error.stack);
+				process.exit(1);
+			}
+		}
+
+		private function readHTMLTemplateOptions(compilerOptionsJSON:Object):void
+		{
+			try
+			{
+				this._htmlTemplateOptions = HTMLTemplateOptionsParser.parse(
+					compilerOptionsJSON,
+					this._mainFile,
+					this._outputPath);
+			}
+			catch(error:Error)
+			{
+				console.error("Error: Failed to parse HTML template options.");
 				console.error(error.stack);
 				process.exit(1);
 			}
@@ -761,6 +795,31 @@ package
 					copySourcePathAssetToOutputDirectory(assetPath, this._mainFile, sourcePaths, outputDirectory);
 				}
 			}
+		}
+
+		private function copyHTMLTemplate():void
+		{
+			if(!this._htmlTemplate)
+			{
+				return;
+			}
+			if(!fs.existsSync(this._htmlTemplate))
+			{
+				console.error("htmlTemplate directory does not exist: " + this._htmlTemplate);
+				process.exit(1);
+			}
+			if(!fs.statSync(this._htmlTemplate).isDirectory())
+			{
+				console.error("htmlTemplate path must be a directory. Invalid path: " + this._htmlTemplate);
+				process.exit(1);
+			}
+			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
+			copyHTMLTemplateDirectory(this._htmlTemplate, outputDir);
+		}
+
+		private function copyHTMLTemplateDirectory(inputDir:String, outputDir:String):void
+		{
+
 		}
 
 		private function processDescriptor():void

@@ -15,16 +15,13 @@ limitations under the License.
 */
 package com.nextgenactionscript.asconfigc
 {
-	public class ASConfigFields
+	public class HTMLTemplateOptionsParser
 	{
-		public static const TYPE:String = "type";
-		public static const CONFIG:String = "config";
-		public static const COMPILER_OPTIONS:String = "compilerOptions";
-		public static const ADDITIONAL_OPTIONS:String = "additionalOptions";
-		public static const FILES:String = "files";
-		public static const APPLICATION:String = "application";
-		public static const COPY_SOURCE_PATH_ASSETS:String = "copySourcePathAssets";
-		public static const AIR_OPTIONS:String = "airOptions";
-		public static const HTML_TEMPLATE:String = "htmlTemplate";
+		public static function parse(compilerOptions:Object, mainFile:String, outputPath:String):Object
+		{
+			var result:Object = {};
+			
+			return result;
+		}
 	}
 }
