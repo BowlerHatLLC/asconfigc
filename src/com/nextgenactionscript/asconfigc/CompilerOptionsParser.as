@@ -55,6 +55,11 @@ package com.nextgenactionscript.asconfigc
 						OptionsFormatter.setValue(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.DEFAULT_BACKGROUND_COLOR:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.DEFAULT_FRAME_RATE:
 					{
 						OptionsFormatter.setValue(key, options[key], result);
@@ -344,8 +349,8 @@ package com.nextgenactionscript.asconfigc
 		private static function setDefaultSize(sizePair:Object, result:Array):void
 		{
 			result.push("--" + CompilerOptions.DEFAULT_SIZE);
-			result.push(sizePair.width.toString());
-			result.push(sizePair.height.toString());
+			result.push(sizePair[CompilerOptions.DEFAULT_SIZE__WIDTH].toString());
+			result.push(sizePair[CompilerOptions.DEFAULT_SIZE__HEIGHT].toString());
 		}
 
 		private static function setDefine(values:Array, result:Array):void

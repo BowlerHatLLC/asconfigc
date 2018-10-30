@@ -22,8 +22,11 @@ package com.nextgenactionscript.asconfigc
 		public static const BENCHMARK:String = "benchmark";
 		public static const DEBUG:String = "debug";
 		public static const DEBUG_PASSWORD:String = "debug-password";
+		public static const DEFAULT_BACKGROUND_COLOR:String = "default-background-color";
 		public static const DEFAULT_FRAME_RATE:String = "default-frame-rate";
 		public static const DEFAULT_SIZE:String = "default-size";
+		public static const DEFAULT_SIZE__WIDTH:String = "width";
+		public static const DEFAULT_SIZE__HEIGHT:String = "height";
 		public static const DEFINE:String = "define";
 		public static const DUMP_CONFIG:String = "dump-config";
 		public static const EXTERNAL_LIBRARY_PATH:String = "external-library-path";
