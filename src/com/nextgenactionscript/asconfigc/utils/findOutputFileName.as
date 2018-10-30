@@ -15,13 +15,18 @@ limitations under the License.
 */
 package com.nextgenactionscript.asconfigc.utils
 {
-	public function findApplicationContent(mainFile:String, outputPath:String, isSWF:Boolean):String
+	public function findOutputFileName(mainFile:String, outputPath:String):String
 	{
-		if(!isSWF)
+		if(!outputPath)
 		{
-			//An AIR app will load an HTML file as its main content
-			return "index.html";
+			if(!mainFile)
+			{
+				return null;
+			}
+			//replace .as or .mxml with .swf
+			var fileName:String = path.basename(mainFile);
+			return fileName.substr(0, fileName.length - path.extname(mainFile).length) + ".swf";
 		}
-		return findOutputFileName(mainFile, outputPath);
+		return path.basename(outputPath);
 	}
 }
