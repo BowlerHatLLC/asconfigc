@@ -46,7 +46,7 @@ The source code for the `asconfigc` utility is written in ActionScript. That's r
 
 ## Support this project
 
-The [ActionScript and MXML extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=bowlerhatllc.vscode-nextgenas) and [*asconfigc*](https://www.npmjs.com/package/asconfigc) are developed by Josh Tynjala with the support of community members like you.
+The [ActionScript and MXML extension for Visual Studio Code](https://as3mxml.com/) and [*asconfigc*](https://www.npmjs.com/package/asconfigc) are developed by Josh Tynjala with the support of community members like you.
 
 [Support Josh Tynjala on Patreon](http://patreon.com/josht)
 
