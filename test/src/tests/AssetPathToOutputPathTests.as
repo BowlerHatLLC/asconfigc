@@ -1,6 +1,6 @@
 package tests
 {
-	import com.nextgenactionscript.asconfigc.utils.assetPathToOutputPath;
+	import com.as3mxml.asconfigc.utils.assetPathToOutputPath;
 
 	import nextgenas.test.assert.Assert;
 

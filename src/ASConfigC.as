@@ -15,28 +15,28 @@ limitations under the License.
 */
 package
 {
-	import com.nextgenactionscript.asconfigc.AIROptions;
-	import com.nextgenactionscript.asconfigc.AIROptionsParser;
-	import com.nextgenactionscript.asconfigc.AIRPlatformType;
-	import com.nextgenactionscript.asconfigc.ASConfigFields;
-	import com.nextgenactionscript.asconfigc.CompilerOptions;
-	import com.nextgenactionscript.asconfigc.CompilerOptionsParser;
-	import com.nextgenactionscript.asconfigc.ConfigName;
-	import com.nextgenactionscript.asconfigc.JSOutputType;
-	import com.nextgenactionscript.asconfigc.ProjectType;
-	import com.nextgenactionscript.asconfigc.Targets;
-	import com.nextgenactionscript.asconfigc.utils.assetPathToOutputPath;
-	import com.nextgenactionscript.asconfigc.utils.escapePath;
-	import com.nextgenactionscript.asconfigc.utils.findAIRDescriptorOutputPath;
-	import com.nextgenactionscript.asconfigc.utils.findApplicationContent;
-	import com.nextgenactionscript.asconfigc.utils.findApplicationContentOutputPath;
-	import com.nextgenactionscript.asconfigc.utils.findOutputDirectory;
-	import com.nextgenactionscript.asconfigc.utils.findSourcePathAssets;
-	import com.nextgenactionscript.royale.utils.ApacheFlexJSUtils;
-	import com.nextgenactionscript.royale.utils.ApacheRoyaleUtils;
-	import com.nextgenactionscript.utils.ActionScriptSDKUtils;
-	import com.nextgenactionscript.utils.findJava;
-	import com.nextgenactionscript.asconfigc.HTMLTemplateOptionsParser;
+	import com.as3mxml.asconfigc.AIROptions;
+	import com.as3mxml.asconfigc.AIROptionsParser;
+	import com.as3mxml.asconfigc.AIRPlatformType;
+	import com.as3mxml.asconfigc.ASConfigFields;
+	import com.as3mxml.asconfigc.CompilerOptions;
+	import com.as3mxml.asconfigc.CompilerOptionsParser;
+	import com.as3mxml.asconfigc.ConfigName;
+	import com.as3mxml.asconfigc.JSOutputType;
+	import com.as3mxml.asconfigc.ProjectType;
+	import com.as3mxml.asconfigc.Targets;
+	import com.as3mxml.asconfigc.utils.assetPathToOutputPath;
+	import com.as3mxml.asconfigc.utils.escapePath;
+	import com.as3mxml.asconfigc.utils.findAIRDescriptorOutputPath;
+	import com.as3mxml.asconfigc.utils.findApplicationContent;
+	import com.as3mxml.asconfigc.utils.findApplicationContentOutputPath;
+	import com.as3mxml.asconfigc.utils.findOutputDirectory;
+	import com.as3mxml.asconfigc.utils.findSourcePathAssets;
+	import com.as3mxml.royale.utils.ApacheFlexJSUtils;
+	import com.as3mxml.royale.utils.ApacheRoyaleUtils;
+	import com.as3mxml.utils.ActionScriptSDKUtils;
+	import com.as3mxml.utils.findJava;
+	import com.as3mxml.asconfigc.HTMLTemplateOptionsParser;
 
 	/**
 	 * A command line utility to build a project defined with an asconfig.json

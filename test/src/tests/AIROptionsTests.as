@@ -1,11 +1,11 @@
 package tests
 {
-	import com.nextgenactionscript.asconfigc.AIROptions;
-	import com.nextgenactionscript.asconfigc.AIROptionsParser;
-	import com.nextgenactionscript.asconfigc.AIRPlatformType;
-	import com.nextgenactionscript.asconfigc.AIRTarget;
-	import com.nextgenactionscript.asconfigc.SigningOptions;
-	import com.nextgenactionscript.asconfigc.utils.escapePath;
+	import com.as3mxml.asconfigc.AIROptions;
+	import com.as3mxml.asconfigc.AIROptionsParser;
+	import com.as3mxml.asconfigc.AIRPlatformType;
+	import com.as3mxml.asconfigc.AIRTarget;
+	import com.as3mxml.asconfigc.SigningOptions;
+	import com.as3mxml.asconfigc.utils.escapePath;
 
 	import nextgenas.test.assert.Assert;
 

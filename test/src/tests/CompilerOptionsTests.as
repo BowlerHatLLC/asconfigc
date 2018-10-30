@@ -1,10 +1,10 @@
 package tests
 {
-	import com.nextgenactionscript.asconfigc.CompilerOptions;
-	import com.nextgenactionscript.asconfigc.CompilerOptionsParser;
+	import com.as3mxml.asconfigc.CompilerOptions;
+	import com.as3mxml.asconfigc.CompilerOptionsParser;
+	import com.as3mxml.asconfigc.utils.escapePath;
 
 	import nextgenas.test.assert.Assert;
-	import com.nextgenactionscript.asconfigc.utils.escapePath;
 
 	public class CompilerOptionsTests
 	{

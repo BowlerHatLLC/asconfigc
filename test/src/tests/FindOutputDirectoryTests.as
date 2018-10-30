@@ -1,6 +1,6 @@
 package tests
 {
-	import com.nextgenactionscript.asconfigc.utils.findOutputDirectory;
+	import com.as3mxml.asconfigc.utils.findOutputDirectory;
 
 	import nextgenas.test.assert.Assert;
 
