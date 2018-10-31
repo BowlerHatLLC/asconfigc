@@ -22,6 +22,7 @@ package
 	import com.as3mxml.asconfigc.CompilerOptions;
 	import com.as3mxml.asconfigc.CompilerOptionsParser;
 	import com.as3mxml.asconfigc.ConfigName;
+	import com.as3mxml.asconfigc.HTMLTemplateOptionsParser;
 	import com.as3mxml.asconfigc.JSOutputType;
 	import com.as3mxml.asconfigc.ProjectType;
 	import com.as3mxml.asconfigc.Targets;
@@ -32,11 +33,11 @@ package
 	import com.as3mxml.asconfigc.utils.findApplicationContentOutputPath;
 	import com.as3mxml.asconfigc.utils.findOutputDirectory;
 	import com.as3mxml.asconfigc.utils.findSourcePathAssets;
+	import com.as3mxml.asconfigc.utils.populateHTMLTemplateFile;
 	import com.as3mxml.royale.utils.ApacheFlexJSUtils;
 	import com.as3mxml.royale.utils.ApacheRoyaleUtils;
 	import com.as3mxml.utils.ActionScriptSDKUtils;
 	import com.as3mxml.utils.findJava;
-	import com.as3mxml.asconfigc.HTMLTemplateOptionsParser;
 
 	/**
 	 * A command line utility to build a project defined with an asconfig.json
@@ -819,7 +820,71 @@ package
 
 		private function copyHTMLTemplateDirectory(inputDir:String, outputDir:String):void
 		{
+			mkdirp["sync"](outputDir);
+			if(!fs.existsSync(outputDir))
+			{
+				console.error("Failed to create output directory for HTML template: " + outputDir);
+				process.exit(1);
+			}
+			var files:Array = fs.readdirSync(inputDir);
+			var fileCount:int = files.length;
+			for(var i:int = 0; i < fileCount; i++)
+			{
+				var fileName:String = files[i];
+				var inputFilePath:String = path.resolve(inputDir, fileName);
+				var outputFilePath:String = path.resolve(outputDir, fileName);
+				if(fs.statSync(inputFilePath).isDirectory())
+				{
+					copyHTMLTemplateDirectory(inputFilePath, outputFilePath);
+					continue;
+				}
+				var extension:String = path.extname(fileName);
+				if(extension)
+				{
+					var templateExtension:String = ".template" + extension;
+					if(fileName.endsWith(templateExtension))
+					{
+						var fileNameWithoutExtension:String = fileName.substr(0, fileName.length - templateExtension.length);
+						if(fileNameWithoutExtension === "index")
+						{
+							if(this._mainFile !== null)
+							{
+								var mainFileName:String = path.basename(this._mainFile);
+								var mainFileExtensionIndex:int = mainFileName.indexOf(".");
+								if(mainFileExtensionIndex !== -1)
+								{
+									fileNameWithoutExtension = mainFileName.substr(0, mainFileExtensionIndex);
+								}
+							}
+						}
+						try
+						{
+							var content:String = fs.readFileSync(inputFilePath, "utf8") as String;
+						}
+						catch(error)
+						{
+							console.error("Failed to copy file: " + inputFilePath);
+							process.exit(1);
+						}
+						content = populateHTMLTemplateFile(content, this._htmlTemplateOptions);
+						var outputFileName:String = fileNameWithoutExtension + extension;
+						outputFilePath = path.resolve(outputDir, outputFileName);
+						fs.writeFileSync(outputFilePath, content);
+						continue;
+					}
+				}
+				try
+				{
+					var rawContent:Object = fs.readFileSync(inputFilePath);
+				}
+				catch(error)
+				{
+					console.error("Failed to copy file: " + inputFilePath);
+					process.exit(1);
+				}
+				fs.writeFileSync(outputFilePath, rawContent);
 
+			}
 		}
 
 		private function processDescriptor():void
