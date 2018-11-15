@@ -1,0 +1,20 @@
+{
+	"type": "lib",
+	"config": "node",
+	"compilerOptions": {
+		"targets": [
+			"SWF",
+			"JSNode"
+		],
+		"keep-as3-metadata": [
+			"JSModule"
+		],
+		"source-path": [
+			"src"
+		],
+		"include-sources": [
+			"src"
+		],
+		"output": "../../typedefs/minimist.swc"
+	}
+}

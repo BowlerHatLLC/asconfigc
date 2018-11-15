@@ -16,7 +16,6 @@ bin-release/
 .idea/
 *.lnk
 node_modules/
-typings/
 .vscode/
 asconfigc-*.tgz
 npm-debug.log
