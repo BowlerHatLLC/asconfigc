@@ -33,6 +33,7 @@ package
 	import com.as3mxml.asconfigc.utils.findApplicationContentOutputPath;
 	import com.as3mxml.asconfigc.utils.findOutputDirectory;
 	import com.as3mxml.asconfigc.utils.findSourcePathAssets;
+	import com.as3mxml.asconfigc.utils.folderContains;
 	import com.as3mxml.asconfigc.utils.populateHTMLTemplateFile;
 	import com.as3mxml.royale.utils.ApacheFlexJSUtils;
 	import com.as3mxml.royale.utils.ApacheRoyaleUtils;
@@ -98,6 +99,7 @@ package
 			//validate the SDK after knowing if we're building SWF or JS
 			//because JS has stricter SDK requirements
 			this.validateSDK();
+			this.cleanProject();
 			this.compileProject();
 			this.copySourcePathAssets();
 			this.copyHTMLTemplate();
@@ -127,6 +129,7 @@ package
 		private var _outputPath:String = null;
 		private var _mainFile:String = null;
 		private var _forceDebug:* = undefined;
+		private var _clean:Boolean = false;
 		private var _debugBuild:Boolean = false;
 		private var _sourcePaths:Vector.<String> = null;
 		private var _copySourcePathAssets:Boolean = false;
@@ -159,6 +162,7 @@ package
 			console.info(" --sdk DIRECTORY                                     Specify the directory where the ActionScript SDK is located. If omitted, defaults to checking ROYALE_HOME, FLEX_HOME and PATH environment variables.");
 			console.info(" --debug=true, --debug=false                         Specify debug or release mode. Overrides the debug compiler option, if specified in asconfig.json.");
 			console.info(" --air PLATFORM                                      Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, and `air`.");
+			console.info(" --clean                                             Clean the output directory. Will not build the project.")
 		}
 
 		private function parseArguments():void
@@ -234,6 +238,20 @@ package
 						else
 						{
 							this._forceDebug = debugValue as Boolean;
+						}
+						break;
+					}
+					case "clean":
+					{
+						//support both --clean=true or simply --clean
+						var cleanValue:Object = args[key];
+						if(typeof cleanValue === "string")
+						{
+							this._clean = cleanValue === "true";
+						}
+						else
+						{
+							this._clean = cleanValue as Boolean;
 						}
 						break;
 					}
@@ -683,6 +701,64 @@ package
 				return jarPath;
 			}
 			return null;
+		}
+
+		private function cleanProject():void
+		{
+			if(!this._clean)
+			{
+				return;
+			}
+			var outputDirectory:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
+			var cwd:String = process.cwd();
+			if(folderContains(outputDirectory, cwd))
+			{
+				console.error("Failed to clean project because the output path overlaps with the current working directory.");
+				process.exit(1);
+			}
+
+			var sourcePathsCopy:Vector.<String> = new <String>[];
+			if(this._sourcePaths !== null)
+			{
+				//we don't want to modify the original list, so copy the items over
+				sourcePathsCopy = this._sourcePaths.slice();
+			}
+			if(this._mainFile !== null)
+			{
+				//the parent directory of the main file is automatically added as a
+				//source path by the compiler
+				var mainPath:String = path.dirname(this._mainFile);
+				sourcePathsCopy.push(mainPath);
+			}
+			var sourcePathCount:int = sourcePathsCopy.length;
+			for(var i:int = 0; i < sourcePathCount; i++)
+			{
+				var sourcePath:String = sourcePathsCopy[i];
+				//get the absolute path for each of the source paths
+				sourcePath = path.resolve(sourcePath);
+				if(folderContains(outputDirectory, sourcePath) ||
+					folderContains(sourcePath, outputDirectory))
+				{
+					console.error("Failed to clean project because the output path overlaps with a source path.");
+					process.exit(1);
+				}
+			}
+
+			if(fs.existsSync(outputDirectory))
+			{
+				try
+				{
+					del.sync([outputDirectory]);
+				}
+				catch(e:Error)
+				{
+					console.error("Failed to clean project because an I/O exception occurred.");
+					process.exit(1);
+				}
+			}
+
+			//immediately exits after cleaning
+			process.exit(0);
 		}
 
 		private function compileProject():void
