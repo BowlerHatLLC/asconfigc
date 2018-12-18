@@ -74,7 +74,7 @@ package com.as3mxml.asconfigc
 
 		//library options
 		public static const INCLUDE_CLASSES:String = "include-classes";
-		public static const INCLUDE_NAMESPACES:String = "include-namespace";
+		public static const INCLUDE_NAMESPACES:String = "include-namespaces";
 		public static const INCLUDE_SOURCES:String = "include-sources";
 	}
 }
