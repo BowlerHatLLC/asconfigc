@@ -20,6 +20,7 @@ package com.as3mxml.asconfigc
 		public static const ALIAS:String = "alias";
 		public static const STORETYPE:String = "storetype";
 		public static const KEYSTORE:String = "keystore";
+		public static const STOREPASS:String = "storepass";
 		public static const PROVIDER_NAME:String = "providerName";
 		public static const TSA:String = "tsa";
 		public static const PROVISIONING_PROFILE:String = "provisioning-profile";

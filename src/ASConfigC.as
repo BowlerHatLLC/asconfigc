@@ -25,6 +25,7 @@ package
 	import com.as3mxml.asconfigc.HTMLTemplateOptionsParser;
 	import com.as3mxml.asconfigc.JSOutputType;
 	import com.as3mxml.asconfigc.ProjectType;
+	import com.as3mxml.asconfigc.SigningOptions;
 	import com.as3mxml.asconfigc.Targets;
 	import com.as3mxml.asconfigc.utils.assetPathToOutputPath;
 	import com.as3mxml.asconfigc.utils.escapePath;
@@ -134,6 +135,7 @@ package
 		private var _sourcePaths:Vector.<String> = null;
 		private var _copySourcePathAssets:Boolean = false;
 		private var _airPlatform:String = null;
+		private var _storepass:String = null;
 		private var _airArgs:Array;
 		private var _airOptionsJSON:Object = null;
 		private var _htmlTemplate:String = null;
@@ -162,6 +164,7 @@ package
 			console.info(" --sdk DIRECTORY                                     Specify the directory where the ActionScript SDK is located. If omitted, defaults to checking ROYALE_HOME, FLEX_HOME and PATH environment variables.");
 			console.info(" --debug=true, --debug=false                         Specify debug or release mode. Overrides the debug compiler option, if specified in asconfig.json.");
 			console.info(" --air PLATFORM                                      Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, and `air`.");
+			console.info(" --storepass PASSWORD                                The password required to access the keystore used when packging the Adobe AIR application. If not specified, prompts for the password.");
 			console.info(" --clean                                             Clean the output directory. Will not build the project.")
 		}
 
@@ -174,7 +177,7 @@ package
 				{
 					case "_":
 					{
-						var value:String = args[key] as String;
+						var value:String = String(args[key]);
 						if(value)
 						{
 							console.error("Unknown argument: " + value);
@@ -192,7 +195,7 @@ package
 					case "sdk":
 					case "flexHome":
 					{
-						this._sdkHome = args[key] as String;
+						this._sdkHome = String(args[key]);
 						//on windows, don't let the path end with a backslash
 						//because resolving sub-directories may fail
 						if(this._sdkHome.endsWith("\\"))
@@ -204,7 +207,7 @@ package
 					case "p":
 					case "project":
 					{
-						var projectPath:String = args[key] as String;
+						var projectPath:String = String(args[key]);
 						projectPath = path.resolve(process.cwd(), projectPath);
 						if(!fs.existsSync(projectPath))
 						{
@@ -278,6 +281,16 @@ package
 						{
 							this._airPlatform = AIRPlatformType.AIR;
 						}
+						break;
+					}
+					case "storepass":
+					{
+						if(!args["air"])
+						{
+							console.error("Error: The storepass option requires the air option to be set too.");
+							process.exit(1);
+						}
+						this._storepass = String(args[key]);
 						break;
 					}
 					case "v":
@@ -1100,6 +1113,19 @@ package
 
 		private function packageAIR():void
 		{
+			if(this._storepass !== null)
+			{
+				var storepassIndex:int = this._airArgs.indexOf("-" + SigningOptions.STOREPASS);
+				if(storepassIndex == -1)
+				{
+					var keystoreIndex:int = this._airArgs.indexOf("-" + SigningOptions.KEYSTORE);
+					if(keystoreIndex != -1)
+					{
+						this._airArgs.splice(keystoreIndex + 2, 0, "-" + SigningOptions.STOREPASS);
+						this._airArgs.splice(keystoreIndex + 3, 0, this._storepass);
+					}
+				}
+			}
 			var jarPath:String = this.findAIRPackagerJarPath();
 			if(!jarPath)
 			{
