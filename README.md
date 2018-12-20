@@ -32,6 +32,10 @@ The following options are available:
 
 	Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, and `air`.
 
+* `--storepass PASSWORD`
+
+	The password required to access the keystore used when packging the Adobe AIR application. If not specified, prompts for the password.
+
 * `-h` or `--help`
 
 	Print help message.
