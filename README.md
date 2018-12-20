@@ -36,6 +36,10 @@ The following options are available:
 
 	The password required to access the keystore used when packging the Adobe AIR application. If not specified, prompts for the password.
 
+* `--clean`
+
+	Clean the output directory. Will not build the project.
+
 * `-h` or `--help`
 
 	Print help message.
