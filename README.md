@@ -36,6 +36,10 @@ The following options are available:
 
 	The password required to access the keystore used when packging the Adobe AIR application. If not specified, prompts for the password.
 
+* `--unpackage-anes`
+
+	Unpackage native extensions to the output directory when creating a debug build for the Adobe AIR simulator.
+
 * `--clean`
 
 	Clean the output directory. Will not build the project.

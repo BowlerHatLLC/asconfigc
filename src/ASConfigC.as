@@ -106,6 +106,7 @@ package
 			this.copyHTMLTemplate();
 			this.processDescriptor();
 			this.copyAIRFiles();
+			this.prepareNativeExtensions();
 			if(this._airPlatform !== null)
 			{
 				this.packageAIR();
@@ -131,12 +132,14 @@ package
 		private var _mainFile:String = null;
 		private var _forceDebug:* = undefined;
 		private var _clean:Boolean = false;
+		private var _unpackageANEs:Boolean = false;
 		private var _debugBuild:Boolean = false;
 		private var _sourcePaths:Vector.<String> = null;
 		private var _copySourcePathAssets:Boolean = false;
 		private var _airPlatform:String = null;
 		private var _storepass:String = null;
 		private var _airArgs:Array;
+		private var _compilerOptionsJSON:Object = null;
 		private var _airOptionsJSON:Object = null;
 		private var _htmlTemplate:String = null;
 		private var _htmlTemplateOptions:Object = null;
@@ -165,6 +168,7 @@ package
 			console.info(" --debug=true, --debug=false                         Specify debug or release mode. Overrides the debug compiler option, if specified in asconfig.json.");
 			console.info(" --air PLATFORM                                      Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, and `air`.");
 			console.info(" --storepass PASSWORD                                The password required to access the keystore used when packging the Adobe AIR application. If not specified, prompts for the password.");
+			console.info(" --unpackage-anes                                    Unpackage native extensions to the output directory when creating a debug build for the Adobe AIR simulator.");
 			console.info(" --clean                                             Clean the output directory. Will not build the project.")
 		}
 
@@ -293,6 +297,25 @@ package
 						this._storepass = String(args[key]);
 						break;
 					}
+					case "unpackage-anes":
+					{
+						if(args["air"])
+						{
+							console.error("Error: The unpackage-anes option cannot be set when the air option is set.");
+							process.exit(1);
+						}
+						//support both --unpackage-anes=true or simply --unpackage-anes
+						var unpackageANEsValue:Object = args[key];
+						if(typeof unpackageANEsValue === "string")
+						{
+							this._unpackageANEs = unpackageANEsValue === "true";
+						}
+						else
+						{
+							this._unpackageANEs = unpackageANEsValue as Boolean;
+						}
+						break;
+					}
 					case "v":
 					case "version":
 					{
@@ -372,6 +395,7 @@ package
 		{
 			this._compilerArgs = [];
 			this._airArgs = [];
+			this._compilerOptionsJSON = null;
 			this._airOptionsJSON = null;
 			var configData:Object = this.loadConfig();
 			this._projectType = this.readProjectType(configData);
@@ -383,26 +407,26 @@ package
 			}
 			if(ASConfigFields.COMPILER_OPTIONS in configData)
 			{
-				var compilerOptions:Object = configData[ASConfigFields.COMPILER_OPTIONS];
+				this._compilerOptionsJSON = configData[ASConfigFields.COMPILER_OPTIONS];
 				if(this._forceDebug === true || this._forceDebug === false)
 				{
 					//ignore the debug option when it is specified on the
 					//command line
-					delete compilerOptions["debug"];
+					delete this._compilerOptionsJSON["debug"];
 					this._compilerArgs.push("--debug=" + this._forceDebug);
 				}
-				this.readCompilerOptions(compilerOptions);
-				if(this._forceDebug === true || compilerOptions.debug)
+				this.readCompilerOptions(this._compilerOptionsJSON);
+				if(this._forceDebug === true || this._compilerOptionsJSON.debug)
 				{
 					this._debugBuild = true;
 				}
-				if(CompilerOptions.SOURCE_PATH in compilerOptions)
+				if(CompilerOptions.SOURCE_PATH in this._compilerOptionsJSON)
 				{
-					this._sourcePaths = compilerOptions[CompilerOptions.SOURCE_PATH];
+					this._sourcePaths = this._compilerOptionsJSON[CompilerOptions.SOURCE_PATH];
 				}
-				if(CompilerOptions.OUTPUT in compilerOptions)
+				if(CompilerOptions.OUTPUT in this._compilerOptionsJSON)
 				{
-					this._outputPath = compilerOptions[CompilerOptions.OUTPUT];
+					this._outputPath = this._compilerOptionsJSON[CompilerOptions.OUTPUT];
 				}
 			}
 			if(ASConfigFields.ADDITIONAL_OPTIONS in configData)
@@ -1011,6 +1035,32 @@ package
 				mkdirp["sync"](path.dirname(descriptorOutputPath));
 				fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
 			}
+		}
+
+		private function prepareNativeExtensions():void
+		{
+			if(this._airPlatform !== null)
+			{
+				//don't copy anything when packaging an app. these files are
+				//used for debug builds only.
+				return;
+			}
+			if(!this._unpackageANEs)
+			{
+				//don't copy anything if it's not requested.
+				return;
+			}
+			if(!this._debugBuild)
+			{
+				//don't copy anything when it's a release build.
+				return;
+			}
+			if(this._compilerOptionsJSON === null)
+			{
+				//the compilerOptions field is not defined, so there's nothing to copy
+				return;
+			}
+			console.warn("Skipping native extension unpackaging step. This option is currently unsupported by asconfigc. To debug with native extensions, you must unpackage them manually.");
 		}
 
 		private function copyAIRFiles():void
