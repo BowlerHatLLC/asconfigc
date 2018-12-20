@@ -172,7 +172,7 @@ package com.as3mxml.asconfigc
 					}
 					case CompilerOptions.NAMESPACE:
 					{
-						setNamespace(options[key], result);
+						appendNamespace(options[key], result);
 						break;
 					}
 					case CompilerOptions.OPTIMIZE:
@@ -304,7 +304,7 @@ package com.as3mxml.asconfigc
 			return result;
 		}
 
-		private static function setNamespace(values:Array, result:Array):void
+		private static function appendNamespace(values:Array, result:Array):void
 		{
 			if(values.length === 0)
 			{
@@ -320,10 +320,9 @@ package com.as3mxml.asconfigc
 					process.exit(1);
 				}
 
+				var uri:String = currentValue.uri.toString();
 				var manifest:String = escapePath(currentValue.manifest.toString(), false);
-				result.push("--" + CompilerOptions.NAMESPACE);
-				result.push(currentValue.uri.toString());
-				result.push(manifest);
+				result.push("--" + CompilerOptions.NAMESPACE + "+=" + uri + "," + manifest);
 			}
 		}
 

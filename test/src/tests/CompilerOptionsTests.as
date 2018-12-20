@@ -513,20 +513,12 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.NAMESPACE] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			Assert.strictEqual(result.length, 6,
+			Assert.strictEqual(result.length, 2,
 				"Incorrect argument count for " + CompilerOptions.NAMESPACE);
-			Assert.strictEqual(result[0], "--" + CompilerOptions.NAMESPACE,
+			Assert.strictEqual(result[0], "--" + CompilerOptions.NAMESPACE + "+=" + value[0].uri + "," + value[0].manifest,
 				"Incorrect argument 0 value for " + CompilerOptions.NAMESPACE);
-			Assert.strictEqual(result[1], value[0].uri,
+			Assert.strictEqual(result[1], "--" + CompilerOptions.NAMESPACE + "+=" + value[1].uri + "," + formattedManifest,
 				"Incorrect argument 1 value for " + CompilerOptions.NAMESPACE);
-			Assert.strictEqual(result[2], value[0].manifest,
-				"Incorrect argument 2 value for " + CompilerOptions.NAMESPACE);
-			Assert.strictEqual(result[3], "--" + CompilerOptions.NAMESPACE,
-				"Incorrect argument 3 value for " + CompilerOptions.NAMESPACE);
-			Assert.strictEqual(result[4], value[1].uri,
-				"Incorrect argument 4 value for " + CompilerOptions.NAMESPACE);
-			Assert.strictEqual(result[5], formattedManifest,
-				"Incorrect argument 5 value for " + CompilerOptions.NAMESPACE);
 		}
 
 		[Test]
