@@ -49,6 +49,8 @@ package
 	public class ASConfigC
 	{
 		private static const ASCONFIG_JSON:String = "asconfig.json";
+		private static const FILE_EXTENSION_ANE:String = ".ane";
+		private static const FILE_NAME_UNPACKAGED_ANES:String = ".as3mxml-unpackaged-anes";
 
 		private static const MXMLC_JARS:Vector.<String> = new <String>
 		[
@@ -1060,7 +1062,71 @@ package
 				//the compilerOptions field is not defined, so there's nothing to copy
 				return;
 			}
-			console.warn("Skipping native extension unpackaging step. This option is currently unsupported by asconfigc. To debug with native extensions, you must unpackage them manually.");
+
+			if(CompilerOptions.LIBRARY_PATH in this._compilerOptionsJSON)
+			{
+				var libraryPathJSON:Array = this._compilerOptionsJSON[CompilerOptions.LIBRARY_PATH] as Array;
+				this.unpackANEs(libraryPathJSON);
+			}
+			if(CompilerOptions.EXTERNAL_LIBRARY_PATH in this._compilerOptionsJSON)
+			{
+				var externalLibraryPathJSON:Array = this._compilerOptionsJSON[CompilerOptions.EXTERNAL_LIBRARY_PATH] as Array;
+				this.unpackANEs(externalLibraryPathJSON);
+			}
+		}
+
+		private function unpackANEs(libraryPathJSON:Array):void
+		{
+			var pathCount:int = libraryPathJSON.length;
+			for(var i:int = 0; i < pathCount; i++)
+			{
+				var libraryPath:String = libraryPathJSON[i] as String;
+				libraryPath = path.resolve(libraryPath);
+				if(libraryPath.endsWith(FILE_EXTENSION_ANE))
+				{
+					this.unpackANE(libraryPath);
+				}
+				else if(fs.statSync(libraryPath).isDirectory())
+				{
+					var files:Array = fs.readdirSync(libraryPath);
+					var fileCount:int = files.length;
+					for(var j:int = 0; j < fileCount; j++)
+					{
+						var file:String = files[j];
+						var fullPath:String = path.resolve(libraryPath, file);
+						if(fullPath.endsWith(FILE_EXTENSION_ANE))
+						{
+							this.unpackANE(fullPath);
+						}
+					}
+				}
+			}
+		}
+
+		private function unpackANE(aneFilePath:String):void
+		{
+			if(fs.statSync(aneFilePath).isDirectory())
+			{
+				//this is either an ANE that's already unpacked
+				//...or something else entirely
+				return;
+			}
+
+			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
+			var unpackedAneDir:String = path.resolve(outputDir, FILE_NAME_UNPACKAGED_ANES);
+			var currentAneDir:String = path.resolve(unpackedAneDir, path.basename(aneFilePath));		
+			mkdirp["sync"](currentAneDir);
+
+			try
+			{
+				var zipFile:admZip = new admZip(aneFilePath);
+				zipFile.extractAllTo(currentAneDir, true);
+			}
+			catch(error:Error)
+			{
+				console.error("Failed to copy Adobe AIR native extension from path: " + aneFilePath + ".");
+				process.exit(1);
+			}
 		}
 
 		private function copyAIRFiles():void
