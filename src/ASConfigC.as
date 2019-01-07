@@ -748,7 +748,26 @@ package
 			{
 				return;
 			}
+
 			var outputDirectory:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
+			if(this._outputIsJS)
+			{
+				var debugOutputDir:String = path.join(outputDirectory, "bin", "js-debug");
+				this.cleanOutputDirectory(debugOutputDir);
+				var releaseOutputDir:String = path.join(outputDirectory, "bin", "js-release");
+				this.cleanOutputDirectory(releaseOutputDir);
+			}
+			else //swf
+			{
+				this.cleanOutputDirectory(outputDirectory);
+			}
+
+			//immediately exits after cleaning
+			process.exit(0);
+		}
+
+		private function cleanOutputDirectory(outputDirectory:String):void
+		{
 			var cwd:String = process.cwd();
 			if(folderContains(outputDirectory, cwd))
 			{
@@ -795,9 +814,6 @@ package
 					process.exit(1);
 				}
 			}
-
-			//immediately exits after cleaning
-			process.exit(0);
 		}
 
 		private function compileProject():void
