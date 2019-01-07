@@ -61,8 +61,10 @@ package com.as3mxml.asconfigc
 		public static const HTML_TEMPLATE:String = "html-template";
 		public static const JS_COMPILER_OPTION:String = "js-compiler-option";
 		public static const JS_DEFAULT_INITIALIZERS:String = "js-default-initializers";
+		public static const JS_DEFINE:String = "js-define";
 		public static const JS_EXTERNAL_LIBRARY_PATH:String = "js-external-library-path";
 		public static const JS_LIBRARY_PATH:String = "js-library-path";
+		public static const JS_LOAD_CONFIG:String = "js-load-config";
 		public static const JS_OUTPUT:String = "js-output";
 		public static const JS_OUTPUT_TYPE:String = "js-output-type";
 		public static const REMOVE_CIRCULARS:String = "remove-circulars";

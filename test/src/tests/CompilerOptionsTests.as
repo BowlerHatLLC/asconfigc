@@ -152,6 +152,54 @@ package tests
 		}
 
 		[Test]
+		public function testJSDefine():void
+		{
+			var value:Array =
+			[
+				{
+					name: "CONFIG::bool",
+					value: true
+				},
+				{
+					name: "CONFIG::str",
+					value: "'test'"
+				},
+				{
+					name: "CONFIG::str2",
+					value: "\"test\""
+				},
+				{
+					name: "CONFIG::num",
+					value: 12.3
+				},
+				{
+					name: "CONFIG::expr",
+					value: "2 + 4"
+				}
+			];
+			var args:Object = {};
+			args[CompilerOptions.JS_DEFINE] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 5,
+				"Incorrect argument count for " + CompilerOptions.JS_DEFINE);
+			Assert.strictEqual(result[0],
+				"--" + CompilerOptions.JS_DEFINE + "+=" + value[0].name + "," + value[0].value,
+				"Incorrect argument 0 value for " + CompilerOptions.JS_DEFINE);
+			Assert.strictEqual(result[1],
+				"--" + CompilerOptions.JS_DEFINE + "+=" + value[1].name + ",\"" + value[1].value + "\"",
+				"Incorrect argument 1 value for " + CompilerOptions.JS_DEFINE);
+			Assert.strictEqual(result[2],
+				"--" + CompilerOptions.JS_DEFINE + "+=" + value[2].name + ",\"\\\"test\\\"\"",
+				"Incorrect argument 2 value for " + CompilerOptions.JS_DEFINE);
+			Assert.strictEqual(result[3],
+				"--" + CompilerOptions.JS_DEFINE + "+=" + value[3].name + "," + value[3].value,
+				"Incorrect argument 3 value for " + CompilerOptions.JS_DEFINE);
+			Assert.strictEqual(result[4],
+				"--" + CompilerOptions.JS_DEFINE + "+=" + value[4].name + ",\"" + value[4].value + "\"",
+				"Incorrect argument 4 value for " + CompilerOptions.JS_DEFINE);
+		}
+
+		[Test]
 		public function testDumpConfig():void
 		{
 			var value:String = "./path/to/file.xml";
@@ -474,6 +522,22 @@ package tests
 				"Incorrect argument count for " + CompilerOptions.LOAD_CONFIG);
 			Assert.strictEqual(result[0], "--" + CompilerOptions.LOAD_CONFIG + "+=" + value[0],
 				"Incorrect argument value for " + CompilerOptions.LOAD_CONFIG);
+		}
+
+		[Test]
+		public function testJSLoadConfig():void
+		{
+			var value:Array =
+			[
+				"test1/test-config.xml"
+			];
+			var args:Object = {};
+			args[CompilerOptions.JS_LOAD_CONFIG] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.JS_LOAD_CONFIG);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.JS_LOAD_CONFIG + "+=" + value[0],
+				"Incorrect argument value for " + CompilerOptions.JS_LOAD_CONFIG);
 		}
 
 		[Test]

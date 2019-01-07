@@ -72,7 +72,12 @@ package com.as3mxml.asconfigc
 					}
 					case CompilerOptions.DEFINE:
 					{
-						setDefine(options[key], result);
+						setDefine(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.JS_DEFINE:
+					{
+						setDefine(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.DUMP_CONFIG:
@@ -161,6 +166,11 @@ package com.as3mxml.asconfigc
 						break;
 					}
 					case CompilerOptions.LOAD_CONFIG:
+					{
+						OptionsFormatter.appendPaths(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.JS_LOAD_CONFIG:
 					{
 						OptionsFormatter.appendPaths(key, options[key], result);
 						break;
@@ -352,7 +362,7 @@ package com.as3mxml.asconfigc
 			result.push(sizePair[CompilerOptions.DEFAULT_SIZE__HEIGHT].toString());
 		}
 
-		private static function setDefine(values:Array, result:Array):void
+		private static function setDefine(optionName:String, values:Array, result:Array):void
 		{
 			if(values.length === 0)
 			{
@@ -374,7 +384,7 @@ package com.as3mxml.asconfigc
 					defineValue = defineValue.replace(/\"/g, "\\\"");
 					defineValue = "\"" + defineValue + "\"";
 				}
-				result.push("--" + CompilerOptions.DEFINE + "+=" +
+				result.push("--" + optionName + "+=" +
 					defineName + "," + defineValue.toString());
 			}
 		}
