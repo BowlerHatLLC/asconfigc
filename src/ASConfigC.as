@@ -169,7 +169,7 @@ package
 			console.info(" --sdk DIRECTORY                                     Specify the directory where the ActionScript SDK is located. If omitted, defaults to checking ROYALE_HOME, FLEX_HOME and PATH environment variables.");
 			console.info(" --debug=true, --debug=false                         Specify debug or release mode. Overrides the debug compiler option, if specified in asconfig.json.");
 			console.info(" --air PLATFORM                                      Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, and `air`.");
-			console.info(" --storepass PASSWORD                                The password required to access the keystore used when packging the Adobe AIR application. If not specified, prompts for the password.");
+			console.info(" --storepass PASSWORD                                The password used when signing and packaging an Adobe AIR application. If not specified, prompts for the password.");
 			console.info(" --unpackage-anes                                    Unpackage native extensions to the output directory when creating a debug build for the Adobe AIR simulator.");
 			console.info(" --clean                                             Clean the output directory. Will not build the project.")
 		}

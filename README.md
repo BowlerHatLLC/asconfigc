@@ -34,7 +34,7 @@ The following options are available:
 
 * `--storepass PASSWORD`
 
-	The password required to access the keystore used when packging the Adobe AIR application. If not specified, prompts for the password.
+	The password used when signing and packaging an Adobe AIR application. If not specified, prompts for the password.
 
 * `--unpackage-anes`
 
