@@ -282,12 +282,10 @@ package tests
 			var args:Object = {};
 			args[CompilerOptions.INCLUDE_CLASSES] = value;
 			var result:Array = CompilerOptionsParser.parse(args);
-			Assert.strictEqual(result.length, 2,
+			Assert.strictEqual(result.length, 1,
 				"Incorrect argument count for " + CompilerOptions.INCLUDE_CLASSES);
-			Assert.strictEqual(result[0], "--" + CompilerOptions.INCLUDE_CLASSES + "+=" + value[0],
-				"Incorrect argument 0 value for " + CompilerOptions.INCLUDE_CLASSES);
-			Assert.strictEqual(result[1], "--" + CompilerOptions.INCLUDE_CLASSES + "+=" + value[1],
-				"Incorrect argument 1 value for " + CompilerOptions.INCLUDE_CLASSES);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.INCLUDE_CLASSES + "=" + value[0] + "," + value[1],
+				"Incorrect argument value for " + CompilerOptions.INCLUDE_CLASSES);
 		}
 
 		[Test]

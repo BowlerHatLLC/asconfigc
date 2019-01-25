@@ -102,7 +102,7 @@ package com.as3mxml.asconfigc
 					}
 					case CompilerOptions.INCLUDE_CLASSES:
 					{
-						OptionsFormatter.appendValues(key, options[key], result);
+						OptionsFormatter.setCommaArray(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.INCLUDE_NAMESPACES:
