@@ -464,6 +464,10 @@ package
 					var filesCount:int = files.length;
 					for(var i:int = 0; i < filesCount; i++)
 					{
+						if(i === 0)
+						{
+							this._compilerArgs.push("--");
+						}
 						var file:String = files[i];
 						this._compilerArgs.push(file);
 					}
