@@ -435,6 +435,12 @@ package
 			{
 				this._additionalOptions = configData[ASConfigFields.ADDITIONAL_OPTIONS];
 			}
+			//if js-output-type was not specified, use the default
+			//swf projects won't have a js-output-type
+			if(this._jsOutputType)
+			{
+				this._compilerArgs.push("--" + CompilerOptions.JS_OUTPUT_TYPE + "=" + this._jsOutputType);
+			}
 			if(ASConfigFields.APPLICATION in configData)
 			{
 				//if the path is relative, path.resolve() will give us the
@@ -503,12 +509,6 @@ package
 					compilerOptionsJSON = configData[ASConfigFields.COMPILER_OPTIONS];
 				}
 				readHTMLTemplateOptions(compilerOptionsJSON);
-			}
-			//if js-output-type was not specified, use the default
-			//swf projects won't have a js-output-type
-			if(this._jsOutputType)
-			{
-				this._compilerArgs.push("--" + CompilerOptions.JS_OUTPUT_TYPE + "=" + this._jsOutputType);
 			}
 		}
 
