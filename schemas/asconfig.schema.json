@@ -489,6 +489,11 @@
 						]
 					}
 				},
+				"directory":
+				{
+					"type": "boolean",
+					"description": "(Library projects only) Outputs the library as a directory instead of a SWC file."
+				},
 				"dump-config":
 				{
 					"type": "string",
@@ -519,6 +524,34 @@
 					"items":
 					{
 						"type": "string"
+					}
+				},
+				"include-file":
+				{
+					"type": "array",
+					"description": "(Library projects only) Specifies a list of files to include in the SWC file.",
+					"items":
+					{
+						"type": "object",
+						"additionalProperties": false,
+						"properties":
+						{
+							"file":
+							{
+								"type": "string",
+								"description": "Source path of a file or directory to include in the SWC."
+							},
+							"path":
+							{
+								"type": "string",
+								"description": "Destination path of the file or directory inside the SWC."
+							}
+						},
+						"required":
+						[
+							"file",
+							"path"
+						]
 					}
 				},
 				"include-classes":
@@ -627,6 +660,15 @@
 				{
 					"type": "array",
 					"description": "Specifies the locations of XML configuration files that define extra compiler options.",
+					"items":
+					{
+						"type": "string"
+					}
+				},
+				"load-externs":
+				{
+					"type": "array",
+					"description": "Specifies the locations of XML files that define extra symbols to omit from the output.",
 					"items":
 					{
 						"type": "string"
