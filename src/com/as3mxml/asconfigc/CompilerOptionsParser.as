@@ -345,8 +345,8 @@ package com.as3mxml.asconfigc
 					process.exit(1);
 				}
 
-				var uri:String = currentValue.uri.toString();
-				var manifest:String = escapePath(currentValue.manifest.toString(), false);
+				var uri:String = currentValue[CompilerOptions.NAMESPACE__URI].toString();
+				var manifest:String = escapePath(currentValue[CompilerOptions.NAMESPACE__MANIFEST].toString(), false);
 				result.push("--" + CompilerOptions.NAMESPACE + "+=" + uri + "," + manifest);
 			}
 		}
@@ -392,8 +392,8 @@ package com.as3mxml.asconfigc
 					console.error("Value for option \"" + CompilerOptions.DEFINE + "\" not valid: " + currentValue);
 					process.exit(1);
 				}
-				var defineName:String = currentValue.name.toString();
-				var defineValue:Object = currentValue.value;
+				var defineName:String = currentValue[CompilerOptions.DEFINE__NAME].toString();
+				var defineValue:Object = currentValue[CompilerOptions.DEFINE__VALUE];
 				if(defineValue is String)
 				{
 					defineValue = defineValue.replace(/\"/g, "\\\"");

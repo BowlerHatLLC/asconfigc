@@ -28,6 +28,8 @@ package com.as3mxml.asconfigc
 		public static const DEFAULT_SIZE__WIDTH:String = "width";
 		public static const DEFAULT_SIZE__HEIGHT:String = "height";
 		public static const DEFINE:String = "define";
+		public static const DEFINE__NAME:String = "name";
+		public static const DEFINE__VALUE:String = "value";
 		public static const DIRECTORY:String = "directory";
 		public static const DUMP_CONFIG:String = "dump-config";
 		public static const EXTERNAL_LIBRARY_PATH:String = "external-library-path";
@@ -39,6 +41,8 @@ package com.as3mxml.asconfigc
 		public static const LOAD_EXTERNS:String = "load-externs";
 		public static const LOCALE:String = "locale";
 		public static const NAMESPACE:String = "namespace";
+		public static const NAMESPACE__URI:String = "uri";
+		public static const NAMESPACE__MANIFEST:String = "manifest";
 		public static const OPTIMIZE:String = "optimize";
 		public static const OMIT_TRACE_STATEMENTS:String = "omit-trace-statements";
 		public static const OUTPUT:String = "output";
