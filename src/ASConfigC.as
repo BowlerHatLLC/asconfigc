@@ -131,6 +131,7 @@ package
 		private var _additionalOptions:String;
 		private var _airDescriptor:String = null;
 		private var _outputPath:String = null;
+		private var _files:Array = null;
 		private var _mainFile:String = null;
 		private var _forceDebug:* = undefined;
 		private var _clean:Boolean = false;
@@ -457,29 +458,19 @@ package
 			//needed to generate some file paths
 			if(ASConfigFields.FILES in configData)
 			{
-				var files:Array = configData[ASConfigFields.FILES] as Array;
+				this._files = configData[ASConfigFields.FILES] as Array;
 				if(this._projectType === ProjectType.LIB)
 				{
 					CompilerOptionsParser.parse(
 					{
-						"include-sources": files
+						"include-sources": this._files
 					}, this._compilerArgs);
 				}
-				else
+				else //app
 				{
-					var filesCount:int = files.length;
-					for(var i:int = 0; i < filesCount; i++)
+					if(this._files.length > 0)
 					{
-						if(i === 0)
-						{
-							this._compilerArgs.push("--");
-						}
-						var file:String = files[i];
-						this._compilerArgs.push(file);
-					}
-					if(filesCount > 0)
-					{
-						this._mainFile = files[filesCount - 1];
+						this._mainFile = this._files[this._files.length - 1];
 					}
 				}
 			}
@@ -861,6 +852,23 @@ package
 				if(this._additionalOptions)
 				{
 					command += " " + this._additionalOptions;
+				}
+				if(this._files && this._projectType !== ProjectType.LIB)
+				{
+					var filesCount:int = this._files.length;
+					for(var i:int = 0; i < filesCount; i++)
+					{
+						if(i === 0)
+						{
+							command += " -- ";
+						}
+						else
+						{
+							command += " ";
+						}
+						var file:String = this._files[i];
+						command += escapePath(file, false);
+					}
 				}
 				var result:Object = child_process.execSync(command,
 				{
