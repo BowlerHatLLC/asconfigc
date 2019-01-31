@@ -28,6 +28,7 @@ package com.as3mxml.asconfigc
 		public static const DEFAULT_SIZE__WIDTH:String = "width";
 		public static const DEFAULT_SIZE__HEIGHT:String = "height";
 		public static const DEFINE:String = "define";
+		public static const DIRECTORY:String = "directory";
 		public static const DUMP_CONFIG:String = "dump-config";
 		public static const EXTERNAL_LIBRARY_PATH:String = "external-library-path";
 		public static const KEEP_AS3_METADATA:String = "keep-as3-metadata";
@@ -35,6 +36,7 @@ package com.as3mxml.asconfigc
 		public static const LIBRARY_PATH:String = "library-path";
 		public static const LINK_REPORT:String = "link-report";
 		public static const LOAD_CONFIG:String = "load-config";
+		public static const LOAD_EXTERNS:String = "load-externs";
 		public static const LOCALE:String = "locale";
 		public static const NAMESPACE:String = "namespace";
 		public static const OPTIMIZE:String = "optimize";
@@ -76,6 +78,9 @@ package com.as3mxml.asconfigc
 
 		//library options
 		public static const INCLUDE_CLASSES:String = "include-classes";
+		public static const INCLUDE_FILE:String = "include-file";
+		public static const INCLUDE_FILE__FILE:String = "file";
+		public static const INCLUDE_FILE__PATH:String = "path";
 		public static const INCLUDE_NAMESPACES:String = "include-namespaces";
 		public static const INCLUDE_SOURCES:String = "include-sources";
 	}

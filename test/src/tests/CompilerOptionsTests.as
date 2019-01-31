@@ -200,6 +200,18 @@ package tests
 		}
 
 		[Test]
+		public function testDirectory():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.DIRECTORY] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.DIRECTORY);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.DIRECTORY + "=true",
+				"Incorrect argument value for " + CompilerOptions.DIRECTORY);
+		}
+
+		[Test]
 		public function testDumpConfig():void
 		{
 			var value:String = "./path/to/file.xml";
@@ -286,6 +298,27 @@ package tests
 				"Incorrect argument count for " + CompilerOptions.INCLUDE_CLASSES);
 			Assert.strictEqual(result[0], "--" + CompilerOptions.INCLUDE_CLASSES + "=" + value[0] + "," + value[1],
 				"Incorrect argument value for " + CompilerOptions.INCLUDE_CLASSES);
+		}
+
+		[Test]
+		public function testIncludeFile():void
+		{
+			var value:Array =
+			[
+				{ file: "myfile.txt", path: "assets/myfile2.txt" },
+				{ file: "path/with spaces/to/another.png", path: "another file.png" }
+			];
+			var formattedFile1:String = escapePath(value[1].file, true);
+			var formattedPath1:String = escapePath(value[1].path, true);
+			var args:Object = {};
+			args[CompilerOptions.INCLUDE_FILE] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 2,
+				"Incorrect argument count for " + CompilerOptions.INCLUDE_FILE);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.INCLUDE_FILE + "+=" + value[0].path + "," + value[0].file,
+				"Incorrect argument value for " + CompilerOptions.INCLUDE_FILE);
+			Assert.strictEqual(result[1], "--" + CompilerOptions.INCLUDE_FILE + "+=" + formattedPath1 + "," + formattedFile1,
+				"Incorrect argument value for " + CompilerOptions.INCLUDE_FILE);
 		}
 
 		[Test]
@@ -520,6 +553,22 @@ package tests
 				"Incorrect argument count for " + CompilerOptions.LOAD_CONFIG);
 			Assert.strictEqual(result[0], "--" + CompilerOptions.LOAD_CONFIG + "+=" + value[0],
 				"Incorrect argument value for " + CompilerOptions.LOAD_CONFIG);
+		}
+
+		[Test]
+		public function testLoadExterns():void
+		{
+			var value:Array =
+			[
+				"test1/test-externs.xml"
+			];
+			var args:Object = {};
+			args[CompilerOptions.LOAD_EXTERNS] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.strictEqual(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.LOAD_EXTERNS);
+			Assert.strictEqual(result[0], "--" + CompilerOptions.LOAD_EXTERNS + "+=" + value[0],
+				"Incorrect argument value for " + CompilerOptions.LOAD_EXTERNS);
 		}
 
 		[Test]

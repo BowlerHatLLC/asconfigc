@@ -80,6 +80,11 @@ package com.as3mxml.asconfigc
 						setDefine(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.DIRECTORY:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.DUMP_CONFIG:
 					{
 						OptionsFormatter.setPathValue(key, options[key], result);
@@ -103,6 +108,11 @@ package com.as3mxml.asconfigc
 					case CompilerOptions.INCLUDE_CLASSES:
 					{
 						OptionsFormatter.setCommaArray(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.INCLUDE_FILE:
+					{
+						parseIncludeFile(options[key], result);
 						break;
 					}
 					case CompilerOptions.INCLUDE_NAMESPACES:
@@ -166,6 +176,11 @@ package com.as3mxml.asconfigc
 						break;
 					}
 					case CompilerOptions.LOAD_CONFIG:
+					{
+						OptionsFormatter.appendPaths(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.LOAD_EXTERNS:
 					{
 						OptionsFormatter.appendPaths(key, options[key], result);
 						break;
@@ -386,6 +401,30 @@ package com.as3mxml.asconfigc
 				}
 				result.push("--" + optionName + "+=" +
 					defineName + "," + defineValue.toString());
+			}
+		}
+
+		private static function parseIncludeFile(files:Array, result:Array):void
+		{
+			var count:int = files.length;
+			for(var i:int = 0; i < count; i++)
+			{
+				var file:Object = files[i];
+				var src:String = null;
+				var dest:String = null;
+				if(typeof file === "string")
+				{
+					src = file as String;
+					dest = file as String;
+				}
+				else
+				{
+					src = file[CompilerOptions.INCLUDE_FILE__FILE];
+					dest = file[CompilerOptions.INCLUDE_FILE__PATH];
+				}
+				src = escapePath(src, false);
+				dest = escapePath(dest, false);
+				result.push("--" + CompilerOptions.INCLUDE_FILE + "+=" + dest + "," + src);
 			}
 		}
 	}
