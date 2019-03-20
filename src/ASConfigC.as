@@ -842,6 +842,7 @@ package
 				this._compilerArgs.unshift("-Dflexlib=" + escapePath(frameworkPath));
 				this._compilerArgs.unshift("-Dflexcompiler=" + escapePath(this._sdkHome));
 			}
+			this._compilerArgs.unshift("-Xmx512m");
 			try
 			{
 				var command:String = escapePath(this._javaExecutable) + " " + this._compilerArgs.join(" ");
