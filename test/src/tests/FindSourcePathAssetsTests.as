@@ -13,7 +13,7 @@ package tests
 			var sourcePaths:Vector.<String> = new <String>[];
 			var outputDirectory:String = "./source-path-assets/bin";
 			var excludes:Vector.<String> = new <String>[];
-			var assetPaths:Vector.<String> =
+			var assetPaths:Array =
 				findSourcePathAssets(mainFile, sourcePaths, outputDirectory, excludes);
 			Assert.strictEqual(assetPaths.length, 2, "Incorrect number of assets with main file and no source paths.");
 			var expectedPaths:Vector.<String> = new <String>
@@ -37,7 +37,7 @@ package tests
 			var sourcePaths:Vector.<String> = new <String>["./source-path-assets/src"];
 			var outputDirectory:String = "./source-path-assets/bin";
 			var excludes:Vector.<String> = new <String>[];
-			var assetPaths:Vector.<String> =
+			var assetPaths:Array =
 				findSourcePathAssets(mainFile, sourcePaths, outputDirectory, excludes);
 			Assert.strictEqual(assetPaths.length, 2, "Incorrect number of assets with main file and source path.");
 			var expectedPaths:Vector.<String> = new <String>
@@ -61,7 +61,7 @@ package tests
 			var sourcePaths:Vector.<String> = new <String>["./source-path-assets/src2"];
 			var outputDirectory:String = "./source-path-assets/bin";
 			var excludes:Vector.<String> = new <String>[];
-			var assetPaths:Vector.<String> =
+			var assetPaths:Array =
 				findSourcePathAssets(mainFile, sourcePaths, outputDirectory, excludes);
 			Assert.strictEqual(assetPaths.length, 3, "Incorrect number of assets with main file and source path.");
 			var expectedPaths:Vector.<String> = new <String>
@@ -86,7 +86,7 @@ package tests
 			var sourcePaths:Vector.<String> = new <String>[];
 			var outputDirectory:String = "./source-path-assets/bin";
 			var excludes:Vector.<String> = new <String>["./source-path-assets/src/asset-at-root.txt"];
-			var assetPaths:Vector.<String> =
+			var assetPaths:Array =
 				findSourcePathAssets(mainFile, sourcePaths, outputDirectory, excludes);
 			Assert.strictEqual(assetPaths.length, 1, "Incorrect number of assets with excludes.");
 			var expectedPaths:Vector.<String> = new <String>
