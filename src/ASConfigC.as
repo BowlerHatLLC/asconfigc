@@ -901,6 +901,12 @@ package
 			var content:Object = fs.readFileSync(assetPath);
 			var targetPath:String = assetPathToOutputPath(assetPath, mainFile, sourcePaths, outputDirectory);
 			mkdirp["sync"](path.dirname(targetPath));
+			if(!fs["accessSync"](targetPath, fs["constants"].W_OK))
+			{
+				//is this the best way to do it? seems to be no way to make
+				//writable without also modifying the others
+				fs.chmodSync(targetPath, parseInt("766", 8));
+			}
 			fs.writeFileSync(targetPath, content);
 		}
 
