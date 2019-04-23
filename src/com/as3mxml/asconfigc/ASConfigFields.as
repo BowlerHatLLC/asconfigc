@@ -26,5 +26,6 @@ package com.as3mxml.asconfigc
 		public static const COPY_SOURCE_PATH_ASSETS:String = "copySourcePathAssets";
 		public static const AIR_OPTIONS:String = "airOptions";
 		public static const HTML_TEMPLATE:String = "htmlTemplate";
+		public static const ANIMATE_OPTIONS:String = "animateOptions";
 	}
 }

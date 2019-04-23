@@ -501,6 +501,11 @@ package
 				}
 				readHTMLTemplateOptions(compilerOptionsJSON);
 			}
+			if(ASConfigFields.ANIMATE_OPTIONS in configData)
+			{
+				console.error("The animateOptions field is not supported.");
+				process.exit(1);
+			}
 		}
 
 		private function readProjectType(configData:Object):String
