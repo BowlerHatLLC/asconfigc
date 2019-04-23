@@ -16,9 +16,9 @@ limitations under the License.
 package com.as3mxml.asconfigc.utils
 {
 	public function findSourcePathAssets(mainFile:String, sourcePaths:Vector.<String>,
-		outputDirectory:String, excludes:Vector.<String>):Vector.<String>
+		outputDirectory:String, excludes:Vector.<String>):Array
 	{
-		var result:Vector.<String> = new <String>[];
+		var result:Set = new Set();
 		if(!sourcePaths)
 		{
 			sourcePaths = new <String>[];
@@ -44,7 +44,7 @@ package com.as3mxml.asconfigc.utils
 		if(sourcePaths.indexOf(outputDirectory) !== -1)
 		{
 			console.warn("Assets in source path will not be copied because the output directory is a source path: " + outputDirectory);
-			return result;
+			return Array.from(result);
 		}
 		if(excludes)
 		{
@@ -80,9 +80,9 @@ package com.as3mxml.asconfigc.utils
 				{
 					continue;
 				}
-				result.push(fullPath);
+				result.add(fullPath);
 			}
 		}
-		return result;
+		return Array.from(result);
 	}
 }

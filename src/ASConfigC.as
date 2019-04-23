@@ -920,7 +920,7 @@ package
 			{
 				excludes.push(this._airDescriptor);
 			}
-			var assetPaths:Vector.<String> = findSourcePathAssets(this._mainFile, sourcePaths, outputDirectory, excludes);
+			var assetPaths:Array = findSourcePathAssets(this._mainFile, sourcePaths, outputDirectory, excludes);
 			var assetCount:int = assetPaths.length;
 			for(var i:int = 0; i < assetCount; i++)
 			{
@@ -1201,7 +1201,7 @@ package
 				if(fs.statSync(srcFilePath).isDirectory())
 				{
 					var assetDirList:Vector.<String> = new <String>[srcFilePath];
-					var assetPaths:Vector.<String> = findSourcePathAssets(null, assetDirList, outputDir, null);
+					var assetPaths:Array = findSourcePathAssets(null, assetDirList, outputDir, null);
 					assetDirList = new <String>[path.dirname(srcFilePath)];
 					var assetCount:int = assetPaths.length;
 					for(var j:int = 0; j < assetCount; j++)
