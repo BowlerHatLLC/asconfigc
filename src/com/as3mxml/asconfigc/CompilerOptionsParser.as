@@ -155,6 +155,11 @@ package com.as3mxml.asconfigc
 						OptionsFormatter.setValue(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.KEEP_ALL_TYPE_SELECTORS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.KEEP_AS3_METADATA:
 					{
 						OptionsFormatter.appendValues(key, options[key], result);
@@ -221,6 +226,11 @@ package com.as3mxml.asconfigc
 						break;
 					}
 					case CompilerOptions.REMOVE_CIRCULARS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.SHOW_UNUSED_TYPE_SELECTOR_WARNINGS:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
 						break;

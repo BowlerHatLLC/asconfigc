@@ -33,6 +33,7 @@ package com.as3mxml.asconfigc
 		public static const DIRECTORY:String = "directory";
 		public static const DUMP_CONFIG:String = "dump-config";
 		public static const EXTERNAL_LIBRARY_PATH:String = "external-library-path";
+		public static const KEEP_ALL_TYPE_SELECTORS:String = "keep-all-type-selectors";
 		public static const KEEP_AS3_METADATA:String = "keep-as3-metadata";
 		public static const KEEP_GENERATED_ACTIONSCRIPT:String = "keep-generated-actionscript";
 		public static const LIBRARY_PATH:String = "library-path";
@@ -47,6 +48,7 @@ package com.as3mxml.asconfigc
 		public static const OMIT_TRACE_STATEMENTS:String = "omit-trace-statements";
 		public static const OUTPUT:String = "output";
 		public static const PRELOADER:String = "preloader";
+		public static const SHOW_UNUSED_TYPE_SELECTOR_WARNINGS:String = "show-unused-type-selector-warnings";
 		public static const SIZE_REPORT:String = "size-report";
 		public static const SOURCE_PATH:String = "source-path";
 		public static const STATIC_LINK_RUNTIME_SHARED_LIBRARIES:String = "static-link-runtime-shared-libraries";
