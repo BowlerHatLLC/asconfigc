@@ -15,23 +15,26 @@ limitations under the License.
 */
 package com.as3mxml.asconfigc.utils
 {
-	public function populateHTMLTemplateFile(content:String, options:Object):String
+	public function generateApplicationID(mainFile:String, outputPath:String):String
 	{
-		if(options === null)
+		if(!outputPath && !mainFile)
 		{
-			return content;
+			return null;
 		}
-		for(var key:String in options)
+		var fileName:String = null;
+		if(outputPath == null)
 		{
-			var token:String = "${" + key + "}";
-			var value:String = options[key];
-			var index:int = content.indexOf(token);
-			while(index !== -1)
-			{
-				content = content.substr(0, index) + value + content.substr(index + token.length);
-				index = content.indexOf(token);
-			}
+			fileName = path.basename(mainFile);
 		}
-		return content;
+		else
+		{
+			fileName = path.basename(outputPath);
+		}
+		var extensionIndex:int = fileName.indexOf(".");
+		if(extensionIndex == -1)
+		{
+			return fileName;
+		}
+		return fileName.substr(0, extensionIndex);
 	}
 }

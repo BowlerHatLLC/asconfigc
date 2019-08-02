@@ -35,6 +35,8 @@ package
 	import com.as3mxml.asconfigc.utils.findOutputDirectory;
 	import com.as3mxml.asconfigc.utils.findSourcePathAssets;
 	import com.as3mxml.asconfigc.utils.folderContains;
+	import com.as3mxml.asconfigc.utils.generateApplicationID;
+	import com.as3mxml.asconfigc.utils.populateAdobeAIRDescriptorTemplateFile;
 	import com.as3mxml.asconfigc.utils.populateHTMLTemplateFile;
 	import com.as3mxml.royale.utils.ApacheFlexJSUtils;
 	import com.as3mxml.royale.utils.ApacheRoyaleUtils;
@@ -124,6 +126,7 @@ package
 		private var _configRequiresRoyale:Boolean;
 		private var _configRequiresFlexJS:Boolean;
 		private var _configRequiresRoyaleOrFlexJS:Boolean;
+		private var _configRequiresAIR:Boolean;
 		private var _isSWFTargetOnly:Boolean;
 		private var _outputIsJS:Boolean;
 		private var _jsOutputType:String;
@@ -405,7 +408,7 @@ package
 			if(ASConfigFields.CONFIG in configData)
 			{
 				var configName:String = configData[ASConfigFields.CONFIG] as String;
-				this.detectJavaScript(configName);
+				this.detectConfigRequirements(configName);
 				this._compilerArgs.push("+configname=" + configName);
 			}
 			if(ASConfigFields.COMPILER_OPTIONS in configData)
@@ -444,6 +447,7 @@ package
 			}
 			if(ASConfigFields.APPLICATION in configData)
 			{
+				this._configRequiresAIR = true;
 				this._airDescriptors = new <String>[];
 				var application:Object = configData[ASConfigFields.APPLICATION]
 				if(typeof application === "string")
@@ -509,6 +513,7 @@ package
 			}
 			if(ASConfigFields.AIR_OPTIONS in configData)
 			{
+				this._configRequiresAIR = true;
 				this._airOptionsJSON = configData[ASConfigFields.AIR_OPTIONS];
 				this.readAIROptions(this._airOptionsJSON);
 			}
@@ -641,7 +646,7 @@ package
 			}
 		}
 
-		private function detectJavaScript(configName:String):void
+		private function detectConfigRequirements(configName:String):void
 		{
 			switch(configName)
 			{
@@ -661,6 +666,16 @@ package
 				{
 					//this option is not supported by FlexJS
 					this._configRequiresRoyale = true;
+					break;
+				}
+				case ConfigName.AIR:
+				{
+					this._configRequiresAIR = true;
+					break;
+				}
+				case ConfigName.AIRMOBILE:
+				{
+					this._configRequiresAIR = true;
 					break;
 				}
 			}
@@ -1081,9 +1096,18 @@ package
 
 		private function processAIRDescriptors():void
 		{
-			if(!this._airDescriptors || this._airDescriptors.length == 0)
+			if(!this._configRequiresAIR)
 			{
 				return;
+			}
+			
+			var populateTemplate:Boolean = false;
+			if(this._airDescriptors == null || this._airDescriptors.length == 0)
+			{
+				this._airDescriptors = new <String>[];
+				var templatePath:String = path.resolve(this._sdkHome, "templates/air/descriptor-template.xml");
+				this._airDescriptors.push(templatePath);
+				populateTemplate = true;
 			}
 			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
 			var contentValue:String = findApplicationContent(this._mainFile, this._outputPath, !this._outputIsJS);
@@ -1097,6 +1121,16 @@ package
 			{
 				var airDescriptor:String = this._airDescriptors[i];
 				var descriptor:String = fs.readFileSync(airDescriptor, "utf8") as String;
+				if(populateTemplate)
+				{
+					var appID:String = generateApplicationID(this._mainFile, this._outputPath);
+					if (appID == null)
+					{
+						console.error("Failed to generate application ID for Adobe AIR.");
+						process.exit(1);
+					}
+					descriptor = populateAdobeAIRDescriptorTemplateFile(descriptor, appID);
+				}
 				descriptor = descriptor.replace(/<content>.*<\/content>/, "<content>" + contentValue + "</content>");
 				if(this._outputIsJS)
 				{

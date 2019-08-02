@@ -18,6 +18,20 @@ package com.as3mxml.asconfigc.utils
 	public function findAIRDescriptorOutputPath(mainFile:String, airDescriptor:String, outputPath:String, isSWF:Boolean):String
 	{
 		var outputDir:String = findOutputDirectory(mainFile, outputPath, isSWF);
-		return path.resolve(outputDir, path.basename(airDescriptor));
+		var fileName:String = null;
+		if(airDescriptor)
+		{
+			fileName = path.basename(airDescriptor);
+		}
+		else
+		{
+			var appID:String = generateApplicationID(mainFile, outputPath);
+			if(appID == null)
+			{
+				return null;
+			}
+			fileName = appID + "-app.xml";
+		}
+		return path.resolve(outputDir, fileName);
 	}
 }
