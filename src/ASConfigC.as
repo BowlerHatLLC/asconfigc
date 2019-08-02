@@ -106,7 +106,7 @@ package
 			this.compileProject();
 			this.copySourcePathAssets();
 			this.copyHTMLTemplate();
-			this.processDescriptor();
+			this.processAIRDescriptors();
 			this.copyAIRFiles();
 			this.prepareNativeExtensions();
 			if(this._airPlatform !== null)
@@ -129,7 +129,7 @@ package
 		private var _jsOutputType:String;
 		private var _compilerArgs:Array;
 		private var _additionalOptions:String;
-		private var _airDescriptor:String = null;
+		private var _airDescriptors:Vector.<String> = null;
 		private var _outputPath:String = null;
 		private var _files:Array = null;
 		private var _mainFile:String = null;
@@ -444,14 +444,47 @@ package
 			}
 			if(ASConfigFields.APPLICATION in configData)
 			{
-				//if the path is relative, path.resolve() will give us the
-				//absolute path
-				this._airDescriptor = path.resolve(configData[ASConfigFields.APPLICATION]);
-				if(this._airDescriptor &&
-					(!fs.existsSync(this._airDescriptor) || fs.statSync(this._airDescriptor).isDirectory()))
+				this._airDescriptors = new <String>[];
+				var application:Object = configData[ASConfigFields.APPLICATION]
+				if(typeof application === "string")
 				{
-					console.error("Adobe AIR application descriptor not found: " + this._airDescriptor);
-					process.exit(1);
+					//if it's a string, just use it as is for all platforms
+					this._airDescriptors[0] = configData[ASConfigFields.APPLICATION];
+				}
+				else if(this._airPlatform)
+				{
+					//if it's an object, and we're packaging an AIR app, we need to
+					//grab the descriptor for the platform we're targeting
+					//we can ignore the rest
+					if(application.hasOwnProperty(this._airPlatform))
+					{
+						this._airDescriptors[0] = application[this._airPlatform];
+					}
+				}
+				else
+				{
+					//if it's an object, and we're compiling and not packaging an
+					//AIR app, we need to use all of the descriptors
+					var index:int = 0;
+					for(var platformID:String in application)
+					{
+						this._airDescriptors[index] = application[platformID];
+						index++;
+					}
+				}
+				var descriptorCount:int = this._airDescriptors.length;
+				for(var i:int = 0; i < descriptorCount; i++)
+				{
+					//if the path is relative, path.resolve() will give us the
+					//absolute path
+					var airDescriptor:String = path.resolve(this._airDescriptors[i]);
+					this._airDescriptors[i] = airDescriptor;
+
+					if(!fs.existsSync(airDescriptor) || fs.statSync(airDescriptor).isDirectory())
+					{
+						console.error("Adobe AIR application descriptor not found: " + airDescriptor);
+						process.exit(1);
+					}
 				}
 			}
 			//parse files before airOptions because the mainFile may be
@@ -476,11 +509,6 @@ package
 			}
 			if(ASConfigFields.AIR_OPTIONS in configData)
 			{
-				if(this._airDescriptor === null)
-				{
-					console.error("Adobe AIR packaging options found, but the \"application\" field is empty.");
-					process.exit(1);
-				}
 				this._airOptionsJSON = configData[ASConfigFields.AIR_OPTIONS];
 				this.readAIROptions(this._airOptionsJSON);
 			}
@@ -573,12 +601,17 @@ package
 
 		private function readAIROptions(options:Object):void
 		{
+			var airDescriptor:String = null;
+			if(this._airDescriptors && this._airDescriptors.length > 0)
+			{
+				airDescriptor = this._airDescriptors[0];
+			}
 			try
 			{
 				AIROptionsParser.parse(
 					this._airPlatform,
 					this._debugBuild,
-					findAIRDescriptorOutputPath(this._mainFile, this._airDescriptor, this._outputPath, !this._outputIsJS),
+					findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPath, !this._outputIsJS),
 					findApplicationContentOutputPath(this._mainFile, this._outputPath, !this._outputIsJS),
 					options,
 					this._airArgs);
@@ -927,13 +960,17 @@ package
 			}
 			var outputDirectory:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
 			var excludes:Vector.<String> = new <String>[];
-			if(this._airDescriptor)
+			if(this._airDescriptors)
 			{
-				excludes.push(this._airDescriptor);
+				var descriptorCount:int = this._airDescriptors.length;
+				for(var i:int = 0; i < descriptorCount; i++)
+				{
+					excludes.push(this._airDescriptors[i]);
+				}
 			}
 			var assetPaths:Array = findSourcePathAssets(this._mainFile, sourcePaths, outputDirectory, excludes);
 			var assetCount:int = assetPaths.length;
-			for(var i:int = 0; i < assetCount; i++)
+			for(i = 0; i < assetCount; i++)
 			{
 				var assetPath:String = assetPaths[i];
 				if(this._outputIsJS)
@@ -1042,9 +1079,9 @@ package
 			}
 		}
 
-		private function processDescriptor():void
+		private function processAIRDescriptors():void
 		{
-			if(!this._airDescriptor)
+			if(!this._airDescriptors || this._airDescriptors.length == 0)
 			{
 				return;
 			}
@@ -1055,27 +1092,32 @@ package
 				console.error("Failed to find content for application descriptor.");
 				process.exit(1);
 			}
-			var descriptor:String = fs.readFileSync(this._airDescriptor, "utf8") as String;
-			descriptor = descriptor.replace(/<content>.*<\/content>/, "<content>" + contentValue + "</content>");
-			if(this._outputIsJS)
+			var descriptorCount:int = this._airDescriptors.length;
+			for(var i:int = 0; i < descriptorCount; i++)
 			{
-				var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
-				var debugDescriptorOutputPath:String = path.resolve(debugOutputDir, path.basename(this._airDescriptor));
-				mkdirp["sync"](path.dirname(debugDescriptorOutputPath));
-				fs.writeFileSync(debugDescriptorOutputPath, descriptor, "utf8");
-				if(!this._debugBuild)
+				var airDescriptor:String = this._airDescriptors[i];
+				var descriptor:String = fs.readFileSync(airDescriptor, "utf8") as String;
+				descriptor = descriptor.replace(/<content>.*<\/content>/, "<content>" + contentValue + "</content>");
+				if(this._outputIsJS)
 				{
-					var releaseOutputDir:String = path.join(outputDir, "bin", "js-release");
-					var releaseDescriptorOutputPath:String = path.resolve(releaseOutputDir, path.basename(this._airDescriptor));
-					mkdirp["sync"](path.dirname(releaseDescriptorOutputPath));
-					fs.writeFileSync(releaseDescriptorOutputPath, descriptor, "utf8");
+					var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
+					var debugDescriptorOutputPath:String = path.resolve(debugOutputDir, path.basename(airDescriptor));
+					mkdirp["sync"](path.dirname(debugDescriptorOutputPath));
+					fs.writeFileSync(debugDescriptorOutputPath, descriptor, "utf8");
+					if(!this._debugBuild)
+					{
+						var releaseOutputDir:String = path.join(outputDir, "bin", "js-release");
+						var releaseDescriptorOutputPath:String = path.resolve(releaseOutputDir, path.basename(airDescriptor));
+						mkdirp["sync"](path.dirname(releaseDescriptorOutputPath));
+						fs.writeFileSync(releaseDescriptorOutputPath, descriptor, "utf8");
+					}
 				}
-			}
-			else //swf
-			{
-				var descriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, this._airDescriptor, this._outputPath, true);
-				mkdirp["sync"](path.dirname(descriptorOutputPath));
-				fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
+				else //swf
+				{
+					var descriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPath, true);
+					mkdirp["sync"](path.dirname(descriptorOutputPath));
+					fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
+				}
 			}
 		}
 
