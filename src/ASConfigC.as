@@ -1012,14 +1012,13 @@ package
 			}
 		}
 
-		private function copySourcePathAssetToOutputDirectory(assetPath:String, mainFile:String, sourcePaths:Vector.<String>, outputDirectory:String):void
+		private function copyAsset(srcPath:String, targetPath:String):void
 		{
 			if(this._verbose)
 			{
-				console.info("Copying asset: " + assetPath);
+				console.info("Copying asset: " + srcPath);
 			}
-			var content:Object = fs.readFileSync(assetPath);
-			var targetPath:String = assetPathToOutputPath(assetPath, mainFile, sourcePaths, outputDirectory);
+			var content:Object = fs.readFileSync(srcPath);
 			mkdirp["sync"](path.dirname(targetPath));
 			if(fs.existsSync(targetPath) && !fs["accessSync"](targetPath, fs["constants"].W_OK))
 			{
@@ -1071,16 +1070,19 @@ package
 				if(this._outputIsJS)
 				{
 					var debugOutputDir:String = path.join(outputDirectory, "bin", "js-debug");
-					copySourcePathAssetToOutputDirectory(assetPath, this._mainFile, sourcePaths, debugOutputDir);
+					var debugTargetPath:String = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, debugOutputDir);
+					copyAsset(assetPath, debugTargetPath);
 					if(!this._debugBuild)
 					{
 						var releaseOutputDir:String = path.join(outputDirectory, "bin", "js-release");
-						copySourcePathAssetToOutputDirectory(assetPath, this._mainFile, sourcePaths, releaseOutputDir);
+						var releaseTargetPath:String = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, releaseOutputDir);
+						copyAsset(assetPath, releaseTargetPath);
 					}
 				}
-				else
+				else //swf
 				{
-					copySourcePathAssetToOutputDirectory(assetPath, this._mainFile, sourcePaths, outputDirectory);
+					var swfTargetPath:String = assetPathToOutputPath(assetPath, this._mainFile, sourcePaths, outputDirectory);
+					copyAsset(assetPath, swfTargetPath);
 				}
 			}
 		}
@@ -1435,47 +1437,38 @@ package
 						if(this._outputIsJS)
 						{
 							var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
-							copySourcePathAssetToOutputDirectory(assetPath, null, assetDirList, debugOutputDir);
+							var debugTargetPath:String = assetPathToOutputPath(assetPath, null, assetDirList, debugOutputDir);
+							copyAsset(assetPath, debugTargetPath);
 							if(!this._debugBuild)
 							{
 								var releaseOutputDir:String = path.join(outputDir, "bin", "js-release");
-								copySourcePathAssetToOutputDirectory(assetPath, null, assetDirList, releaseOutputDir);
+								var releaseTargetPath:String = assetPathToOutputPath(assetPath, null, assetDirList, releaseOutputDir);
+								copyAsset(assetPath, releaseTargetPath);
 							}
 						}
 						else //swf
 						{
-							copySourcePathAssetToOutputDirectory(assetPath, null, assetDirList, outputDir);
+							var swfTargetPath:String = assetPathToOutputPath(assetPath, null, assetDirList, outputDir);
+							copyAsset(assetPath, swfTargetPath);
 						}
 					}
 				}
 				else //src not a directory
 				{
-					try
-					{
-						var content:Object = fs.readFileSync(srcFilePath);
-					}
-					catch(error)
-					{
-						console.error("Failed to copy file: " + srcFilePath);
-						process.exit(1);
-					}
 					if(this._outputIsJS)
 					{
-						var targetPath:String = path.resolve(path.join(outputDir, "bin", "js-debug"), destFilePath);
-						mkdirp["sync"](path.dirname(targetPath));
-						fs.writeFileSync(targetPath, content);
+						debugTargetPath = path.resolve(path.join(outputDir, "bin", "js-debug"), destFilePath);
+						copyAsset(srcFilePath, debugTargetPath);
 						if(!this._debugBuild)
 						{
-							targetPath = path.resolve(path.join(outputDir, "bin", "js-release"), destFilePath);
-							mkdirp["sync"](path.dirname(targetPath));
-							fs.writeFileSync(targetPath, content);
+							releaseTargetPath = path.resolve(path.join(outputDir, "bin", "js-release"), destFilePath);
+							copyAsset(srcFilePath, releaseTargetPath);
 						}
 					}
 					else //swf
 					{
-						targetPath = path.resolve(outputDir, destFilePath);
-						mkdirp["sync"](path.dirname(targetPath));
-						fs.writeFileSync(targetPath, content);
+						swfTargetPath = path.resolve(outputDir, destFilePath);
+						copyAsset(srcFilePath, swfTargetPath);
 					}
 				}
 			}
