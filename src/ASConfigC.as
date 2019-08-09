@@ -82,21 +82,10 @@ package
 					process.exit(1);
 				}
 			}
-			if(!this._configFilePath)
+			this.findConfig();
+			if(this._verbose)
 			{
-				//try to find asconfig.json in the current working directory
-				var cwdConfigPath:String = path.resolve(process.cwd(), ASCONFIG_JSON);
-				if(fs.existsSync(cwdConfigPath))
-				{
-					this._configFilePath = cwdConfigPath;
-				}
-				else
-				{
-					//asconfig.json not found
-					console.error("asconfig.json not found in directory: " + process.cwd());
-					this.printUsage();
-					process.exit(1);
-				}
+				console.info("Configuration file: " + this._configFilePath);
 			}
 			process.chdir(path.dirname(this._configFilePath));
 
@@ -140,6 +129,7 @@ package
 		private var _clean:Boolean = false;
 		private var _unpackageANEs:Boolean = false;
 		private var _debugBuild:Boolean = false;
+		private var _verbose:Boolean = false;
 		private var _sourcePaths:Vector.<String> = null;
 		private var _copySourcePathAssets:Boolean = false;
 		private var _airPlatform:String = null;
@@ -176,6 +166,7 @@ package
 			console.info(" --storepass PASSWORD                                The password used when signing and packaging an Adobe AIR application. If not specified, prompts for the password.");
 			console.info(" --unpackage-anes                                    Unpackage native extensions to the output directory when creating a debug build for the Adobe AIR simulator.");
 			console.info(" --clean                                             Clean the output directory. Will not build the project.")
+			console.info(" --verbose                                           Displays verbose output.")
 		}
 
 		private function parseArguments():void
@@ -268,6 +259,20 @@ package
 						}
 						break;
 					}
+					case "verbose":
+					{
+						//support both --verbose=true or simply --verbose
+						var verboseValue:Object = args[key];
+						if(typeof verboseValue === "string")
+						{
+							this._verbose = verboseValue === "true";
+						}
+						else
+						{
+							this._verbose = verboseValue as Boolean;
+						}
+						break;
+					}
 					case "air":
 					{
 						var airPlatformValue:Object = args[key];
@@ -339,6 +344,10 @@ package
 
 		private function loadConfig():Object
 		{
+			if(this._verbose)
+			{
+				console.info("Reading configuration file...");
+			}
 			var schemaFilePath:String = path.join(__dirname, "..", "..", "schemas", "asconfig.schema.json");
 			try
 			{
@@ -358,6 +367,10 @@ package
 				console.error("Error: Invalid JSON in schema file. " + schemaFilePath);
 				console.error(error);
 				process.exit(1);
+			}
+			if(this._verbose)
+			{
+				console.info("Validating configuration file...");
 			}
 			try
 			{
@@ -396,6 +409,29 @@ package
 			}
 			return configData;
 		}
+
+		private function findConfig():void
+		{
+			if(this._configFilePath)
+			{
+				//already found from arguments
+				return;
+			}
+
+			//try to find asconfig.json in the current working directory
+			var cwdConfigPath:String = path.resolve(process.cwd(), ASCONFIG_JSON);
+			if(fs.existsSync(cwdConfigPath))
+			{
+				this._configFilePath = cwdConfigPath;
+			}
+			else
+			{
+				//asconfig.json not found
+				console.error("asconfig.json not found in directory: " + process.cwd());
+				this.printUsage();
+				process.exit(1);
+			}
+		}
 		
 		private function parseConfig():void
 		{
@@ -404,6 +440,10 @@ package
 			this._compilerOptionsJSON = null;
 			this._airOptionsJSON = null;
 			var configData:Object = this.loadConfig();
+			if(this._verbose)
+			{
+				console.info("Parsing configuration file...");
+			}
 			this._projectType = this.readProjectType(configData);
 			if(ASConfigFields.CONFIG in configData)
 			{
@@ -749,6 +789,10 @@ package
 			}
 
 			this._outputIsJS = (this._sdkIsRoyale || sdkIsFlexJS) && !this._isSWFTargetOnly;
+			if(this._verbose)
+			{
+				console.info("SDK: " + this._sdkHome);
+			}
 		}
 
 		private function findCompilerJarPath():String
@@ -795,6 +839,11 @@ package
 			if(!this._clean)
 			{
 				return;
+			}
+
+			if(this._verbose)
+			{
+				console.info("Cleaning project...");
 			}
 
 			var outputDirectory:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
@@ -852,6 +901,10 @@ package
 
 			if(fs.existsSync(outputDirectory))
 			{
+				if(this._verbose)
+				{
+					console.info("Deleting: " + outputDirectory);
+				}
 				try
 				{
 					del.sync([outputDirectory]);
@@ -866,6 +919,17 @@ package
 
 		private function compileProject():void
 		{
+			if(this._verbose)
+			{
+				if(this._projectType == ProjectType.LIB)
+				{
+					console.info("Compiling library...");
+				}
+				else //app
+				{
+					console.info("Compiling application...");
+				}
+			}
 			var jarPath:String = this.findCompilerJarPath();
 			if(!jarPath)
 			{
@@ -924,6 +988,10 @@ package
 						command += escapePath(file, false);
 					}
 				}
+				if(this._verbose)
+				{
+					console.info(command);
+				}
 				var result:Object = child_process.execSync(command,
 				{
 					stdio: "inherit",
@@ -946,6 +1014,10 @@ package
 
 		private function copySourcePathAssetToOutputDirectory(assetPath:String, mainFile:String, sourcePaths:Vector.<String>, outputDirectory:String):void
 		{
+			if(this._verbose)
+			{
+				console.info("Copying asset: " + assetPath);
+			}
 			var content:Object = fs.readFileSync(assetPath);
 			var targetPath:String = assetPathToOutputPath(assetPath, mainFile, sourcePaths, outputDirectory);
 			mkdirp["sync"](path.dirname(targetPath));
@@ -985,6 +1057,14 @@ package
 			}
 			var assetPaths:Array = findSourcePathAssets(this._mainFile, sourcePaths, outputDirectory, excludes);
 			var assetCount:int = assetPaths.length;
+			if(assetCount === 0)
+			{
+				return;
+			}
+			if(this._verbose)
+			{
+				console.info("Copying source path assets...");
+			}
 			for(i = 0; i < assetCount; i++)
 			{
 				var assetPath:String = assetPaths[i];
@@ -1010,6 +1090,10 @@ package
 			if(!this._htmlTemplate)
 			{
 				return;
+			}
+			if(this._verbose)
+			{
+				console.info("Copying HTML template...");
 			}
 			if(!fs.existsSync(this._htmlTemplate))
 			{
@@ -1100,6 +1184,11 @@ package
 			{
 				return;
 			}
+
+			if(this._verbose)
+			{
+				console.info("Processing Adobe AIR application descriptor(s)...");
+			}
 			
 			var populateTemplate:Boolean = false;
 			if(this._airDescriptors == null || this._airDescriptors.length == 0)
@@ -1108,6 +1197,10 @@ package
 				var templatePath:String = path.resolve(this._sdkHome, "templates/air/descriptor-template.xml");
 				this._airDescriptors.push(templatePath);
 				populateTemplate = true;
+				if(this._verbose)
+				{
+					console.info("Using template fallback: " + templatePath);
+				}
 			}
 			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
 			var contentValue:String = findApplicationContent(this._mainFile, this._outputPath, !this._outputIsJS);
@@ -1116,10 +1209,18 @@ package
 				console.error("Failed to find content for application descriptor.");
 				process.exit(1);
 			}
+			if(this._verbose)
+			{
+				console.info("Initial window content: " + contentValue);
+			}
 			var descriptorCount:int = this._airDescriptors.length;
 			for(var i:int = 0; i < descriptorCount; i++)
 			{
 				var airDescriptor:String = this._airDescriptors[i];
+				if(this._verbose)
+				{
+					console.info("Descriptor: " + airDescriptor);
+				}
 				var descriptor:String = fs.readFileSync(airDescriptor, "utf8") as String;
 				if(populateTemplate)
 				{
@@ -1128,6 +1229,10 @@ package
 					{
 						console.error("Failed to generate application ID for Adobe AIR.");
 						process.exit(1);
+					}
+					if(this._verbose)
+					{
+						console.info("Generated application ID: " + appID);
 					}
 					descriptor = populateAdobeAIRDescriptorTemplateFile(descriptor, appID);
 				}
@@ -1179,19 +1284,37 @@ package
 				return;
 			}
 
+			var anes:Vector.<String> = new <String>[];
 			if(CompilerOptions.LIBRARY_PATH in this._compilerOptionsJSON)
 			{
 				var libraryPathJSON:Array = this._compilerOptionsJSON[CompilerOptions.LIBRARY_PATH] as Array;
-				this.unpackANEs(libraryPathJSON);
+				this.findANEs(libraryPathJSON, anes);
 			}
 			if(CompilerOptions.EXTERNAL_LIBRARY_PATH in this._compilerOptionsJSON)
 			{
 				var externalLibraryPathJSON:Array = this._compilerOptionsJSON[CompilerOptions.EXTERNAL_LIBRARY_PATH] as Array;
-				this.unpackANEs(externalLibraryPathJSON);
+				this.findANEs(externalLibraryPathJSON, anes);
+			}
+
+			var aneCount:int = anes.length;
+			if(aneCount === 0)
+			{
+				return;
+			}
+
+			if(this._verbose)
+			{
+				console.info("Unpacking Adobe AIR native extensions...");
+			}
+
+			for(var i:int = 0; i < aneCount; i++)
+			{
+				var anePath:String = anes[i];
+				this.unpackANE(anePath);
 			}
 		}
 
-		private function unpackANEs(libraryPathJSON:Array):void
+		private function findANEs(libraryPathJSON:Array, result:Vector.<String>):void
 		{
 			var pathCount:int = libraryPathJSON.length;
 			for(var i:int = 0; i < pathCount; i++)
@@ -1200,7 +1323,7 @@ package
 				libraryPath = path.resolve(libraryPath);
 				if(libraryPath.endsWith(FILE_EXTENSION_ANE))
 				{
-					this.unpackANE(libraryPath);
+					result.push(libraryPath);
 				}
 				else if(fs.statSync(libraryPath).isDirectory())
 				{
@@ -1212,7 +1335,7 @@ package
 						var fullPath:String = path.resolve(libraryPath, file);
 						if(fullPath.endsWith(FILE_EXTENSION_ANE))
 						{
-							this.unpackANE(fullPath);
+							result.push(fullPath);
 						}
 					}
 				}
@@ -1226,6 +1349,11 @@ package
 				//this is either an ANE that's already unpacked
 				//...or something else entirely
 				return;
+			}
+
+			if(this._verbose)
+			{
+				console.info("Unpacking: " + aneFilePath);
 			}
 
 			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
@@ -1267,6 +1395,16 @@ package
 			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
 			var filesJSON:Array = this._airOptionsJSON.files as Array;
 			var fileCount:int = filesJSON.length;
+			if(fileCount === 0)
+			{
+				return;
+			}
+
+			if(this._verbose)
+			{
+				console.info("Copying Adobe AIR application files...")
+			}
+
 			for(var i:int = 0; i < fileCount; i++)
 			{
 				var fileJSON:Object = filesJSON[i];
@@ -1345,6 +1483,10 @@ package
 
 		private function packageAIR():void
 		{
+			if(this._verbose)
+			{
+				console.info("Packaging Adobe AIR application...");
+			}
 			if(this._storepass !== null)
 			{
 				var storepassIndex:int = this._airArgs.indexOf("-" + SigningOptions.STOREPASS);
@@ -1369,6 +1511,10 @@ package
 			try
 			{
 				var command:String = escapePath(this._javaExecutable) + " " + this._airArgs.join(" ");
+				if(this._verbose)
+				{
+					console.info(command);
+				}
 				var result:Object = child_process.execSync(command,
 				{
 					stdio: "inherit",
