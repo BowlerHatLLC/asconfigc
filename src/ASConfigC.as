@@ -1237,18 +1237,21 @@ package
 						console.info("Generated application ID: " + appID);
 					}
 					descriptor = populateAdobeAIRDescriptorTemplateFile(descriptor, appID);
+
+					//clear this so that the name is based on the project name
+					airDescriptor = null;
 				}
 				descriptor = descriptor.replace(/<content>.*<\/content>/, "<content>" + contentValue + "</content>");
 				if(this._outputIsJS)
 				{
 					var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
-					var debugDescriptorOutputPath:String = path.resolve(debugOutputDir, path.basename(airDescriptor));
+					var debugDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, debugOutputDir, false);
 					mkdirp["sync"](path.dirname(debugDescriptorOutputPath));
 					fs.writeFileSync(debugDescriptorOutputPath, descriptor, "utf8");
 					if(!this._debugBuild)
 					{
 						var releaseOutputDir:String = path.join(outputDir, "bin", "js-release");
-						var releaseDescriptorOutputPath:String = path.resolve(releaseOutputDir, path.basename(airDescriptor));
+						var releaseDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, releaseOutputDir, false);
 						mkdirp["sync"](path.dirname(releaseDescriptorOutputPath));
 						fs.writeFileSync(releaseDescriptorOutputPath, descriptor, "utf8");
 					}
