@@ -361,20 +361,71 @@ package com.as3mxml.asconfigc
 
 		protected static function parseFiles(files:Array, result:Array):void
 		{
+			var selfFolders:Array = [];
+			var rootFolders:Array = [];
 			var count:int = files.length;
 			for(var i:int = 0; i < count; i++)
 			{
 				var file:Object = files[i];
+				var srcFile:String = null;
+				var destPath:String = null;
 				if(typeof file === "string")
 				{
-					result.push(file);
+					srcFile = file as String;
+					destPath = null;
 				}
 				else
 				{
-					var srcFile:String = file[AIROptions.FILES_FILE];
-					var destPath:String = file[AIROptions.FILES_PATH];
-					addFile(srcFile, destPath, result);
+					srcFile = file[AIROptions.FILES_FILE] as String;
+					destPath = file[AIROptions.FILES_PATH] as String;
 				}
+
+				if(fs.statSync(srcFile).isDirectory())
+				{
+					if(!destPath)
+					{
+						//add these folders after everything else because we'll
+						//use the -C option
+						selfFolders.push(srcFile);
+						continue;
+					}
+					else if(destPath == path.basename(srcFile))
+					{
+						//add these folders after everything else because we'll
+						//use the -C option
+						selfFolders.push(srcFile);
+						continue;
+					}
+					else if(destPath == ".")
+					{
+						//add these folders after everything else because we'll
+						//use the -C option
+						rootFolders.push(srcFile);
+						continue;
+					}
+				}
+
+				if(!destPath)
+				{
+					destPath = path.basename(srcFile);
+				}
+				addFile(srcFile, destPath, result);
+			}
+			count = rootFolders.length;
+			for(i = 0; i < count; i++)
+			{
+				folder = rootFolders[i];
+				result.push("-C");
+				result.push(folder);
+				result.push(".");
+			}
+			count = selfFolders.length;
+			for(i = 0; i < count; i++)
+			{
+				var folder:String = selfFolders[i];
+				result.push("-C");
+				result.push(path.dirname(folder));
+				result.push(path.basename(folder));
 			}
 		}
 
