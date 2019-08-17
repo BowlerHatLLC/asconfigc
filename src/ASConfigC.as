@@ -139,6 +139,7 @@ package
 		private var _airOptionsJSON:Object = null;
 		private var _htmlTemplate:String = null;
 		private var _htmlTemplateOptions:Object = null;
+		private var _jvmArgs:Array = null;
 
 		private function printVersion():void
 		{
@@ -165,8 +166,9 @@ package
 			console.info(" --air PLATFORM                                      Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, and `air`.");
 			console.info(" --storepass PASSWORD                                The password used when signing and packaging an Adobe AIR application. If not specified, prompts for the password.");
 			console.info(" --unpackage-anes                                    Unpackage native extensions to the output directory when creating a debug build for the Adobe AIR simulator.");
-			console.info(" --clean                                             Clean the output directory. Will not build the project.")
-			console.info(" --verbose                                           Displays verbose output.")
+			console.info(" --clean                                             Clean the output directory. Will not build the project.");
+			console.info(" --verbose                                           Displays verbose output.");
+			console.info(" --jvmargs ARGS                                      (Advanced) Pass custom arguments to the Java virtual machine.");
 		}
 
 		private function parseArguments():void
@@ -270,6 +272,24 @@ package
 						else
 						{
 							this._verbose = verboseValue as Boolean;
+						}
+						break;
+					}
+					case "jvmargs":
+					{
+						var jvmArgsValue:Object = args[key];
+						if(typeof jvmArgsValue === "string")
+						{
+							var jvmArgs:String = jvmArgsValue as String;
+							if(jvmArgs.startsWith("\"") && jvmArgs.endsWith("\""))
+							{
+								jvmArgs = jvmArgs.substr(1, jvmArgs.length - 2);
+							}
+							this._jvmArgs = jvmArgs.split(" ");
+						}
+						else
+						{
+							this._jvmArgs = null;
 						}
 						break;
 					}
@@ -959,7 +979,15 @@ package
 				this._compilerArgs.unshift("-Dflexlib=" + escapePath(frameworkPath));
 				this._compilerArgs.unshift("-Dflexcompiler=" + escapePath(this._sdkHome));
 			}
-			this._compilerArgs.unshift("-Xmx512m");
+			if(this._jvmArgs)
+			{
+				var jvmArgCount:int = this._jvmArgs.length;
+				for(var i:int = jvmArgCount - 1; i >= 0; i--)
+				{
+					var jvmArg:String = this._jvmArgs[i] as String;
+					this._compilerArgs.unshift(jvmArg);
+				}
+			}
 			try
 			{
 				var command:String = escapePath(this._javaExecutable) + " " + this._compilerArgs.join(" ");
@@ -974,7 +1002,7 @@ package
 				if(this._files && this._projectType !== ProjectType.LIB)
 				{
 					var filesCount:int = this._files.length;
-					for(var i:int = 0; i < filesCount; i++)
+					for(i = 0; i < filesCount; i++)
 					{
 						if(i === 0)
 						{
