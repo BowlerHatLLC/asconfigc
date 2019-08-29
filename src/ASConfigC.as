@@ -167,7 +167,7 @@ package
 			console.info(" --storepass PASSWORD                                The password used when signing and packaging an Adobe AIR application. If not specified, prompts for the password.");
 			console.info(" --unpackage-anes                                    Unpackage native extensions to the output directory when creating a debug build for the Adobe AIR simulator.");
 			console.info(" --clean                                             Clean the output directory. Will not build the project.");
-			console.info(" --verbose                                           Displays verbose output.");
+			console.info(" --verbose                                           Displays more detailed output, including the full set of options passed to all programs.");
 			console.info(" --jvmargs ARGS                                      (Advanced) Pass custom arguments to the Java virtual machine.");
 		}
 

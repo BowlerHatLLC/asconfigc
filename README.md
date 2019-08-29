@@ -1,6 +1,6 @@
 # asconfigc
 
-A command line utility that compiles an ActionScript project configured with an [*asconfig.json*](https://github.com/BowlerHatLLC/vscode-as3mxml/wiki/asconfig.json) file. This utility parses the configuration file and runs the compiler with the appropriate options. It can also package an Adobe AIR application. Supports a variety of ActionScript SDKs, including [Adobe AIR SDK & Compiler](http://www.adobe.com/devnet/air/air-sdk-download.html), [Apache Flex](https://flex.apache.org), the [Feathers SDK](https://feathersui.com/sdk/), and [Apache Royale](https://royale.apache.org/).
+A command line utility that compiles an ActionScript project configured with an [*asconfig.json*](https://github.com/BowlerHatLLC/vscode-as3mxml/wiki/asconfig.json) file. This utility parses the configuration file and runs the compiler with the appropriate options. It can also package an Adobe AIR application. Supports a variety of ActionScript SDKs, including [Adobe AIR SDK & Compiler](https://www.adobe.com/devnet/air/air-sdk-download.html), [Apache Flex](https://flex.apache.org), the [Feathers SDK](https://feathersui.com/sdk/), and [Apache Royale](https://royale.apache.org/).
 
 ## Installation
 
@@ -22,7 +22,7 @@ The following options are available:
 
 * `--sdk DIRECTORY`
 
-	Specify the directory where the ActionScript SDK is located. If omitted, defaults to checking `FLEX_HOME` and `PATH` environment variables for a supported SDK.
+	Specify the directory where the ActionScript SDK is located. If omitted, defaults to checking `ROYALE_HOME`, `FLEX_HOME`, and `PATH` environment variables for a supported SDK.
 
 * `--debug=true` or `--debug=false`
 
@@ -36,13 +36,21 @@ The following options are available:
 
 	The password used when signing and packaging an Adobe AIR application. If not specified, prompts for the password.
 
-* `--unpackage-anes`
-
-	Unpackage native extensions to the output directory when creating a debug build for the Adobe AIR simulator.
-
 * `--clean`
 
 	Clean the output directory. Will not build the project.
+
+* `--unpackage-anes`
+
+	(Advanced) Unpackage native extensions to the output directory when creating a debug build for the Adobe AIR simulator.
+
+* `--verbose`
+
+	(Advanced) Displays more detailed output, including the full set of options passed to all programs.
+
+* `--jvmargs`
+
+	(Advanced) Pass additional options to the Java Virtual Machine when running the compiler.
 
 * `-h` or `--help`
 
@@ -58,12 +66,12 @@ The source code for the `asconfigc` utility is written in ActionScript. That's r
 
 ## Support this project
 
-The [ActionScript and MXML extension for Visual Studio Code](https://as3mxml.com/) and [*asconfigc*](https://www.npmjs.com/package/asconfigc) are developed by Josh Tynjala with the support of community members like you.
+The [ActionScript & MXML extension for Visual Studio Code](https://as3mxml.com/) and [*asconfigc*](https://www.npmjs.com/package/asconfigc) are developed by [Josh Tynjala](https://patreon.com/josht) with the support of community members like you.
 
-[Support Josh Tynjala on Patreon](http://patreon.com/josht)
+[Support Josh Tynjala on Patreon](https://patreon.com/josht)
 
 Special thanks to the following sponsors for their generous support:
 
-* [Moonshine IDE](http://moonshine-ide.com/)
+* [Moonshine IDE](https://moonshine-ide.com/)
 
 * [Dedoose](https://www.dedoose.com/)
