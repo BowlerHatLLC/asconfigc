@@ -100,7 +100,7 @@ package tests
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.EMBED_BITCODE);
 			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value.toString()), optionIndex + 1);
+			Assert.strictEqual(result.indexOf(value ? "yes" : "no"), optionIndex + 1);
 		}
 
 		[Test]
@@ -198,7 +198,7 @@ package tests
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.HIDE_ANE_LIB_SYMBOLS);
 			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value.toString()), optionIndex + 1);
+			Assert.strictEqual(result.indexOf(value ? "yes" : "no"), optionIndex + 1);
 		}
 
 		[Test]
@@ -328,7 +328,6 @@ package tests
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.SAMPLER);
 			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value.toString()), optionIndex + 1);
 		}
 
 		[Test]

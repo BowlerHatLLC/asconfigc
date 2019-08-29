@@ -129,18 +129,6 @@ package com.as3mxml.asconfigc
 					}
 				}
 			}
-			if(overridesOptionForPlatform(options, AIROptions.SAMPLER, platform))
-			{
-				setValueWithoutAssignment(AIROptions.SAMPLER, options[platform][AIROptions.SAMPLER], result);
-			}
-			if(overridesOptionForPlatform(options, AIROptions.HIDE_ANE_LIB_SYMBOLS, platform))
-			{
-				setValueWithoutAssignment(AIROptions.HIDE_ANE_LIB_SYMBOLS, options[platform][AIROptions.HIDE_ANE_LIB_SYMBOLS], result);
-			}
-			if(overridesOptionForPlatform(options, AIROptions.EMBED_BITCODE, platform))
-			{
-				setValueWithoutAssignment(AIROptions.EMBED_BITCODE, options[platform][AIROptions.EMBED_BITCODE], result);
-			}
 
 			//DEBUGGER_CONNECTION_OPTIONS begin
 			if(debug && (platform === AIRPlatformType.ANDROID || platform === AIRPlatformType.IOS || platform === AIRPlatformType.IOS_SIMULATOR))
@@ -148,6 +136,19 @@ package com.as3mxml.asconfigc
 				parseDebugOptions(options, platform, result);
 			}
 			//DEBUGGER_CONNECTION_OPTIONS end
+			
+			if(overridesOptionForPlatform(options, AIROptions.SAMPLER, platform))
+			{
+				result.push("-" + AIROptions.SAMPLER);
+			}
+			if(overridesOptionForPlatform(options, AIROptions.HIDE_ANE_LIB_SYMBOLS, platform))
+			{
+				setBooleanValueWithoutAssignment(AIROptions.HIDE_ANE_LIB_SYMBOLS, options[platform][AIROptions.HIDE_ANE_LIB_SYMBOLS], result);
+			}
+			if(overridesOptionForPlatform(options, AIROptions.EMBED_BITCODE, platform))
+			{
+				setBooleanValueWithoutAssignment(AIROptions.EMBED_BITCODE, options[platform][AIROptions.EMBED_BITCODE], result);
+			}
 
 			if(overridesOptionForPlatform(options, AIROptions.AIR_DOWNLOAD_URL, platform))
 			{
@@ -297,6 +298,12 @@ package com.as3mxml.asconfigc
 		{
 			result.push("-" + optionName);
 			result.push(value.toString());
+		}
+		
+		public static function setBooleanValueWithoutAssignment(optionName:String, value:Boolean, result:Array):void
+		{
+			result.push("-" + optionName);
+			result.push(value ? "yes" : "no");
 		}
 		
 		public static function setPathValueWithoutAssignment(optionName:String, value:Object, result:Array):void
