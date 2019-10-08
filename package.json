@@ -38,7 +38,7 @@
     "mkdirp": "^0.5.1"
   },
   "scripts": {
-    "build": "asnodec --source-map=true --external-library-path+=typedefs src/ASConfigC.as",
+    "build": "asnodec --source-map=true --source-path+=typedefs src/ASConfigC.as",
     "test": "npm run build && node ./bin/js-release/index.js -p test && cd ./test/fixtures && node ../bin/js-debug/index.js",
     "prepublish": "npm test"
   }

@@ -13,7 +13,8 @@
 		],
 		"warn-public-vars": false,
 		"source-path": [
-			"../src"
+			"../src",
+			"../typedefs"
 		],
 		"js-library-path": [
 			"${royalelib}/js/libs/LanguageJS.swc",

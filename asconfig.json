@@ -1,11 +1,9 @@
 {
 	"config": "node",
 	"compilerOptions": {
-		"external-library-path": [
-			"typedefs"
-		],
 		"source-path": [
-			"src"
+			"src",
+			"typedefs"
 		],
 		"source-map": true
 	},
