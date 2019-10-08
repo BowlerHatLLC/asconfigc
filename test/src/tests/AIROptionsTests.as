@@ -7,7 +7,7 @@ package tests
 	import com.as3mxml.asconfigc.SigningOptions;
 	import com.as3mxml.asconfigc.utils.escapePath;
 
-	import nextgenas.test.assert.Assert;
+	import org.apache.royale.test.Assert;
 
 	public class AIROptionsTests
 	{
@@ -19,11 +19,11 @@ package tests
 			var value:String = dirPath + "/" + filename;
 			var args:Object = {};
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", value, args);
-			Assert.strictEqual(result.indexOf(value), -1);
+			Assert.assertStrictlyEquals(result.indexOf(value), -1);
 			var optionIndex:int = result.indexOf("-C");
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(dirPath), optionIndex + 1);
-			Assert.strictEqual(result.indexOf(filename), optionIndex + 2);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(dirPath), optionIndex + 1);
+			Assert.assertStrictlyEquals(result.indexOf(filename), optionIndex + 2);
 		}
 
 		[Test]
@@ -37,12 +37,12 @@ package tests
 			var formattedFilename:String = escapePath(filename);
 			var args:Object = {};
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", value, args);
-			Assert.strictEqual(result.indexOf(value), -1);
-			Assert.strictEqual(result.indexOf(formattedValue), -1);
+			Assert.assertStrictlyEquals(result.indexOf(value), -1);
+			Assert.assertStrictlyEquals(result.indexOf(formattedValue), -1);
 			var optionIndex:int = result.indexOf("-C");
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(formattedDirPath), optionIndex + 1);
-			Assert.strictEqual(result.indexOf(formattedFilename), optionIndex + 2);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(formattedDirPath), optionIndex + 1);
+			Assert.assertStrictlyEquals(result.indexOf(formattedFilename), optionIndex + 2);
 		}
 
 		[Test]
@@ -51,7 +51,7 @@ package tests
 			var value:String = "path/to/application.xml";
 			var args:Object = {};
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, value, "test.swf", args);
-			Assert.notStrictEqual(result.indexOf(value), -1);
+			Assert.assertNotStrictlyEquals(result.indexOf(value), -1);
 		}
 
 		[Test]
@@ -61,7 +61,7 @@ package tests
 			var formattedValue:String = escapePath(value);
 			var args:Object = {};
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, value, "test.swf", args);
-			Assert.notStrictEqual(result.indexOf(formattedValue), -1);
+			Assert.assertNotStrictlyEquals(result.indexOf(formattedValue), -1);
 		}
 
 		[Test]
@@ -73,8 +73,8 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.AIR_DOWNLOAD_URL] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.AIR_DOWNLOAD_URL);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value), optionIndex + 1);
 		}
 
 		[Test]
@@ -86,8 +86,8 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.ARCH] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.ARCH);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value), optionIndex + 1);
 		}
 
 		[Test]
@@ -99,8 +99,8 @@ package tests
 			args[AIRPlatformType.IOS][AIROptions.EMBED_BITCODE] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.EMBED_BITCODE);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value ? "yes" : "no"), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value ? "yes" : "no"), optionIndex + 1);
 		}
 
 		[Test]
@@ -114,11 +114,11 @@ package tests
 			args[AIROptions.EXTDIR] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex1:int = result.indexOf("-" + AIROptions.EXTDIR);
-			Assert.notStrictEqual(optionIndex1, -1);
-			Assert.strictEqual(result.indexOf(value[0]), optionIndex1 + 1);
+			Assert.assertNotStrictlyEquals(optionIndex1, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value[0]), optionIndex1 + 1);
 			var optionIndex2:int = result.indexOf("-" + AIROptions.EXTDIR, optionIndex1 + 1);
-			Assert.notStrictEqual(optionIndex2, -1);
-			Assert.strictEqual(result.indexOf(value[1]), optionIndex2 + 1);
+			Assert.assertNotStrictlyEquals(optionIndex2, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value[1]), optionIndex2 + 1);
 		}
 
 		[Test]
@@ -132,8 +132,8 @@ package tests
 			args[AIROptions.EXTDIR] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex1:int = result.indexOf("-" + AIROptions.EXTDIR);
-			Assert.notStrictEqual(optionIndex1, -1);
-			Assert.strictEqual(result.indexOf(formattedValue), optionIndex1 + 1);
+			Assert.assertNotStrictlyEquals(optionIndex1, -1);
+			Assert.assertStrictlyEquals(result.indexOf(formattedValue), optionIndex1 + 1);
 		}
 
 		[Test]
@@ -153,13 +153,13 @@ package tests
 			args[AIROptions.FILES] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex1:int = result.indexOf("-e");
-			Assert.notStrictEqual(optionIndex1, -1);
-			Assert.strictEqual(result.indexOf(file1[AIROptions.FILES_FILE]), optionIndex1 + 1);
-			Assert.strictEqual(result.indexOf(file1[AIROptions.FILES_PATH]), optionIndex1 + 2);
+			Assert.assertNotStrictlyEquals(optionIndex1, -1);
+			Assert.assertStrictlyEquals(result.indexOf(file1[AIROptions.FILES_FILE]), optionIndex1 + 1);
+			Assert.assertStrictlyEquals(result.indexOf(file1[AIROptions.FILES_PATH]), optionIndex1 + 2);
 			var optionIndex2:int = result.indexOf("-e", optionIndex1 + 1);
-			Assert.notStrictEqual(optionIndex2, -1);
-			Assert.strictEqual(result.indexOf(file2[AIROptions.FILES_FILE]), optionIndex2 + 1);
-			Assert.strictEqual(result.indexOf(file2[AIROptions.FILES_PATH]), optionIndex2 + 2);
+			Assert.assertNotStrictlyEquals(optionIndex2, -1);
+			Assert.assertStrictlyEquals(result.indexOf(file2[AIROptions.FILES_FILE]), optionIndex2 + 1);
+			Assert.assertStrictlyEquals(result.indexOf(file2[AIROptions.FILES_PATH]), optionIndex2 + 2);
 		}
 
 		[Test]
@@ -179,13 +179,13 @@ package tests
 			args[AIROptions.FILES] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex1:int = result.indexOf("-e");
-			Assert.notStrictEqual(optionIndex1, -1);
-			Assert.strictEqual(result.indexOf(fileInDir1), optionIndex1 + 1);
-			Assert.strictEqual(result.indexOf(dirPath1), optionIndex1 + 2);
+			Assert.assertNotStrictlyEquals(optionIndex1, -1);
+			Assert.assertStrictlyEquals(result.indexOf(fileInDir1), optionIndex1 + 1);
+			Assert.assertStrictlyEquals(result.indexOf(dirPath1), optionIndex1 + 2);
 			var optionIndex2:int = result.indexOf("-e", optionIndex1 + 1);
-			Assert.notStrictEqual(optionIndex2, -1);
-			Assert.strictEqual(result.indexOf(fileInDir2, optionIndex2), optionIndex2 + 1);
-			Assert.strictEqual(result.indexOf(dirPath2, optionIndex2), optionIndex2 + 2);
+			Assert.assertNotStrictlyEquals(optionIndex2, -1);
+			Assert.assertStrictlyEquals(result.indexOf(fileInDir2, optionIndex2), optionIndex2 + 1);
+			Assert.assertStrictlyEquals(result.indexOf(dirPath2, optionIndex2), optionIndex2 + 2);
 		}
 
 		[Test]
@@ -197,8 +197,8 @@ package tests
 			args[AIRPlatformType.IOS][AIROptions.HIDE_ANE_LIB_SYMBOLS] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.HIDE_ANE_LIB_SYMBOLS);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value ? "yes" : "no"), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value ? "yes" : "no"), optionIndex + 1);
 		}
 
 		[Test]
@@ -209,8 +209,8 @@ package tests
 			args[AIROptions.OUTPUT] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.AIR, false, "application.xml", "test.swf", args);
 			//no -output, just the path without anything else
-			Assert.strictEqual(result.indexOf("-" + AIROptions.OUTPUT), -1);
-			Assert.notStrictEqual(result.indexOf(value.toString()), -1);
+			Assert.assertStrictlyEquals(result.indexOf("-" + AIROptions.OUTPUT), -1);
+			Assert.assertNotStrictlyEquals(result.indexOf(value.toString()), -1);
 		}
 
 		[Test]
@@ -222,8 +222,8 @@ package tests
 			args[AIROptions.OUTPUT] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.AIR, false, "application.xml", "test.swf", args);
 			//no -output, just the path without anything else
-			Assert.strictEqual(result.indexOf("-" + AIROptions.OUTPUT), -1);
-			Assert.notStrictEqual(result.indexOf(formattedValue), -1);
+			Assert.assertStrictlyEquals(result.indexOf("-" + AIROptions.OUTPUT), -1);
+			Assert.assertNotStrictlyEquals(result.indexOf(formattedValue), -1);
 		}
 
 		[Test]
@@ -237,8 +237,8 @@ package tests
 			args[AIRPlatformType.IOS] = {};
 			args[AIRPlatformType.IOS][AIROptions.OUTPUT] = iOSValue;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
-			Assert.notStrictEqual(result.indexOf(androidValue), -1);
-			Assert.strictEqual(result.indexOf(iOSValue), -1);
+			Assert.assertNotStrictlyEquals(result.indexOf(androidValue), -1);
+			Assert.assertStrictlyEquals(result.indexOf(iOSValue), -1);
 		}
 
 		[Test]
@@ -252,8 +252,8 @@ package tests
 			args[AIRPlatformType.IOS] = {};
 			args[AIRPlatformType.IOS][AIROptions.OUTPUT] = iOSValue;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
-			Assert.notStrictEqual(result.indexOf(iOSValue), -1);
-			Assert.strictEqual(result.indexOf(androidValue), -1);
+			Assert.assertNotStrictlyEquals(result.indexOf(iOSValue), -1);
+			Assert.assertStrictlyEquals(result.indexOf(androidValue), -1);
 		}
 
 		[Test]
@@ -268,9 +268,9 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.PLATFORMSDK] = androidValue;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.PLATFORMSDK);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(androidValue), optionIndex + 1);
-			Assert.strictEqual(result.indexOf(iOSValue), -1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(androidValue), optionIndex + 1);
+			Assert.assertStrictlyEquals(result.indexOf(iOSValue), -1);
 		}
 
 		[Test]
@@ -285,9 +285,9 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.PLATFORMSDK] = androidValue;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.PLATFORMSDK);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(iOSValue), optionIndex + 1);
-			Assert.strictEqual(result.indexOf(androidValue), -1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(iOSValue), optionIndex + 1);
+			Assert.assertStrictlyEquals(result.indexOf(androidValue), -1);
 		}
 
 		[Test]
@@ -300,8 +300,8 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.PLATFORMSDK] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.PLATFORMSDK);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(formattedValue), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(formattedValue), optionIndex + 1);
 		}
 
 		[Test]
@@ -314,8 +314,8 @@ package tests
 			args[AIRPlatformType.IOS][AIROptions.PLATFORMSDK] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.PLATFORMSDK);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(formattedValue), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(formattedValue), optionIndex + 1);
 		}
 
 		[Test]
@@ -327,7 +327,7 @@ package tests
 			args[AIRPlatformType.IOS][AIROptions.SAMPLER] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.SAMPLER);
-			Assert.notStrictEqual(optionIndex, -1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
 		}
 
 		[Test]
@@ -338,8 +338,8 @@ package tests
 			args[AIROptions.TARGET] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.AIR, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.TARGET);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value.toString()), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value.toString()), optionIndex + 1);
 		}
 
 		[Test]
@@ -353,8 +353,8 @@ package tests
 			args[AIRPlatformType.IOS] = {};
 			args[AIRPlatformType.IOS][AIROptions.TARGET] = iOSTarget;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
-			Assert.notStrictEqual(result.indexOf(iOSTarget), -1);
-			Assert.strictEqual(result.indexOf(androidTarget), -1);
+			Assert.assertNotStrictlyEquals(result.indexOf(iOSTarget), -1);
+			Assert.assertStrictlyEquals(result.indexOf(androidTarget), -1);
 		}
 
 		[Test]
@@ -368,8 +368,8 @@ package tests
 			args[AIRPlatformType.IOS] = {};
 			args[AIRPlatformType.IOS][AIROptions.TARGET] = iOSTarget;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
-			Assert.notStrictEqual(result.indexOf(androidTarget), -1);
-			Assert.strictEqual(result.indexOf(iOSTarget), -1);
+			Assert.assertNotStrictlyEquals(result.indexOf(androidTarget), -1);
+			Assert.assertStrictlyEquals(result.indexOf(iOSTarget), -1);
 		}
 
 	//------ signing options
@@ -383,8 +383,8 @@ package tests
 			args[AIROptions.SIGNING_OPTIONS][SigningOptions.ALIAS] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.AIR, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + SigningOptions.ALIAS);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value), optionIndex + 1);
 		}
 
 		[Test]
@@ -396,8 +396,8 @@ package tests
 			args[AIROptions.SIGNING_OPTIONS][SigningOptions.KEYSTORE] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.AIR, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + SigningOptions.KEYSTORE);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value), optionIndex + 1);
 		}
 
 		[Test]
@@ -410,8 +410,8 @@ package tests
 			args[AIROptions.SIGNING_OPTIONS][SigningOptions.KEYSTORE] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.AIR, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + SigningOptions.KEYSTORE);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(formattedValue), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(formattedValue), optionIndex + 1);
 		}
 
 		[Test]
@@ -423,8 +423,8 @@ package tests
 			args[AIROptions.SIGNING_OPTIONS][SigningOptions.PROVIDER_NAME] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.AIR, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + SigningOptions.PROVIDER_NAME);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value), optionIndex + 1);
 		}
 
 		[Test]
@@ -436,8 +436,8 @@ package tests
 			args[AIROptions.SIGNING_OPTIONS][SigningOptions.STORETYPE] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.AIR, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + SigningOptions.STORETYPE);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value), optionIndex + 1);
 		}
 
 		[Test]
@@ -449,8 +449,8 @@ package tests
 			args[AIROptions.SIGNING_OPTIONS][SigningOptions.TSA] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.AIR, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + SigningOptions.TSA);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value), optionIndex + 1);
 		}
 
 		[Test]
@@ -462,8 +462,8 @@ package tests
 			args[AIROptions.SIGNING_OPTIONS][SigningOptions.PROVISIONING_PROFILE] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.IOS, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + SigningOptions.PROVISIONING_PROFILE);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(value), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value), optionIndex + 1);
 		}
 
 	//------ overrides
@@ -478,8 +478,8 @@ package tests
 			args[AIRPlatformType.ANDROID] = {};
 			args[AIRPlatformType.ANDROID][AIROptions.OUTPUT] = androidValue;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
-			Assert.notStrictEqual(result.indexOf(androidValue), -1);
-			Assert.strictEqual(result.indexOf(defaultValue), -1);
+			Assert.assertNotStrictlyEquals(result.indexOf(androidValue), -1);
+			Assert.assertStrictlyEquals(result.indexOf(defaultValue), -1);
 		}
 
 		[Test]
@@ -492,8 +492,8 @@ package tests
 			args[AIRPlatformType.ANDROID] = {};
 			args[AIRPlatformType.ANDROID][AIROptions.TARGET] = androidTarget;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
-			Assert.notStrictEqual(result.indexOf(androidTarget), -1);
-			Assert.strictEqual(result.indexOf(defaultTarget), -1);
+			Assert.assertNotStrictlyEquals(result.indexOf(androidTarget), -1);
+			Assert.assertStrictlyEquals(result.indexOf(defaultTarget), -1);
 		}
 
 		[Test]
@@ -512,11 +512,11 @@ package tests
 			args[AIROptions.EXTDIR] = defaultValue;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
 			var optionIndex1:int = result.indexOf("-" + AIROptions.EXTDIR);
-			Assert.notStrictEqual(optionIndex1, -1);
-			Assert.strictEqual(result.indexOf(androidValue[0]), optionIndex1 + 1);
+			Assert.assertNotStrictlyEquals(optionIndex1, -1);
+			Assert.assertStrictlyEquals(result.indexOf(androidValue[0]), optionIndex1 + 1);
 			var optionIndex2:int = result.indexOf("-" + AIROptions.EXTDIR, optionIndex1 + 1);
-			Assert.notStrictEqual(optionIndex2, -1);
-			Assert.strictEqual(result.indexOf(androidValue[1]), optionIndex2 + 1);
+			Assert.assertNotStrictlyEquals(optionIndex2, -1);
+			Assert.assertStrictlyEquals(result.indexOf(androidValue[1]), optionIndex2 + 1);
 		}
 
 		[Test]
@@ -535,13 +535,13 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.SIGNING_OPTIONS] = androidValue;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
 			var optionIndex1:int = result.indexOf("-" + SigningOptions.KEYSTORE);
-			Assert.notStrictEqual(optionIndex1, -1);
-			Assert.strictEqual(result.indexOf(androidValue[SigningOptions.KEYSTORE]), optionIndex1 + 1);
+			Assert.assertNotStrictlyEquals(optionIndex1, -1);
+			Assert.assertStrictlyEquals(result.indexOf(androidValue[SigningOptions.KEYSTORE]), optionIndex1 + 1);
 			var optionIndex2:int = result.indexOf("-" + SigningOptions.STORETYPE);
-			Assert.notStrictEqual(optionIndex2, -1);
-			Assert.strictEqual(result.indexOf(androidValue[SigningOptions.STORETYPE]), optionIndex2 + 1);
+			Assert.assertNotStrictlyEquals(optionIndex2, -1);
+			Assert.assertStrictlyEquals(result.indexOf(androidValue[SigningOptions.STORETYPE]), optionIndex2 + 1);
 			//this one doesn't exist in the android signing options
-			Assert.strictEqual(result.indexOf(defaultValue[SigningOptions.TSA]), -1);
+			Assert.assertStrictlyEquals(result.indexOf(defaultValue[SigningOptions.TSA]), -1);
 		}
 
 		[Test]
@@ -560,11 +560,11 @@ package tests
 			args[AIROptions.SIGNING_OPTIONS] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
 			var optionIndex1:int = result.indexOf("-" + SigningOptions.KEYSTORE);
-			Assert.notStrictEqual(optionIndex1, -1);
-			Assert.strictEqual(result.indexOf(debugSigningOptions[SigningOptions.KEYSTORE]), optionIndex1 + 1);
+			Assert.assertNotStrictlyEquals(optionIndex1, -1);
+			Assert.assertStrictlyEquals(result.indexOf(debugSigningOptions[SigningOptions.KEYSTORE]), optionIndex1 + 1);
 			var optionIndex2:int = result.indexOf("-" + SigningOptions.STORETYPE);
-			Assert.notStrictEqual(optionIndex2, -1);
-			Assert.strictEqual(result.indexOf(debugSigningOptions[SigningOptions.STORETYPE]), optionIndex2 + 1);
+			Assert.assertNotStrictlyEquals(optionIndex2, -1);
+			Assert.assertStrictlyEquals(result.indexOf(debugSigningOptions[SigningOptions.STORETYPE]), optionIndex2 + 1);
 		}
 
 		[Test]
@@ -583,11 +583,11 @@ package tests
 			args[AIROptions.SIGNING_OPTIONS] = value;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
 			var optionIndex1:int = result.indexOf("-" + SigningOptions.KEYSTORE);
-			Assert.notStrictEqual(optionIndex1, -1);
-			Assert.strictEqual(result.indexOf(releaseSigningOptions[SigningOptions.KEYSTORE]), optionIndex1 + 1);
+			Assert.assertNotStrictlyEquals(optionIndex1, -1);
+			Assert.assertStrictlyEquals(result.indexOf(releaseSigningOptions[SigningOptions.KEYSTORE]), optionIndex1 + 1);
 			var optionIndex2:int = result.indexOf("-" + SigningOptions.STORETYPE);
-			Assert.notStrictEqual(optionIndex2, -1);
-			Assert.strictEqual(result.indexOf(releaseSigningOptions[SigningOptions.STORETYPE]), optionIndex2 + 1);
+			Assert.assertNotStrictlyEquals(optionIndex2, -1);
+			Assert.assertStrictlyEquals(result.indexOf(releaseSigningOptions[SigningOptions.STORETYPE]), optionIndex2 + 1);
 		}
 
 		[Test]
@@ -599,7 +599,7 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.CONNECT] = connect;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.CONNECT);
-			Assert.notStrictEqual(optionIndex, -1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
 		}
 
 		[Test]
@@ -611,8 +611,8 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.CONNECT] = connect;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.CONNECT);
-			Assert.notStrictEqual(optionIndex, -1);
-			Assert.strictEqual(result.indexOf(connect), optionIndex + 1);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(connect), optionIndex + 1);
 		}
 
 		[Test]
@@ -624,7 +624,7 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.CONNECT] = connect;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.CONNECT);
-			Assert.strictEqual(optionIndex, -1);
+			Assert.assertStrictlyEquals(optionIndex, -1);
 		}
 
 		[Test]
@@ -636,7 +636,7 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.CONNECT] = connect;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
 			var optionIndex:int = result.indexOf("-" + AIROptions.CONNECT);
-			Assert.strictEqual(optionIndex, -1);
+			Assert.assertStrictlyEquals(optionIndex, -1);
 		}
 
 		[Test]
@@ -648,9 +648,9 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.LISTEN] = listen;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
 			var listenIndex:int = result.indexOf("-" + AIROptions.LISTEN);
-			Assert.notStrictEqual(listenIndex, -1);
+			Assert.assertNotStrictlyEquals(listenIndex, -1);
 			var connectIndex:int = result.indexOf("-" + AIROptions.CONNECT);
-			Assert.strictEqual(connectIndex, -1);
+			Assert.assertStrictlyEquals(connectIndex, -1);
 		}
 
 		[Test]
@@ -662,9 +662,9 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.CONNECT] = listen;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
 			var listenIndex:int = result.indexOf("-" + AIROptions.LISTEN);
-			Assert.strictEqual(listenIndex, -1);
+			Assert.assertStrictlyEquals(listenIndex, -1);
 			var connectIndex:int = result.indexOf("-" + AIROptions.CONNECT);
-			Assert.strictEqual(connectIndex, -1);
+			Assert.assertStrictlyEquals(connectIndex, -1);
 		}
 
 		[Test]
@@ -676,9 +676,9 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.LISTEN] = listen;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
 			var listenIndex:int = result.indexOf("-" + AIROptions.LISTEN);
-			Assert.strictEqual(listenIndex, -1);
+			Assert.assertStrictlyEquals(listenIndex, -1);
 			var connectIndex:int = result.indexOf("-" + AIROptions.CONNECT);
-			Assert.strictEqual(connectIndex, -1);
+			Assert.assertStrictlyEquals(connectIndex, -1);
 		}
 
 		[Test]
@@ -690,10 +690,10 @@ package tests
 			args[AIRPlatformType.ANDROID][AIROptions.LISTEN] = listen;
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
 			var listenIndex:int = result.indexOf("-" + AIROptions.LISTEN);
-			Assert.notStrictEqual(listenIndex, -1);
-			Assert.strictEqual(result.indexOf(listen), listenIndex + 1);
+			Assert.assertNotStrictlyEquals(listenIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(listen), listenIndex + 1);
 			var connectIndex:int = result.indexOf("-" + AIROptions.CONNECT);
-			Assert.strictEqual(connectIndex, -1);
+			Assert.assertStrictlyEquals(connectIndex, -1);
 		}
 
 		[Test]
@@ -704,9 +704,9 @@ package tests
 			args[AIRPlatformType.ANDROID] = {};
 			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, true, "application.xml", "test.swf", args);
 			var connectIndex:int = result.indexOf("-" + AIROptions.CONNECT);
-			Assert.notStrictEqual(connectIndex, -1);
+			Assert.assertNotStrictlyEquals(connectIndex, -1);
 			var listenIndex:int = result.indexOf("-" + AIROptions.LISTEN);
-			Assert.strictEqual(listenIndex, -1);
+			Assert.assertStrictlyEquals(listenIndex, -1);
 		}
 	}
 }

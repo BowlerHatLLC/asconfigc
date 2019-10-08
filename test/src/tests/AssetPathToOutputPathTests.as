@@ -2,7 +2,7 @@ package tests
 {
 	import com.as3mxml.asconfigc.utils.assetPathToOutputPath;
 
-	import nextgenas.test.assert.Assert;
+	import org.apache.royale.test.Assert;
 
 	public class AssetPathToOutputPathTests
 	{
@@ -14,7 +14,7 @@ package tests
 			var outputDirectory:String = "./source-path-assets/bin";
 			var result:String = assetPathToOutputPath(assetPath, mainFile, null, outputDirectory);
 			var expectedResult:String = path.resolve("./source-path-assets/bin/asset-at-root.txt");
-			Assert.strictEqual(result, expectedResult,
+			Assert.assertStrictlyEquals(result, expectedResult,
 				"Incorrect output path for asset with path.")
 		}
 
@@ -26,7 +26,7 @@ package tests
 			var outputDirectory:String = "./source-path-assets/bin";
 			var result:String = assetPathToOutputPath(assetPath, null, sourcePaths, outputDirectory);
 			var expectedResult:String = path.resolve("./source-path-assets/bin/asset-at-root.txt");
-			Assert.strictEqual(result, expectedResult,
+			Assert.assertStrictlyEquals(result, expectedResult,
 				"Incorrect output path for asset with path.")
 		}
 
@@ -38,7 +38,7 @@ package tests
 			var outputDirectory:String = "./source-path-assets/bin";
 			var result:String = assetPathToOutputPath(assetPath, null, sourcePaths, outputDirectory);
 			var expectedResult:String = path.resolve("./source-path-assets/bin/com/example/asset-in-package.txt");
-			Assert.strictEqual(result, expectedResult,
+			Assert.assertStrictlyEquals(result, expectedResult,
 				"Incorrect output path for asset with path.")
 		}
 	}

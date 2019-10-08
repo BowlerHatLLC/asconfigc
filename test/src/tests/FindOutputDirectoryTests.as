@@ -2,7 +2,7 @@ package tests
 {
 	import com.as3mxml.asconfigc.utils.findOutputDirectory;
 
-	import nextgenas.test.assert.Assert;
+	import org.apache.royale.test.Assert;
 
 	public class FindOutputDirectoryTests
 	{
@@ -13,7 +13,7 @@ package tests
 			var outputPath:String = "./source-path-assets/bin/Test.swf";
 			var isSWF:Boolean = true;
 			var outputDirectory:String = findOutputDirectory(mainFile, outputPath, isSWF);
-			Assert.strictEqual(outputDirectory, path.resolve("./source-path-assets/bin"),
+			Assert.assertStrictlyEquals(outputDirectory, path.resolve("./source-path-assets/bin"),
 				"Incorrect output directory with output path: " + outputPath);
 		}
 
@@ -24,7 +24,7 @@ package tests
 			var outputPath:String = null;
 			var isSWF:Boolean = true;
 			var outputDirectory:String = findOutputDirectory(mainFile, outputPath, isSWF);
-			Assert.strictEqual(outputDirectory, path.resolve("./source-path-assets"),
+			Assert.assertStrictlyEquals(outputDirectory, path.resolve("./source-path-assets"),
 				"Incorrect output directory with main file for SWF: " + mainFile);
 		}
 
@@ -35,7 +35,7 @@ package tests
 			var outputPath:String = null;
 			var isSWF:Boolean = true;
 			var outputDirectory:String = findOutputDirectory(mainFile, outputPath, isSWF);
-			Assert.strictEqual(outputDirectory, path.resolve("./source-path-assets/src"),
+			Assert.assertStrictlyEquals(outputDirectory, path.resolve("./source-path-assets/src"),
 				"Incorrect output directory with main file for SWF: " + mainFile);
 		}
 
@@ -46,7 +46,7 @@ package tests
 			var outputPath:String = null;
 			var isSWF:Boolean = false;
 			var outputDirectory:String = findOutputDirectory(mainFile, outputPath, isSWF);
-			Assert.strictEqual(outputDirectory, path.resolve("./path/to"),
+			Assert.assertStrictlyEquals(outputDirectory, path.resolve("./path/to"),
 				"Incorrect output directory with main file for JS: " + mainFile);
 		}
 
@@ -57,7 +57,7 @@ package tests
 			var outputPath:String = null;
 			var isSWF:Boolean = false;
 			var outputDirectory:String = findOutputDirectory(mainFile, outputPath, isSWF);
-			Assert.strictEqual(outputDirectory, path.resolve("./source-path-assets"),
+			Assert.assertStrictlyEquals(outputDirectory, path.resolve("./source-path-assets"),
 				"Incorrect output directory with main file for JS: " + mainFile);
 		}
 
@@ -68,7 +68,7 @@ package tests
 			var outputPath:String = null;
 			var isSWF:Boolean = false;
 			var outputDirectory:String = findOutputDirectory(mainFile, outputPath, isSWF);
-			Assert.strictEqual(outputDirectory, path.resolve("./source-path-assets"),
+			Assert.assertStrictlyEquals(outputDirectory, path.resolve("./source-path-assets"),
 				"Incorrect output directory with main file for JS: " + mainFile);
 		}
 
@@ -79,7 +79,7 @@ package tests
 			var outputPath:String = null;
 			var isSWF:Boolean = false;
 			var outputDirectory:String = findOutputDirectory(mainFile, outputPath, isSWF);
-			Assert.strictEqual(outputDirectory, path.resolve("./source-path-assets"),
+			Assert.assertStrictlyEquals(outputDirectory, path.resolve("./source-path-assets"),
 				"Incorrect output directory with main file for JS: " + mainFile);
 		}
 	}

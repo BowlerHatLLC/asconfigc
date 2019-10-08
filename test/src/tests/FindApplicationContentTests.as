@@ -2,7 +2,7 @@ package tests
 {
 	import com.as3mxml.asconfigc.utils.findApplicationContent;
 
-	import nextgenas.test.assert.Assert;
+	import org.apache.royale.test.Assert;
 
 	public class FindApplicationContentTests
 	{
@@ -13,7 +13,7 @@ package tests
 			var outputPath:String = "./source-path-assets/bin/Test.swf";
 			var isSWF:Boolean = true;
 			var applicationContent:String = findApplicationContent(mainFile, outputPath, isSWF);
-			Assert.strictEqual(applicationContent, "Test.swf",
+			Assert.assertStrictlyEquals(applicationContent, "Test.swf",
 				"Incorrect application content with output path: " + outputPath);
 		}
 
@@ -24,7 +24,7 @@ package tests
 			var outputPath:String = null;
 			var isSWF:Boolean = true;
 			var applicationContent:String = findApplicationContent(mainFile, outputPath, isSWF);
-			Assert.strictEqual(applicationContent, "Main.swf",
+			Assert.assertStrictlyEquals(applicationContent, "Main.swf",
 				"Incorrect application content with main file for SWF: " + mainFile);
 		}
 
@@ -35,7 +35,7 @@ package tests
 			var outputPath:String = null;
 			var isSWF:Boolean = false;
 			var applicationContent:String = findApplicationContent(mainFile, outputPath, isSWF);
-			Assert.strictEqual(applicationContent, "index.html",
+			Assert.assertStrictlyEquals(applicationContent, "index.html",
 				"Incorrect application content with main file for JS: " + mainFile);
 		}
 	}

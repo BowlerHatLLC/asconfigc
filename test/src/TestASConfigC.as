@@ -1,8 +1,9 @@
 package
 {
-	import nextgenas.test.TestRunner;
-	import nextgenas.test.events.TestEvent;
-	import nextgenas.test.listeners.TraceListener;
+	import org.apache.royale.events.Event;
+	import org.apache.royale.test.RoyaleUnitCore;
+	import org.apache.royale.test.listeners.FailureListener;
+	import org.apache.royale.test.listeners.TraceListener;
 
 	import tests.AIROptionsTests;
 	import tests.AssetPathToOutputPathTests;
@@ -15,31 +16,32 @@ package
 	{
 		public function TestASConfigC()
 		{
-			this._runner = new TestRunner();
-			new TraceListener(this._runner);
-			this._runner.addEventListener(TestEvent.TEST_RUN_COMPLETE, runner_testRunCompleteHandler);
-			this._runner.addEventListener(TestEvent.TEST_RUN_FAIL, runner_testRunFailHandler);
-			this._runner.run(new <Class>
-			[
+			this._failureListener = new FailureListener();
+			this._royaleUnit = new RoyaleUnitCore();
+			this._royaleUnit.addListener(new TraceListener());
+			this._royaleUnit.addListener(this._failureListener);
+			this._royaleUnit.addEventListener(Event.COMPLETE, royaleUnit_completeHandler);
+			this._royaleUnit.runClasses(
 				AIROptionsTests,
 				CompilerOptionsTests,
 				FindSourcePathAssetsTests,
 				FindOutputDirectoryTests,
 				FindApplicationContentTests,
-				AssetPathToOutputPathTests,
-			]);
+				AssetPathToOutputPathTests
+			);
 		}
 
-		private var _runner:TestRunner;
+		private var _failureListener:FailureListener;
+		private var _royaleUnit:RoyaleUnitCore;
 
-		private function runner_testRunCompleteHandler(event:TestEvent):void
+		private function royaleUnit_completeHandler(event:Event):void
 		{
-			process.exit(0);
-		}
-
-		private function runner_testRunFailHandler(event:TestEvent):void
-		{
-			process.exit(1);
+			var exitCode:int = 0;
+			if(this._failureListener.failed)
+			{
+				exitCode = 1;
+			}
+			process.exit(exitCode);
 		}
 	}
 }
