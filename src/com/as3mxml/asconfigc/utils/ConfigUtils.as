@@ -233,7 +233,8 @@ package com.as3mxml.asconfigc.utils
 				{
 					if(AIRPlatformType.hasOwnProperty(key))
 					{
-						result[key] = baseApplication;
+						var keyValue:String = AIRPlatformType[key] as String;
+						result[keyValue] = baseApplication;
 					}
 				}
 			}
@@ -242,7 +243,6 @@ package com.as3mxml.asconfigc.utils
 				result = baseApplication;
 			}
 			return mergeObjectsSimple(application, result);
-
 		}
 
 		private static function mergeAIROptions(airOptions:Object, baseAIROptions:Object, handlePlatforms:Boolean):Object
@@ -263,13 +263,22 @@ package com.as3mxml.asconfigc.utils
 					keys.add(key);
 				}
 			}
+			var platforms:Set = new Set();
+			for(key in AIRPlatformType)
+			{
+				if(AIRPlatformType.hasOwnProperty(key))
+				{
+					var keyValue:String = AIRPlatformType[key] as String;
+					platforms.add(keyValue);
+				}
+			}
 			keys.forEach(function(value:String, key:Object, set:Set):void
 			{
 				var hasConfig:Boolean = airOptions.hasOwnProperty(key);
 				var hasBase:Boolean = baseAIROptions.hasOwnProperty(key);
 				if(hasConfig && hasBase)
 				{
-					if(handlePlatforms && AIRPlatformType.hasOwnProperty(key))
+					if(handlePlatforms && platforms.has(key))
 					{
 						result[key] = mergeAIROptions(airOptions[key], baseAIROptions[key], false);
 					}
