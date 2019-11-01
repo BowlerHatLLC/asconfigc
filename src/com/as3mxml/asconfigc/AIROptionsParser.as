@@ -383,8 +383,8 @@ package com.as3mxml.asconfigc
 				}
 				else
 				{
-					srcFile = file[AIROptions.FILES_FILE] as String;
-					destPath = file[AIROptions.FILES_PATH] as String;
+					srcFile = file[AIROptions.FILES__FILE] as String;
+					destPath = file[AIROptions.FILES__PATH] as String;
 				}
 
 				if(fs.statSync(srcFile).isDirectory())

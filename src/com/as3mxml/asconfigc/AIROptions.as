@@ -26,8 +26,8 @@ package com.as3mxml.asconfigc
 
 		public static const PLATFORMSDK:String = "platformsdk";
 
-		public static const FILES_FILE:String = "file";
-		public static const FILES_PATH:String = "path";
+		public static const FILES__FILE:String = "file";
+		public static const FILES__PATH:String = "path";
 
 		public static const CONNECT:String = "connect";
 		public static const LISTEN:String = "listen";

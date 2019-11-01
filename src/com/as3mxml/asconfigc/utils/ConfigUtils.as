@@ -286,7 +286,7 @@ package com.as3mxml.asconfigc.utils
 					}
 					else if(key === AIROptions.FILES)
 					{
-						result[key] = mergeArrayWithComparisonKey(newValue as Array, baseValue as Array, AIROptions.FILES_PATH);
+						result[key] = mergeArrayWithComparisonKey(newValue as Array, baseValue as Array, AIROptions.FILES__PATH);
 					}
 					else if(Array.isArray(newValue) && Array.isArray(baseValue))
 					{

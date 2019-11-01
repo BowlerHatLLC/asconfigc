@@ -1493,9 +1493,9 @@ package
 				}
 				else //object with src and dest
 				{
-					srcFilePath = fileJSON[AIROptions.FILES_FILE];
+					srcFilePath = fileJSON[AIROptions.FILES__FILE];
 					srcFilePath = path.resolve(srcFilePath);
-					destFilePath = fileJSON[AIROptions.FILES_PATH];
+					destFilePath = fileJSON[AIROptions.FILES__PATH];
 				}
 
 				if(fs.statSync(srcFilePath).isDirectory())
