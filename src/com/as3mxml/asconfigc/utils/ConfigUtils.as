@@ -288,6 +288,11 @@ package com.as3mxml.asconfigc.utils
 					{
 						result[key] = mergeArrayWithComparisonKey(newValue as Array, baseValue as Array, AIROptions.FILES__PATH);
 					}
+					else if(key === AIROptions.SIGNING_OPTIONS)
+					{
+						//don't merge this field!
+						result[key] = newValue;
+					}
 					else if(Array.isArray(newValue) && Array.isArray(baseValue))
 					{
 						result[key] = mergeArrays(newValue as Array, baseValue as Array);
