@@ -8,6 +8,9 @@ package
 	import tests.AIROptionsTests;
 	import tests.AssetPathToOutputPathTests;
 	import tests.CompilerOptionsTests;
+	import tests.ExtendConfigAIROptionsTests;
+	import tests.ExtendConfigCompilerOptionsTests;
+	import tests.ExtendConfigTopLevelTests;
 	import tests.FindApplicationContentTests;
 	import tests.FindOutputDirectoryTests;
 	import tests.FindSourcePathAssetsTests;
@@ -27,7 +30,10 @@ package
 				FindSourcePathAssetsTests,
 				FindOutputDirectoryTests,
 				FindApplicationContentTests,
-				AssetPathToOutputPathTests
+				AssetPathToOutputPathTests,
+				ExtendConfigTopLevelTests,
+				ExtendConfigCompilerOptionsTests,
+				ExtendConfigAIROptionsTests
 			);
 		}
 
