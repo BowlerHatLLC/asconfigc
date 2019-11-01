@@ -229,11 +229,14 @@ package com.as3mxml.asconfigc.utils
 			var result:Object = {};
 			if(typeof baseApplication === "string")
 			{
-				for(var key:String in AIRPlatformType)
+				//royale 0.9.6 has a bug that misses fully-qualified package in
+				//the hasOwnProperty() part. fixed in 0.9.7.
+				var platformTypes:Object = AIRPlatformType;
+				for(var key:String in platformTypes)
 				{
-					if(AIRPlatformType.hasOwnProperty(key))
+					if(platformTypes.hasOwnProperty(key))
 					{
-						var keyValue:String = AIRPlatformType[key] as String;
+						var keyValue:String = platformTypes[key] as String;
 						result[keyValue] = baseApplication;
 					}
 				}
@@ -264,11 +267,14 @@ package com.as3mxml.asconfigc.utils
 				}
 			}
 			var platforms:Set = new Set();
-			for(key in AIRPlatformType)
+			//royale 0.9.6 has a bug that misses fully-qualified package in
+			//the hasOwnProperty() part. fixed in 0.9.7.
+			var platformTypes:Object = AIRPlatformType;
+			for(key in platformTypes)
 			{
-				if(AIRPlatformType.hasOwnProperty(key))
+				if(platformTypes.hasOwnProperty(key))
 				{
-					var keyValue:String = AIRPlatformType[key] as String;
+					var keyValue:String = platformTypes[key] as String;
 					platforms.add(keyValue);
 				}
 			}
