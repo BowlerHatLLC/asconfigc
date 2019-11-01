@@ -19,7 +19,8 @@
 				"copySourcePathAssets": { "$ref": "#/definitions/copySourcePathAssets" },
 				"config": { "$ref": "#/definitions/config" },
 				"htmlTemplate": { "$ref": "#/definitions/htmlTemplate" },
-				"files": { "$ref": "#/definitions/files" }
+				"files": { "$ref": "#/definitions/files" },
+				"extends": { "$ref": "#/definitions/extends" }
 			},
 			"required": ["files"]
 		},
@@ -36,13 +37,19 @@
 				"compilerOptions": { "$ref": "#/definitions/compilerOptions" },
 				"copySourcePathAssets": { "$ref": "#/definitions/copySourcePathAssets" },
 				"config": { "$ref": "#/definitions/config" },
-				"files": { "$ref": "#/definitions/files" }
+				"files": { "$ref": "#/definitions/files" },
+				"extends": { "$ref": "#/definitions/extends" }
 			},
 			"required": ["type"]
 		}
 	],
 	"definitions":
 	{
+		"extends":
+		{
+			"type": "string",
+			"description": "Path to another asconfig.json file that will be merged with this file. If the same fields are defined in both files, the fields in this file will either replace or expand the values in the base file."
+		},
 		"additionalOptions":
 		{
 			"type": "string",
