@@ -41,6 +41,7 @@ package
 	import com.as3mxml.royale.utils.ApacheFlexJSUtils;
 	import com.as3mxml.royale.utils.ApacheRoyaleUtils;
 	import com.as3mxml.utils.ActionScriptSDKUtils;
+	import com.as3mxml.utils.ConfigUtils;
 	import com.as3mxml.utils.findJava;
 
 	/**
@@ -73,27 +74,26 @@ package
 		public function ASConfigC()
 		{
 			this.parseArguments();
-			if(!this._javaExecutable)
-			{
-				this._javaExecutable = findJava();
-				if(!this._javaExecutable)
-				{
-					console.error("Java not found. Cannot run compiler without Java.");
-					process.exit(1);
-				}
-			}
+
 			this.findConfig();
-			if(this._verbose)
-			{
-				console.info("Configuration file: " + this._configFilePath);
-			}
 			process.chdir(path.dirname(this._configFilePath));
 
-			this.parseConfig();
-			//validate the SDK after knowing if we're building SWF or JS
-			//because JS has stricter SDK requirements
-			this.validateSDK();
+			var configData:Object = this.loadConfig();
+			if(this._printConfig)
+			{
+				console.info(JSON.stringify(configData, null, 2));
+				process.exit(0);
+			}
+			this.parseConfig(configData);
+
 			this.cleanProject();
+			
+			//java is required to run the compiler
+			this.validateJava();
+			//validate the SDK after parsing the config because we need to know
+			//if we're building SWF or JS. JS has stricter SDK requirements.
+			this.validateSDK();
+
 			this.compileProject();
 			this.copySourcePathAssets();
 			this.copyHTMLTemplate();
@@ -127,6 +127,7 @@ package
 		private var _mainFile:String = null;
 		private var _forceDebug:* = undefined;
 		private var _clean:Boolean = false;
+		private var _printConfig:Boolean = false;
 		private var _unpackageANEs:Boolean = false;
 		private var _debugBuild:Boolean = false;
 		private var _verbose:Boolean = false;
@@ -169,6 +170,7 @@ package
 			console.info(" --clean                                             Clean the output directory. Will not build the project.");
 			console.info(" --verbose                                           Displays more detailed output, including the full set of options passed to all programs.");
 			console.info(" --jvmargs ARGS                                      (Advanced) Pass custom arguments to the Java virtual machine.");
+			console.info(" --print-config                                      (Advanced) Prints the contents of the asconfig.json file used to build, including any extensions.");
 		}
 
 		private function parseArguments():void
@@ -347,6 +349,11 @@ package
 						}
 						break;
 					}
+					case "print-config":
+					{
+						this._printConfig = true;
+						break;
+					}
 					case "v":
 					case "version":
 					{
@@ -364,10 +371,6 @@ package
 
 		private function loadConfig():Object
 		{
-			if(this._verbose)
-			{
-				console.info("Reading configuration file...");
-			}
 			var schemaFilePath:String = path.join(__dirname, "..", "..", "schemas", "asconfig.schema.json");
 			try
 			{
@@ -388,10 +391,6 @@ package
 				console.error(error);
 				process.exit(1);
 			}
-			if(this._verbose)
-			{
-				console.info("Validating configuration file...");
-			}
 			try
 			{
 				var validate:Function = jsen(schemaData);
@@ -402,14 +401,31 @@ package
 				console.error(error);
 				process.exit(1);
 			}
+			return this.loadConfigFromPath(this._configFilePath, validate);
+		}
+
+		private function loadConfigFromPath(configPath:String, validate:Function):Object
+		{
+			if(this._verbose)
+			{
+				console.info("Configuration file: " + this._configFilePath);
+			}
+			if(this._verbose)
+			{
+				console.info("Reading configuration file...");
+			}
 			try
 			{
-				var configText:String = fs.readFileSync(this._configFilePath, "utf8") as String;
+				var configText:String = fs.readFileSync(configPath, "utf8") as String;
 			}
 			catch(error:Error)
 			{
-				console.error("Error: Cannot read file. " + this._configFilePath);
+				console.error("Error: Cannot read file. " + configPath);
 				process.exit(1);
+			}
+			if(this._verbose)
+			{
+				console.info("Parsing configuration file...");
 			}
 			try
 			{
@@ -417,15 +433,29 @@ package
 			}
 			catch(error:Error)
 			{
-				console.error("Error: Invalid JSON in file. " + this._configFilePath);
+				console.error("Error: Invalid JSON in file. " + configPath);
 				console.error(error);
 				process.exit(1);
 			}
+			if(this._verbose)
+			{
+				console.info("Validating configuration file...");
+			}
 			if(!validate(configData))
 			{
-				console.error("Error: Invalid asconfig.json file. " + this._configFilePath);
+				console.error("Error: Invalid asconfig.json file. " + configPath);
 				console.error(validate["errors"]);
 				process.exit(1);
+			}
+			if(ASConfigFields.EXTENDS in configData)
+			{
+				var otherConfigPath:String = configData[ASConfigFields.EXTENDS];
+				var otherConfigData:Object = this.loadConfigFromPath(otherConfigPath, validate);
+				if(this._verbose)
+				{
+					console.info("Merging configuration files...");
+				}
+				configData = ConfigUtils.mergeConfigs(configData, otherConfigData);
 			}
 			return configData;
 		}
@@ -453,13 +483,12 @@ package
 			}
 		}
 		
-		private function parseConfig():void
+		private function parseConfig(configData:Object):void
 		{
 			this._compilerArgs = [];
 			this._airArgs = [];
 			this._compilerOptionsJSON = null;
 			this._airOptionsJSON = null;
-			var configData:Object = this.loadConfig();
 			if(this._verbose)
 			{
 				console.info("Parsing configuration file...");
@@ -737,6 +766,19 @@ package
 				{
 					this._configRequiresAIR = true;
 					break;
+				}
+			}
+		}
+
+		private function validateJava():void
+		{
+			if(!this._javaExecutable)
+			{
+				this._javaExecutable = findJava();
+				if(!this._javaExecutable)
+				{
+					console.error("Java not found. Cannot run compiler without Java.");
+					process.exit(1);
 				}
 			}
 		}
