@@ -27,6 +27,7 @@ package
 	import com.as3mxml.asconfigc.ProjectType;
 	import com.as3mxml.asconfigc.SigningOptions;
 	import com.as3mxml.asconfigc.Targets;
+	import com.as3mxml.asconfigc.utils.ConfigUtils;
 	import com.as3mxml.asconfigc.utils.assetPathToOutputPath;
 	import com.as3mxml.asconfigc.utils.escapePath;
 	import com.as3mxml.asconfigc.utils.findAIRDescriptorOutputPath;
@@ -41,7 +42,6 @@ package
 	import com.as3mxml.royale.utils.ApacheFlexJSUtils;
 	import com.as3mxml.royale.utils.ApacheRoyaleUtils;
 	import com.as3mxml.utils.ActionScriptSDKUtils;
-	import com.as3mxml.utils.ConfigUtils;
 	import com.as3mxml.utils.findJava;
 
 	/**
