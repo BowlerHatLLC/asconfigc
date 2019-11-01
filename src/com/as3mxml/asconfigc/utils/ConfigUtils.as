@@ -278,17 +278,23 @@ package com.as3mxml.asconfigc.utils
 				var hasBase:Boolean = baseAIROptions.hasOwnProperty(key);
 				if(hasConfig && hasBase)
 				{
+					var newValue:* = airOptions[key];
+					var baseValue:* = baseAIROptions[key];
 					if(handlePlatforms && platforms.has(key))
 					{
-						result[key] = mergeAIROptions(airOptions[key], baseAIROptions[key], false);
+						result[key] = mergeAIROptions(newValue, baseValue, false);
 					}
 					else if(key === AIROptions.FILES)
 					{
-						result[key] = mergeArrays(airOptions[key] as Array, baseAIROptions[key] as Array);
+						result[key] = mergeArrayWithComparisonKey(newValue as Array, baseValue as Array, AIROptions.FILES_PATH);
 					}
-					else if(key === AIROptions.EXTDIR)
+					else if(Array.isArray(newValue) && Array.isArray(baseValue))
 					{
-						result[key] = mergeArrays(airOptions[key] as Array, baseAIROptions[key] as Array);
+						result[key] = mergeArrays(newValue as Array, baseValue as Array);
+					}
+					else
+					{
+						result[key] = mergeObjectsSimple(airOptions[key], baseAIROptions[key]);
 					}
 				}
 				else if(hasConfig)
