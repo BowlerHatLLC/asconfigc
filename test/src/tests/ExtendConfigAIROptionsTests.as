@@ -1,6 +1,7 @@
 package tests
 {
 	import com.as3mxml.asconfigc.AIROptions;
+	import com.as3mxml.asconfigc.AIRPlatformType;
 	import com.as3mxml.asconfigc.ASConfigFields;
 	import com.as3mxml.asconfigc.SigningOptions;
 	import com.as3mxml.asconfigc.utils.ConfigUtils;
@@ -35,7 +36,7 @@ package tests
 		}
 
 		[Test]
-		public function testOutputWithBaseOnly():void
+		public function testOutputWithoutOverrideAIROptions():void
 		{
 			var baseValue:String = "bin-debug/Base.air";
 			var baseConfig:Object =
@@ -129,7 +130,7 @@ package tests
 		//be duplicated
 
 		[Test]
-		public function testFilesWithBaseOnly():void
+		public function testFilesWithEmptyOverrideAIROptions():void
 		{
 			var baseFile:String = "assets/base.png";
 			var basePath:String = "base.png";
@@ -160,7 +161,7 @@ package tests
 		}
 
 		[Test]
-		public function testFilesWithoutBase():void
+		public function testFilesWithEmptyBaseAIROptions():void
 		{
 			var newFile:String = "assets/new.png";
 			var newPath:String = "new.png";
@@ -277,7 +278,7 @@ package tests
 		//base and not get merged
 
 		[Test]
-		public function testSigningOptionsWithBaseOnly():void
+		public function testSigningOptionsWithoutOverride():void
 		{
 			var baseKeystore:String = "signing/base.p12";
 			var baseStoretype:String = "pkcs12";
@@ -307,7 +308,7 @@ package tests
 		}
 
 		[Test]
-		public function testSigningWithoutBase():void
+		public function testSigningOptionsWithoutBase():void
 		{
 			var newProviderName:String = "Apple";
 			var newStoretype:String = "KeychainStore";
@@ -371,6 +372,365 @@ package tests
 			Assert.assertTrue(signingOptions.hasOwnProperty(SigningOptions.STORETYPE));
 			Assert.assertStrictlyEquals(signingOptions[SigningOptions.PROVIDER_NAME], newProviderName);
 			Assert.assertStrictlyEquals(signingOptions[SigningOptions.STORETYPE], newStoretype);
+		}
+
+		[Test]
+		public function testSigningOptionsMergeWithDual():void
+		{
+			var baseDebugKeystore:String = "signing/base-debug.p12";
+			var baseDebugStoretype:String = "pkcs12";
+			var baseReleaseKeystore:String = "signing/base-release.p12";
+			var baseReleaseStoretype:String = "pkcs12";
+			var newDebugProviderName:String = "Apple";
+			var newDebugStoretype:String = "KeychainStore";
+			var newReleaseProviderName:String = "Adobe";
+			var newReleaseStoretype:String = "KeychainStore";
+
+			var baseConfig:Object =
+			{
+				"airOptions": {
+					"signingOptions": {
+						"debug": {
+							"keystore": baseDebugKeystore,
+							"storetype": baseDebugStoretype
+						},
+						"release": {
+							"keystore": baseReleaseKeystore,
+							"storetype": baseReleaseStoretype
+						}
+					}
+				}
+			};
+			var config:Object =
+			{
+				"airOptions": {
+					"signingOptions": {
+						"debug": {
+							"providerName": newDebugProviderName,
+							"storetype": newDebugStoretype
+						},	
+						"release": {
+							"providerName": newReleaseProviderName,
+							"storetype": newReleaseStoretype
+						}
+					}
+				}
+			};
+			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
+			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
+			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.SIGNING_OPTIONS));
+			var signingOptions:Object = airOptions[AIROptions.SIGNING_OPTIONS];
+			Assert.assertTrue(signingOptions.hasOwnProperty(SigningOptions.DEBUG));
+			Assert.assertTrue(signingOptions.hasOwnProperty(SigningOptions.RELEASE));
+			var debugOptions:Object = signingOptions[SigningOptions.DEBUG];
+			var releaseOptions:Object = signingOptions[SigningOptions.RELEASE];
+			Assert.assertTrue(!debugOptions.hasOwnProperty(SigningOptions.KEYSTORE));
+			Assert.assertTrue(debugOptions.hasOwnProperty(SigningOptions.PROVIDER_NAME));
+			Assert.assertTrue(debugOptions.hasOwnProperty(SigningOptions.STORETYPE));
+			Assert.assertStrictlyEquals(debugOptions[SigningOptions.PROVIDER_NAME], newDebugProviderName);
+			Assert.assertStrictlyEquals(debugOptions[SigningOptions.STORETYPE], newDebugStoretype);
+			Assert.assertTrue(!releaseOptions.hasOwnProperty(SigningOptions.KEYSTORE));
+			Assert.assertTrue(releaseOptions.hasOwnProperty(SigningOptions.PROVIDER_NAME));
+			Assert.assertTrue(releaseOptions.hasOwnProperty(SigningOptions.STORETYPE));
+			Assert.assertStrictlyEquals(releaseOptions[SigningOptions.PROVIDER_NAME], newReleaseProviderName);
+			Assert.assertStrictlyEquals(releaseOptions[SigningOptions.STORETYPE], newReleaseStoretype);
+		}
+
+		[Test]
+		public function testSigningOptionsMergeWithSingleInBaseAndDualInOverride():void
+		{
+			var baseKeystore:String = "signing/base.p12";
+			var baseStoretype:String = "pkcs12";
+			var newDebugProviderName:String = "Apple";
+			var newDebugStoretype:String = "KeychainStore";
+			var newReleaseProviderName:String = "Adobe";
+			var newReleaseStoretype:String = "KeychainStore";
+
+			var baseConfig:Object =
+			{
+				"airOptions": {
+					"signingOptions": {
+						"keystore": baseKeystore,
+						"storetype": baseStoretype
+					}
+				}
+			};
+			var config:Object =
+			{
+				"airOptions": {
+					"signingOptions": {
+						"debug": {
+							"providerName": newDebugProviderName,
+							"storetype": newDebugStoretype
+						}
+					}
+				}
+			};
+			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
+			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
+			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.SIGNING_OPTIONS));
+			var signingOptions:Object = airOptions[AIROptions.SIGNING_OPTIONS];
+			Assert.assertTrue(signingOptions.hasOwnProperty(SigningOptions.DEBUG));
+			Assert.assertTrue(signingOptions.hasOwnProperty(SigningOptions.RELEASE));
+			var debugOptions:Object = signingOptions[SigningOptions.DEBUG];
+			var releaseOptions:Object = signingOptions[SigningOptions.RELEASE];
+			Assert.assertTrue(!debugOptions.hasOwnProperty(SigningOptions.KEYSTORE));
+			Assert.assertTrue(debugOptions.hasOwnProperty(SigningOptions.PROVIDER_NAME));
+			Assert.assertTrue(debugOptions.hasOwnProperty(SigningOptions.STORETYPE));
+			Assert.assertStrictlyEquals(debugOptions[SigningOptions.PROVIDER_NAME], newDebugProviderName);
+			Assert.assertStrictlyEquals(debugOptions[SigningOptions.STORETYPE], newDebugStoretype);
+			Assert.assertTrue(releaseOptions.hasOwnProperty(SigningOptions.KEYSTORE));
+			Assert.assertTrue(!releaseOptions.hasOwnProperty(SigningOptions.PROVIDER_NAME));
+			Assert.assertTrue(releaseOptions.hasOwnProperty(SigningOptions.STORETYPE));
+			Assert.assertStrictlyEquals(releaseOptions[SigningOptions.KEYSTORE], baseKeystore);
+			Assert.assertStrictlyEquals(releaseOptions[SigningOptions.STORETYPE], baseStoretype);
+		}
+
+		[Test]
+		public function testSigningOptionsMergeWithDualInBaseAndSingleInOverride():void
+		{
+			var baseDebugKeystore:String = "signing/base-debug.p12";
+			var baseDebugStoretype:String = "pkcs12";
+			var baseReleaseKeystore:String = "signing/base-release.p12";
+			var baseReleaseStoretype:String = "pkcs12";
+			var newProviderName:String = "Apple";
+			var newStoretype:String = "KeychainStore";
+
+			var baseConfig:Object =
+			{
+				"airOptions": {
+					"signingOptions": {
+						"debug": {
+							"keystore": baseDebugKeystore,
+							"storetype": baseDebugStoretype
+						},
+						"release": {
+							"keystore": baseReleaseKeystore,
+							"storetype": baseReleaseStoretype
+						}
+					}
+				}
+			};
+			var config:Object =
+			{
+				"airOptions": {
+					"signingOptions": {
+						"providerName": newProviderName,
+						"storetype": newStoretype
+					}
+				}
+			};
+			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
+			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
+			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.SIGNING_OPTIONS));
+			var signingOptions:Object = airOptions[AIROptions.SIGNING_OPTIONS];
+			Assert.assertFalse(signingOptions.hasOwnProperty(SigningOptions.DEBUG));
+			Assert.assertFalse(signingOptions.hasOwnProperty(SigningOptions.RELEASE));
+			Assert.assertTrue(!signingOptions.hasOwnProperty(SigningOptions.KEYSTORE));
+			Assert.assertTrue(signingOptions.hasOwnProperty(SigningOptions.PROVIDER_NAME));
+			Assert.assertTrue(signingOptions.hasOwnProperty(SigningOptions.STORETYPE));
+			Assert.assertStrictlyEquals(signingOptions[SigningOptions.PROVIDER_NAME], newProviderName);
+			Assert.assertStrictlyEquals(signingOptions[SigningOptions.STORETYPE], newStoretype);
+		}
+
+		//--- output (platform)
+
+		[Test]
+		public function testOutputPlatformWithBaseAndEmptyPlatform():void
+		{
+			var baseValue:String = "bin-debug/Base.apk";
+			var baseConfig:Object =
+			{
+				"airOptions": {
+					"android": {
+						"output": baseValue
+					}
+				}
+			};
+			var config:Object =
+			{
+				"airOptions": {
+					"android": {
+					}
+				}
+			};
+			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
+			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
+			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
+			var android:Object = airOptions[AIRPlatformType.ANDROID];
+			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
+			var resultValue:* = android[AIROptions.OUTPUT];
+			Assert.assertStrictlyEquals(resultValue, baseValue);
+		}
+
+		[Test]
+		public function testOutputPlatformWithoutOverridePlatform():void
+		{
+			var baseValue:String = "bin-debug/Base.apk";
+			var baseConfig:Object =
+			{
+				"airOptions": {
+					"android": {
+						"output": baseValue
+					}
+				}
+			};
+			var config:Object =
+			{
+				"airOptions": {
+
+				}
+			};
+			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
+			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
+			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
+			var android:Object = airOptions[AIRPlatformType.ANDROID];
+			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
+			var resultValue:* = android[AIROptions.OUTPUT];
+			Assert.assertStrictlyEquals(resultValue, baseValue);
+		}
+
+		[Test]
+		public function testOutputPlatformWithoutOverrideAIROptions():void
+		{
+			var baseValue:String = "bin-debug/Base.apk";
+			var baseConfig:Object =
+			{
+				"airOptions": {
+					"android": {
+						"output": baseValue
+					}
+				}
+			};
+			var config:Object =
+			{
+			};
+			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
+			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
+			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
+			var android:Object = airOptions[AIRPlatformType.ANDROID];
+			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
+			var resultValue:* = android[AIROptions.OUTPUT];
+			Assert.assertStrictlyEquals(resultValue, baseValue);
+		}
+
+		[Test]
+		public function testOutputPlatformWithEmptyBasePlatform():void
+		{
+			var newValue:String = "bin-debug/New.apk";
+			var baseConfig:Object =
+			{
+				"airOptions": {
+					"android": {
+					}
+				}
+			};
+			var config:Object =
+			{
+				"airOptions": {
+					"android": {
+						"output": newValue
+					}
+				}
+			};
+			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
+			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
+			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
+			var android:Object = airOptions[AIRPlatformType.ANDROID];
+			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
+			var resultValue:* = android[AIROptions.OUTPUT];
+			Assert.assertStrictlyEquals(resultValue, newValue);
+		}
+
+		[Test]
+		public function testOutputPlatformWithoutBasePlatform():void
+		{
+			var newValue:String = "bin-debug/New.apk";
+			var baseConfig:Object =
+			{
+				"airOptions": {
+
+				}
+			};
+			var config:Object =
+			{
+				"airOptions": {
+					"android": {
+						"output": newValue
+					}
+				}
+			};
+			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
+			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
+			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
+			var android:Object = airOptions[AIRPlatformType.ANDROID];
+			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
+			var resultValue:* = android[AIROptions.OUTPUT];
+			Assert.assertStrictlyEquals(resultValue, newValue);
+		}
+
+		[Test]
+		public function testOutputPlatformWithoutBaseAIROptions():void
+		{
+			var newValue:String = "bin-debug/New.apk";
+			var baseConfig:Object =
+			{
+			};
+			var config:Object =
+			{
+				"airOptions": {
+					"android": {
+						"output": newValue
+					}
+				}
+			};
+			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
+			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
+			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
+			var android:Object = airOptions[AIRPlatformType.ANDROID];
+			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
+			var resultValue:* = android[AIROptions.OUTPUT];
+			Assert.assertStrictlyEquals(resultValue, newValue);
+		}
+
+		[Test]
+		public function testOutputPlatformMerge():void
+		{
+			var baseValue:String = "bin-debug/Base.apk";
+			var newValue:String = "bin-debug/New.apk";
+			var baseConfig:Object =
+			{
+				"airOptions": {
+					"android": {
+						"output": baseValue
+					}
+				}
+			};
+			var config:Object =
+			{
+				"airOptions": {
+					"android": {
+						"output": newValue
+					}
+				}
+			};
+			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
+			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
+			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
+			var android:Object = airOptions[AIRPlatformType.ANDROID];
+			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
+			var resultValue:* = android[AIROptions.OUTPUT];
+			Assert.assertStrictlyEquals(resultValue, newValue);
 		}
 	}
 }

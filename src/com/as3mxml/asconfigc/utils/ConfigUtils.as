@@ -19,6 +19,7 @@ package com.as3mxml.asconfigc.utils
 	import com.as3mxml.asconfigc.AIRPlatformType;
 	import com.as3mxml.asconfigc.ASConfigFields;
 	import com.as3mxml.asconfigc.CompilerOptions;
+	import com.as3mxml.asconfigc.SigningOptions;
 
 	/**
 	 * Utilities for parsing asconfig.json files.
@@ -296,8 +297,7 @@ package com.as3mxml.asconfigc.utils
 					}
 					else if(key === AIROptions.SIGNING_OPTIONS)
 					{
-						//don't merge this field!
-						result[key] = newValue;
+						result[key] = mergeSigningOptions(newValue, baseValue);
 					}
 					else if(Array.isArray(newValue) && Array.isArray(baseValue))
 					{
@@ -317,6 +317,50 @@ package com.as3mxml.asconfigc.utils
 					result[key] = baseAIROptions[key];
 				}
 			});
+			return result;
+		}
+
+		private static function mergeSigningOptions(signingOptions:Object, baseSigningOptions:Object):Object
+		{
+			var hasDebug:Boolean = signingOptions.hasOwnProperty(SigningOptions.DEBUG);
+			var hasRelease:Boolean = signingOptions.hasOwnProperty(SigningOptions.RELEASE);
+			if(!hasDebug && !hasRelease)
+			{
+				//nothing to merge. fully overrides the base
+				return signingOptions;
+			}
+			if(hasDebug && hasRelease)
+			{
+				//also fully overrides the base
+				return signingOptions;
+			}
+			var hasBaseDebug:Boolean = baseSigningOptions.hasOwnProperty(SigningOptions.DEBUG);
+			var hasBaseRelease:Boolean = baseSigningOptions.hasOwnProperty(SigningOptions.RELEASE);
+			var result:Object = {};
+			if(hasDebug)
+			{
+				result[SigningOptions.DEBUG] = signingOptions[SigningOptions.DEBUG];
+			}
+			else if(hasBaseDebug)
+			{
+				result[SigningOptions.DEBUG] = baseSigningOptions[SigningOptions.DEBUG];
+			}
+			else if(!hasBaseRelease)
+			{
+				result[SigningOptions.DEBUG] = baseSigningOptions;
+			}
+			if(hasRelease)
+			{
+				result[SigningOptions.RELEASE] = signingOptions[SigningOptions.RELEASE];
+			}
+			else if(hasBaseRelease)
+			{
+				result[SigningOptions.RELEASE] = baseSigningOptions[SigningOptions.RELEASE];
+			}
+			else if(!hasBaseDebug)
+			{
+				result[SigningOptions.RELEASE] = baseSigningOptions;
+			}
 			return result;
 		}
 	}
