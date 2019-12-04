@@ -137,6 +137,7 @@ package com.as3mxml.asconfigc
 			}
 			//DEBUGGER_CONNECTION_OPTIONS end
 			
+			//iOS options begin
 			if(overridesOptionForPlatform(options, AIROptions.SAMPLER, platform))
 			{
 				result.push("-" + AIROptions.SAMPLER);
@@ -149,11 +150,18 @@ package com.as3mxml.asconfigc
 			{
 				setBooleanValueWithoutAssignment(AIROptions.EMBED_BITCODE, options[platform][AIROptions.EMBED_BITCODE], result);
 			}
+			//iOS options end
 
+			//Android options begin
 			if(overridesOptionForPlatform(options, AIROptions.AIR_DOWNLOAD_URL, platform))
 			{
 				setValueWithoutAssignment(AIROptions.AIR_DOWNLOAD_URL, options[platform][AIROptions.AIR_DOWNLOAD_URL], result);
 			}
+			if(overridesOptionForPlatform(options, AIROptions.ARCH, platform))
+			{
+				setValueWithoutAssignment(AIROptions.ARCH, options[platform][AIROptions.ARCH], result);
+			}
+			//Android options end
 
 			//NATIVE_SIGNING_OPTIONS begin
 			//these are *mobile* signing options only
@@ -208,10 +216,6 @@ package com.as3mxml.asconfigc
 			if(overridesOptionForPlatform(options, AIROptions.PLATFORMSDK, platform))
 			{
 				setPathValueWithoutAssignment(AIROptions.PLATFORMSDK, options[platform][AIROptions.PLATFORMSDK], result);
-			}
-			if(overridesOptionForPlatform(options, AIROptions.ARCH, platform))
-			{
-				setValueWithoutAssignment(AIROptions.ARCH, options[platform][AIROptions.ARCH], result);
 			}
 
 			//FILE_OPTIONS begin
