@@ -13,6 +13,7 @@
 		],
 		"warn-public-vars": false,
 		"source-path": [
+			"src",
 			"../src",
 			"../typedefs"
 		],
@@ -23,8 +24,5 @@
 			"${royalelib}/js/libs/RoyaleUnitJS.swc"
 		]
 	},
-	"files":
-	[
-		"src/TestASConfigC.as"
-	]
+	"mainClass": "TestASConfigC"
 }

@@ -7,8 +7,5 @@
 		],
 		"source-map": true
 	},
-	"files":
-	[
-		"src/ASConfigC.as"
-	]
+	"mainClass": "ASConfigC"
 }

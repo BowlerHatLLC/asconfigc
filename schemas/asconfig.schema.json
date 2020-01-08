@@ -4,48 +4,83 @@
 	"type": "object",
 	"anyOf": [
 		{
-			"properties":
-			{
-				"type":
+			"allOf": [
+				{ "$ref": "#/definitions/baseAppConfig" },
 				{
-					"type": "string",
-					"description": "Indicates if the project is an application or library. Supported values include \"app\" and \"lib\". Then default value is \"app\".",
-					"default": "app"
-				},
-				"additionalOptions": { "$ref": "#/definitions/additionalOptions" },
-				"application": { "$ref": "#/definitions/application" },
-				"compilerOptions": { "$ref": "#/definitions/compilerOptions" },
-				"airOptions": { "$ref": "#/definitions/airOptions" },
-				"animateOptions": { "$ref" : "#/definitions/animateOptions" },
-				"copySourcePathAssets": { "$ref": "#/definitions/copySourcePathAssets" },
-				"config": { "$ref": "#/definitions/config" },
-				"htmlTemplate": { "$ref": "#/definitions/htmlTemplate" },
-				"files": { "$ref": "#/definitions/files" },
-				"extends": { "$ref": "#/definitions/extends" }
-			},
-			"required": ["files"]
+					"required": ["mainClass"]
+				}
+			]
 		},
 		{
-			"properties":
-			{
-				"type":
+			"allOf": [
+				{ "$ref": "#/definitions/baseAppConfig" },
 				{
-					"type": "string",
-					"description": "Indicates if the project is an application or library. Supported values include \"app\" and \"lib\". Then default value is \"app\".",
-					"pattern": "^lib$"
-				},
-				"additionalOptions": { "$ref": "#/definitions/additionalOptions" },
-				"compilerOptions": { "$ref": "#/definitions/compilerOptions" },
-				"copySourcePathAssets": { "$ref": "#/definitions/copySourcePathAssets" },
-				"config": { "$ref": "#/definitions/config" },
-				"files": { "$ref": "#/definitions/files" },
-				"extends": { "$ref": "#/definitions/extends" }
-			},
-			"required": ["type"]
+					"required": ["files"]
+				}
+			]
+		},
+		{
+			"allOf": [
+				{ "$ref": "#/definitions/baseAppConfig" },
+				{
+					"required": ["extends"]
+				}
+			]
+		},
+		{
+			"allOf": [
+				{ "$ref": "#/definitions/baseConfig" },
+				{
+					"properties":
+					{
+						"type":
+						{
+							"type": "string",
+							"description": "Indicates if the project is an application or library. Supported values include \"app\" and \"lib\". Then default value is \"app\".",
+							"pattern": "^lib$"
+						}
+					},
+					"required": ["type"]
+				}
+			]
 		}
 	],
 	"definitions":
 	{
+		"baseConfig":
+		{
+			"type": "object",
+			"properties": {
+				"config": { "$ref": "#/definitions/config" },
+				"compilerOptions": { "$ref": "#/definitions/compilerOptions" },
+				"additionalOptions": { "$ref": "#/definitions/additionalOptions" },
+				"copySourcePathAssets": { "$ref": "#/definitions/copySourcePathAssets" },
+				"files": { "$ref": "#/definitions/files" },
+				"extends": { "$ref": "#/definitions/extends" }
+			}
+		},
+		"baseAppConfig":
+		{
+			"allOf":[
+				{ "$ref": "#/definitions/baseConfig" },
+				{
+					"properties":
+					{	
+						"type":
+						{
+							"type": "string",
+							"description": "Indicates if the project is an application or library. Supported values include \"app\" and \"lib\". Then default value is \"app\".",
+							"default": "app"
+						},
+						"application": { "$ref": "#/definitions/application" },
+						"airOptions": { "$ref": "#/definitions/airOptions" },
+						"animateOptions": { "$ref" : "#/definitions/animateOptions" },
+						"htmlTemplate": { "$ref": "#/definitions/htmlTemplate" },
+						"mainClass": { "$ref": "#/definitions/mainClass" }
+					}
+				}
+			]
+		},
 		"extends":
 		{
 			"type": "string",
@@ -913,12 +948,17 @@
 		"files":
 		{
 			"type": "array",
-			"description": "The specified files will be included by the compiler, including all of their dependencies. For an application, this field will typically contain one main class only.",
+			"description": "The specified files will be included by the compiler, including all of their dependencies. If the \"mainClass\" field is omitted, the final item in \"files\" will be used as the application entry point.",
 			"items":
 			{
 				"type": "string"
 			},
 			"minItems": 1
+		},
+		"mainClass":
+		{
+			"type": "string",
+			"description": "The fully qualified class name (including the package name, if any) of the main class to use as the application entry point."
 		}
 	}
 }

@@ -26,6 +26,44 @@ package com.as3mxml.asconfigc.utils
 	 */
 	public class ConfigUtils
 	{
+		private static const FILE_EXTENSION_AS:String = ".as";
+		private static const FILE_EXTENSION_MXML:String = ".mxml";
+
+		public static function resolveMainClass(mainClass:String, sourcePaths:Vector.<String>):String
+		{
+			var mainClassBasePath:String = mainClass.replace(/\./g, path.sep);
+			if(sourcePaths != null)
+			{
+				var sourcePathCount:int = sourcePaths.length;
+				for(var i:int = 0; i < sourcePathCount; i++)
+				{
+					var sourcePath:String = path.resolve(process.cwd(), sourcePaths[i]);
+					var mainClassPath:String = path.resolve(sourcePath, mainClassBasePath + FILE_EXTENSION_AS);
+					if(fs.existsSync(mainClassPath))
+					{
+						return mainClassPath;
+					}
+					mainClassPath = path.resolve(mainClassBasePath + FILE_EXTENSION_MXML);
+					if(fs.existsSync(mainClassPath))
+					{
+						return mainClassPath;
+					}
+				}
+			}
+			//as a final fallback, try in the current working directory
+			mainClassPath = path.resolve(process.cwd(), mainClassBasePath + FILE_EXTENSION_AS);
+			if(fs.existsSync(mainClassPath))
+			{
+				return mainClassPath;
+			}
+			mainClassPath = path.resolve(process.cwd(), mainClassBasePath + FILE_EXTENSION_MXML);
+			if(fs.existsSync(mainClassPath))
+			{
+				return mainClassPath;
+			}
+			return null;
+		}
+
 		public static function mergeConfigs(configData:Object, baseConfigData:Object):Object
 		{
 			var result:Object = {};

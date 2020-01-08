@@ -600,6 +600,22 @@ package
 					}
 				}
 			}
+			//mainClass must be parsed after files
+			if(this._projectType === ProjectType.APP && ASConfigFields.MAIN_CLASS in configData)
+			{
+				var mainClass:String = configData[ASConfigFields.MAIN_CLASS];
+				this._mainFile = ConfigUtils.resolveMainClass(mainClass, this._sourcePaths);
+				if(this._mainFile === null)
+				{
+					console.error("Main class not found in source paths: " + mainClass);
+					process.exit(1);
+				}
+				if(!this._files)
+				{
+					this._files = [];
+				}
+				this._files.push(this._mainFile);
+			}
 			if(ASConfigFields.AIR_OPTIONS in configData)
 			{
 				this._configRequiresAIR = true;
