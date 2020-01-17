@@ -965,6 +965,25 @@ package tests
 		}
 
 		[Test]
+		public function testThemeMultiple():void
+		{
+			var value:Array =
+			[
+				"./path/to/file.swc",
+				"another_file.swc"
+			];
+			var args:Object = {};
+			args[CompilerOptions.THEME] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 2,
+				"Incorrect argument count for " + CompilerOptions.THEME);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.THEME + "=" + value[0],
+				"Incorrect argument value for " + CompilerOptions.THEME);
+			Assert.assertStrictlyEquals(result[1], "--" + CompilerOptions.THEME + "+=" + value[1],
+				"Incorrect argument value for " + CompilerOptions.THEME);
+		}
+
+		[Test]
 		public function testToolsLocale():void
 		{
 			var value:String = "fr_FR";

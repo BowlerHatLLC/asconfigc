@@ -85,5 +85,23 @@ package com.as3mxml.asconfigc.utils
 				result.push("--" + optionName + "+=" + currentPath);
 			}
 		}
+
+		public static function setThenAppendPaths(optionName:String, paths:Array, result:Array):void
+		{
+			var pathsCount:int = paths.length;
+			for(var i:int = 0; i < pathsCount; i++)
+			{
+				var currentPath:String = paths[i];
+				currentPath = escapePath(currentPath, false);
+				if(i === 0)
+				{
+					result.push("--" + optionName + "=" + currentPath);
+				}
+				else
+				{
+					result.push("--" + optionName + "+=" + currentPath);
+				}
+			}
+		}
 	}
 }

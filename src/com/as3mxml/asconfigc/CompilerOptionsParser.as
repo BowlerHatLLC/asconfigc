@@ -292,7 +292,15 @@ package com.as3mxml.asconfigc
 					}
 					case CompilerOptions.THEME:
 					{
-						OptionsFormatter.setPathValue(key, options[key], result);
+						var themeValue:Object = options[key];
+						if(Array.isArray(themeValue))
+						{
+							OptionsFormatter.setThenAppendPaths(key, themeValue as Array, result);
+						}
+						else
+						{
+							OptionsFormatter.setPathValue(key, themeValue, result);
+						}
 						break;
 					}
 					case CompilerOptions.TOOLS_LOCALE:
