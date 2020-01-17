@@ -115,6 +115,11 @@ package com.as3mxml.asconfigc
 						parseIncludeFile(options[key], result);
 						break;
 					}
+					case CompilerOptions.INCLUDE_LIBRARIES:
+					{
+						OptionsFormatter.appendPaths(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.INCLUDE_NAMESPACES:
 					{
 						OptionsFormatter.appendValues(key, options[key], result);

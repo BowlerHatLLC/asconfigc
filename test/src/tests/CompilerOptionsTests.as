@@ -322,6 +322,39 @@ package tests
 		}
 
 		[Test]
+		public function testIncludeLibraries():void
+		{
+			var value:Array =
+			[
+				"./test1/file.swc"
+			];
+			var args:Object = {};
+			args[CompilerOptions.INCLUDE_LIBRARIES] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.INCLUDE_LIBRARIES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.INCLUDE_LIBRARIES + "+=" + value[0],
+				"Incorrect argument value for " + CompilerOptions.INCLUDE_LIBRARIES);
+		}
+
+		[Test]
+		public function testIncludeLibrariesWithSpacesInPath():void
+		{
+			var value:Array =
+			[
+				"./test 3.swc"
+			];
+			var formattedPath:String = escapePath(value[0], true);
+			var args:Object = {};
+			args[CompilerOptions.INCLUDE_LIBRARIES] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.INCLUDE_LIBRARIES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.INCLUDE_LIBRARIES + "+=" + formattedPath,
+				"Incorrect argument value for " + CompilerOptions.INCLUDE_LIBRARIES);
+		}
+
+		[Test]
 		public function testIncludeNamespaces():void
 		{
 			var value:Array =
