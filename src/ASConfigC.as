@@ -844,7 +844,7 @@ package
 
 			var jsflPath:String = this.createJSFLScript();
 
-			var command:String = this._animatePath + " " + this._animateFile + " " + jsflPath;
+			var command:String = escapePath(this._animatePath) + " " + escapePath(this._animateFile) + " " + escapePath(jsflPath);
 			if(process.platform === "darwin")
 			{
 				command = "open -a " + command;
@@ -854,11 +854,7 @@ package
 				console.info("Compiling Adobe Animate project...");
 				console.info(command);
 			}
-			var result:Object = child_process.execFileSync(this._animatePath,
-			[
-				this._animateFile,
-				jsflPath
-			],
+			var result:Object = child_process.execSync(command,
 			{
 				stdio: "inherit",
 				encoding: "utf8"
@@ -872,11 +868,11 @@ package
 			var logPath:String = null;
 			if(process.platform === "win32")
 			{
-				logPath = path.resolve(process.env["LOCALAPPDATA"], path.join("Adobe", "vscode-as3mxml"));
+				logPath = path.resolve(os["homedir"](), path.join("Adobe", "vscode-as3mxml"));
 			}
 			else
 			{
-				logPath = path.resolve(process.env["user.home"], path.join("Library", "Application Support", "Adobe", "vscode-as3mxml"));
+				logPath = path.resolve(os["homedir"](), path.join("Library", "Application Support", "Adobe", "vscode-as3mxml"));
 			}
 			if(logPath == null)
 			{
