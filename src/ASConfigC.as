@@ -18,7 +18,7 @@ package
 	import com.as3mxml.asconfigc.AIROptions;
 	import com.as3mxml.asconfigc.AIROptionsParser;
 	import com.as3mxml.asconfigc.AIRPlatformType;
-	import com.as3mxml.asconfigc.ASConfigFields;
+	import com.as3mxml.asconfigc.AnimateOptions;
 	import com.as3mxml.asconfigc.CompilerOptions;
 	import com.as3mxml.asconfigc.CompilerOptionsParser;
 	import com.as3mxml.asconfigc.ConfigName;
@@ -27,6 +27,7 @@ package
 	import com.as3mxml.asconfigc.ProjectType;
 	import com.as3mxml.asconfigc.SigningOptions;
 	import com.as3mxml.asconfigc.Targets;
+	import com.as3mxml.asconfigc.TopLevelFields;
 	import com.as3mxml.asconfigc.utils.ConfigUtils;
 	import com.as3mxml.asconfigc.utils.assetPathToOutputPath;
 	import com.as3mxml.asconfigc.utils.escapePath;
@@ -54,6 +55,8 @@ package
 		private static const ASCONFIG_JSON:String = "asconfig.json";
 		private static const FILE_EXTENSION_ANE:String = ".ane";
 		private static const FILE_NAME_UNPACKAGED_ANES:String = ".as3mxml-unpackaged-anes";
+		private static const FILE_NAME_ANIMATE_PUBLISH_LOG:String = "AnimateDocument.log";
+		private static const FILE_NAME_ANIMATE_ERROR_LOG:String = "AnimateErrors.log";
 
 		private static const MXMLC_JARS:Vector.<String> = new <String>
 		[
@@ -86,25 +89,32 @@ package
 			}
 			this.parseConfig(configData);
 
-			this.cleanProject();
-			
-			//java is required to run the compiler
-			this.validateJava();
-			//validate the SDK after parsing the config because we need to know
-			//if we're building SWF or JS. JS has stricter SDK requirements.
-			this.validateSDK();
-
-			this.compileProject();
-			this.copySourcePathAssets();
-			this.copyHTMLTemplate();
-			this.processAIRDescriptors();
-			this.copyAIRFiles();
-			this.prepareNativeExtensions();
-			if(this._airPlatform !== null)
+			if(this._animateFile)
 			{
-				this.packageAIR();
+				this.compileAnimateFile();
 			}
-			process.exit(0);
+			else
+			{
+				//java is required to run the compiler
+				this.validateJava();
+				//validate the SDK after parsing the config because we need to know
+				//if we're building SWF or JS. JS has stricter SDK requirements.
+				this.validateSDK();
+
+				this.cleanProject();
+
+				this.compileProject();
+				this.copySourcePathAssets();
+				this.copyHTMLTemplate();
+				this.processAIRDescriptors();
+				this.copyAIRFiles();
+				this.prepareNativeExtensions();
+				if(this._airPlatform !== null)
+				{
+					this.packageAIR();
+				}
+				process.exit(0);
+			}
 		}
 
 		private var _sdkHome:String;
@@ -129,6 +139,9 @@ package
 		private var _clean:Boolean = false;
 		private var _printConfig:Boolean = false;
 		private var _unpackageANEs:Boolean = false;
+		private var _animateFile:String = null;
+		private var _animatePath:String = null;
+		private var _publishAnimate:Boolean = false;
 		private var _debugBuild:Boolean = false;
 		private var _verbose:Boolean = false;
 		private var _sourcePaths:Vector.<String> = null;
@@ -167,6 +180,8 @@ package
 			console.info(" --air PLATFORM                                      Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, and `air`.");
 			console.info(" --storepass PASSWORD                                The password used when signing and packaging an Adobe AIR application. If not specified, prompts for the password.");
 			console.info(" --unpackage-anes                                    Unpackage native extensions to the output directory when creating a debug build for the Adobe AIR simulator.");
+			console.info(" --animate FILE                                      Specify the path to the Adobe Animate executable.");
+			console.info(" --publish-animate                                   Publish Adobe Animate document, instead of only exporting the SWF.");
 			console.info(" --clean                                             Clean the output directory. Will not build the project.");
 			console.info(" --verbose                                           Displays more detailed output, including the full set of options passed to all programs.");
 			console.info(" --jvmargs ARGS                                      (Advanced) Pass custom arguments to the Java virtual machine.");
@@ -349,6 +364,25 @@ package
 						}
 						break;
 					}
+					case "animate":
+					{
+						this._animatePath = String(args[key]);
+						break;
+					}
+					case "publish-animate":
+					{
+						//support both --publish-animate=true or simply --publish-animate
+						var publishAnimateValue:Object = args[key];
+						if(typeof publishAnimateValue === "string")
+						{
+							this._publishAnimate = publishAnimateValue === "true";
+						}
+						else
+						{
+							this._publishAnimate = publishAnimateValue as Boolean;
+						}
+						break;
+					}
 					case "print-config":
 					{
 						this._printConfig = true;
@@ -447,9 +481,9 @@ package
 				console.error(validate["errors"]);
 				process.exit(1);
 			}
-			if(ASConfigFields.EXTENDS in configData)
+			if(TopLevelFields.EXTENDS in configData)
 			{
-				var otherConfigPath:String = configData[ASConfigFields.EXTENDS];
+				var otherConfigPath:String = configData[TopLevelFields.EXTENDS];
 				var otherConfigData:Object = this.loadConfigFromPath(otherConfigPath, validate);
 				if(this._verbose)
 				{
@@ -494,15 +528,15 @@ package
 				console.info("Parsing configuration file...");
 			}
 			this._projectType = this.readProjectType(configData);
-			if(ASConfigFields.CONFIG in configData)
+			if(TopLevelFields.CONFIG in configData)
 			{
-				var configName:String = configData[ASConfigFields.CONFIG] as String;
+				var configName:String = configData[TopLevelFields.CONFIG] as String;
 				this.detectConfigRequirements(configName);
 				this._compilerArgs.push("+configname=" + configName);
 			}
-			if(ASConfigFields.COMPILER_OPTIONS in configData)
+			if(TopLevelFields.COMPILER_OPTIONS in configData)
 			{
-				this._compilerOptionsJSON = configData[ASConfigFields.COMPILER_OPTIONS];
+				this._compilerOptionsJSON = configData[TopLevelFields.COMPILER_OPTIONS];
 				if(this._forceDebug === true || this._forceDebug === false)
 				{
 					//ignore the debug option when it is specified on the
@@ -524,9 +558,9 @@ package
 					this._outputPath = this._compilerOptionsJSON[CompilerOptions.OUTPUT];
 				}
 			}
-			if(ASConfigFields.ADDITIONAL_OPTIONS in configData)
+			if(TopLevelFields.ADDITIONAL_OPTIONS in configData)
 			{
-				this._additionalOptions = configData[ASConfigFields.ADDITIONAL_OPTIONS];
+				this._additionalOptions = configData[TopLevelFields.ADDITIONAL_OPTIONS];
 			}
 			//if js-output-type was not specified, use the default
 			//swf projects won't have a js-output-type
@@ -534,15 +568,15 @@ package
 			{
 				this._compilerArgs.push("--" + CompilerOptions.JS_OUTPUT_TYPE + "=" + this._jsOutputType);
 			}
-			if(ASConfigFields.APPLICATION in configData)
+			if(TopLevelFields.APPLICATION in configData)
 			{
 				this._configRequiresAIR = true;
 				this._airDescriptors = new <String>[];
-				var application:Object = configData[ASConfigFields.APPLICATION]
+				var application:Object = configData[TopLevelFields.APPLICATION]
 				if(typeof application === "string")
 				{
 					//if it's a string, just use it as is for all platforms
-					this._airDescriptors[0] = configData[ASConfigFields.APPLICATION];
+					this._airDescriptors[0] = configData[TopLevelFields.APPLICATION];
 				}
 				else if(this._airPlatform)
 				{
@@ -582,9 +616,9 @@ package
 			}
 			//parse files before airOptions because the mainFile may be
 			//needed to generate some file paths
-			if(ASConfigFields.FILES in configData)
+			if(TopLevelFields.FILES in configData)
 			{
-				this._files = configData[ASConfigFields.FILES] as Array;
+				this._files = configData[TopLevelFields.FILES] as Array;
 				if(this._projectType === ProjectType.LIB)
 				{
 					CompilerOptionsParser.parse(
@@ -601,9 +635,9 @@ package
 				}
 			}
 			//mainClass must be parsed after files
-			if(this._projectType === ProjectType.APP && ASConfigFields.MAIN_CLASS in configData)
+			if(this._projectType === ProjectType.APP && TopLevelFields.MAIN_CLASS in configData)
 			{
-				var mainClass:String = configData[ASConfigFields.MAIN_CLASS];
+				var mainClass:String = configData[TopLevelFields.MAIN_CLASS];
 				this._mainFile = ConfigUtils.resolveMainClass(mainClass, this._sourcePaths);
 				if(this._mainFile === null)
 				{
@@ -616,42 +650,49 @@ package
 				}
 				this._files.push(this._mainFile);
 			}
-			if(ASConfigFields.AIR_OPTIONS in configData)
+			if(TopLevelFields.AIR_OPTIONS in configData)
 			{
 				this._configRequiresAIR = true;
-				this._airOptionsJSON = configData[ASConfigFields.AIR_OPTIONS];
+				this._airOptionsJSON = configData[TopLevelFields.AIR_OPTIONS];
 				this.readAIROptions(this._airOptionsJSON);
 			}
-			if(ASConfigFields.COPY_SOURCE_PATH_ASSETS in configData)
+			if(TopLevelFields.COPY_SOURCE_PATH_ASSETS in configData)
 			{
-				this._copySourcePathAssets = configData[ASConfigFields.COPY_SOURCE_PATH_ASSETS];
+				this._copySourcePathAssets = configData[TopLevelFields.COPY_SOURCE_PATH_ASSETS];
 			}
-			if(ASConfigFields.HTML_TEMPLATE in configData)
+			if(TopLevelFields.HTML_TEMPLATE in configData)
 			{
-				this._htmlTemplate = configData[ASConfigFields.HTML_TEMPLATE];
+				this._htmlTemplate = configData[TopLevelFields.HTML_TEMPLATE];
 
 				//the HTML template needs to be parsed after files and outputPath have
 				//both been parsed
 				var compilerOptionsJSON:Object = null;
-				if(ASConfigFields.COMPILER_OPTIONS in configData)
+				if(TopLevelFields.COMPILER_OPTIONS in configData)
 				{
-					compilerOptionsJSON = configData[ASConfigFields.COMPILER_OPTIONS];
+					compilerOptionsJSON = configData[TopLevelFields.COMPILER_OPTIONS];
 				}
 				readHTMLTemplateOptions(compilerOptionsJSON);
 			}
-			if(ASConfigFields.ANIMATE_OPTIONS in configData)
+			if(TopLevelFields.ANIMATE_OPTIONS in configData)
 			{
-				console.error("The animateOptions field is not supported.");
-				process.exit(1);
+				var animateOptionsJSON:Object = configData[TopLevelFields.ANIMATE_OPTIONS];
+				if(AnimateOptions.FILE in animateOptionsJSON)
+				{
+					this._animateFile = animateOptionsJSON[AnimateOptions.FILE];
+					if(!path.isAbsolute(this._animateFile))
+					{
+						this._animateFile = path.resolve(process.cwd(), this._animateFile);
+					}
+				}
 			}
 		}
 
 		private function readProjectType(configData:Object):String
 		{
-			if(ASConfigFields.TYPE in configData)
+			if(TopLevelFields.TYPE in configData)
 			{
 				//this was already validated
-				return configData[ASConfigFields.TYPE] as String;
+				return configData[TopLevelFields.TYPE] as String;
 			}
 			//this field is optional, and this is the default
 			return ProjectType.APP;
@@ -784,6 +825,167 @@ package
 					break;
 				}
 			}
+		}
+
+		private function compileAnimateFile():void
+		{
+			if(!this._animatePath)
+			{
+				console.error("Adobe Animate not found. Use --animate option.");
+				process.exit(1);
+			}
+			if(!fs.existsSync(this._animatePath))
+			{
+				console.error("Adobe Animate not found at path: " + this._animatePath);
+				process.exit(1);
+			}
+
+			var logPath:String = this.createAnimateLogFolder();
+
+			var jsflPath:String = this.createJSFLScript();
+
+			var command:String = this._animatePath + " " + this._animateFile + " " + jsflPath;
+			if(process.platform === "darwin")
+			{
+				command = "open -a " + command;
+			}
+			if(this._verbose)
+			{
+				console.info("Compiling Adobe Animate project...");
+				console.info(command);
+			}
+			var result:Object = child_process.execFileSync(this._animatePath,
+			[
+				this._animateFile,
+				jsflPath
+			],
+			{
+				stdio: "inherit",
+				encoding: "utf8"
+			});
+
+			this.createAnimatePublishWatcher(logPath);
+		}
+
+		private function createAnimateLogFolder():String
+		{			
+			var logPath:String = null;
+			if(process.platform === "win32")
+			{
+				logPath = path.resolve(process.env["LOCALAPPDATA"], path.join("Adobe", "vscode-as3mxml"));
+			}
+			else
+			{
+				logPath = path.resolve(process.env["user.home"], path.join("Library", "Application Support", "Adobe", "vscode-as3mxml"));
+			}
+			if(logPath == null)
+			{
+				console.error("Failed to locate Adobe Animate logs at path: " + logPath);
+				process.exit(1);
+			}
+			//macOS seems to require these files to be manually deleted to detect
+			//the appropriate create event
+			if(fs.existsSync(logPath))
+			{
+				try
+				{
+					del.sync([logPath], {"force": true});
+				}
+				catch(e:Error)
+				{
+					console.error("Failed to delete Adobe Animate logs because an I/O exception occurred.");
+					if(this._verbose)
+					{
+						console.error(e);
+					}
+					process.exit(1);
+				}
+			}
+			mkdirp.sync(logPath);
+			return logPath;
+		}
+
+		private function createJSFLScript():String
+		{
+			var jsflFileName:String = null;
+			if(this._publishAnimate)
+			{
+				jsflFileName = this._debugBuild ? "publish-debug.jsfl" : "publish-release.jsfl";
+			}
+			else
+			{
+				jsflFileName = this._debugBuild ? "compile-debug.jsfl" : "compile-release.jsfl";
+			}
+
+			var jsflTemplatePath:String = path.resolve(path.dirname(__filename), path.join("..", "..", "jsfl", jsflFileName));
+
+			tmp.setGracefulCleanup();
+			var jsflPath:String = tmp.fileSync({"prefix": "vscode-as3mxml", "postfix": ".jsfl", "discardDescriptor": true}).name;
+
+			var jsflContents:String = fs.readFileSync(jsflTemplatePath, "utf8") as String;
+
+			var resolvedOutputPath:String = null;
+			if(this._outputPath == null)
+			{
+				var swfFileName:String = path.basename(this._animateFile);
+				swfFileName = swfFileName.substr(0, swfFileName.length - path.extname(swfFileName).length);
+				resolvedOutputPath = path.resolve(path.dirname(this._animateFile), swfFileName + ".swf");
+			}
+			else
+			{
+				resolvedOutputPath = path.resolve(this._outputPath);
+			}
+
+			mkdirp.sync(path.dirname(resolvedOutputPath));
+
+			var resolvedUri:String = url["pathToFileURL"](resolvedOutputPath);
+			jsflContents = jsflContents.replace(/\$\{OUTPUT_URI\}/g, resolvedUri);
+			fs.writeFileSync(jsflPath, jsflContents, "utf8");
+
+			return jsflPath;
+		}
+
+		private function createAnimatePublishWatcher(pathToWatch:String):void
+		{
+			var errorLogPath:String = path.resolve(pathToWatch, FILE_NAME_ANIMATE_ERROR_LOG);
+			var hasErrors:Boolean = false;
+			var hasPublish:Boolean = false;
+			chokidar.watch("*", {"cwd": pathToWatch, "awaitWriteFinish": true, "usePolling": true})
+				.on("add", function(filePath:String):void
+				{
+					if(filePath == FILE_NAME_ANIMATE_ERROR_LOG)
+					{
+						hasErrors = true;
+						if(hasPublish)
+						{
+							animateComplete(errorLogPath);
+						}
+					}
+					else if(filePath === FILE_NAME_ANIMATE_PUBLISH_LOG)
+					{
+						hasPublish = true;
+						if(hasErrors)
+						{
+							animateComplete(errorLogPath);
+						}
+					}
+				});
+		}
+
+		private function animateComplete(errorLogPath:String):void
+		{
+			if(!fs.existsSync(errorLogPath))
+			{
+				process.exit(0);
+			}
+			var errorLogContents:String = fs.readFileSync(errorLogPath, "utf8") as String;
+			//print the errors/warnings to the console
+			console.error(errorLogContents);
+			if(errorLogContents.indexOf("**Error** ") !== -1)
+			{
+				process.exit(1);
+			}
+			process.exit(0);
 		}
 
 		private function validateJava():void
@@ -985,11 +1187,15 @@ package
 				}
 				try
 				{
-					del.sync([outputDirectory]);
+					del.sync([outputDirectory], {"force": true});
 				}
 				catch(e:Error)
 				{
 					console.error("Failed to clean project because an I/O exception occurred.");
+					if(this._verbose)
+					{
+						console.error(e);
+					}
 					process.exit(1);
 				}
 			}
@@ -1105,7 +1311,7 @@ package
 				console.info("Copying asset: " + srcPath);
 			}
 			var content:Object = fs.readFileSync(srcPath);
-			mkdirp["sync"](path.dirname(targetPath));
+			mkdirp.sync(path.dirname(targetPath));
 			if(fs.existsSync(targetPath) && !fs["accessSync"](targetPath, fs["constants"].W_OK))
 			{
 				//is this the best way to do it? seems to be no way to make
@@ -1199,7 +1405,7 @@ package
 
 		private function copyHTMLTemplateDirectory(inputDir:String, outputDir:String):void
 		{
-			mkdirp["sync"](outputDir);
+			mkdirp.sync(outputDir);
 			if(!fs.existsSync(outputDir))
 			{
 				console.error("Failed to create output directory for HTML template: " + outputDir);
@@ -1332,20 +1538,20 @@ package
 				{
 					var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
 					var debugDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, debugOutputDir, false);
-					mkdirp["sync"](path.dirname(debugDescriptorOutputPath));
+					mkdirp.sync(path.dirname(debugDescriptorOutputPath));
 					fs.writeFileSync(debugDescriptorOutputPath, descriptor, "utf8");
 					if(!this._debugBuild)
 					{
 						var releaseOutputDir:String = path.join(outputDir, "bin", "js-release");
 						var releaseDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, releaseOutputDir, false);
-						mkdirp["sync"](path.dirname(releaseDescriptorOutputPath));
+						mkdirp.sync(path.dirname(releaseDescriptorOutputPath));
 						fs.writeFileSync(releaseDescriptorOutputPath, descriptor, "utf8");
 					}
 				}
 				else //swf
 				{
 					var descriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPath, true);
-					mkdirp["sync"](path.dirname(descriptorOutputPath));
+					mkdirp.sync(path.dirname(descriptorOutputPath));
 					fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
 				}
 			}
@@ -1450,7 +1656,7 @@ package
 			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
 			var unpackedAneDir:String = path.resolve(outputDir, FILE_NAME_UNPACKAGED_ANES);
 			var currentAneDir:String = path.resolve(unpackedAneDir, path.basename(aneFilePath));		
-			mkdirp["sync"](currentAneDir);
+			mkdirp.sync(currentAneDir);
 
 			try
 			{

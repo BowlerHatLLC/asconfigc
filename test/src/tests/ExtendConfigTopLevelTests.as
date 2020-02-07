@@ -1,7 +1,7 @@
 package tests
 {
 	import com.as3mxml.asconfigc.AIRPlatformType;
-	import com.as3mxml.asconfigc.ASConfigFields;
+	import com.as3mxml.asconfigc.TopLevelFields;
 	import com.as3mxml.asconfigc.utils.ConfigUtils;
 
 	import org.apache.royale.test.Assert;
@@ -22,8 +22,8 @@ package tests
 			{
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COPY_SOURCE_PATH_ASSETS));
-			var resultValue:* = result[ASConfigFields.COPY_SOURCE_PATH_ASSETS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COPY_SOURCE_PATH_ASSETS));
+			var resultValue:* = result[TopLevelFields.COPY_SOURCE_PATH_ASSETS];
 			Assert.assertStrictlyEquals(resultValue, baseValue);
 		}
 
@@ -39,8 +39,8 @@ package tests
 				"copySourcePathAssets": newValue
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COPY_SOURCE_PATH_ASSETS));
-			var resultValue:* = result[ASConfigFields.COPY_SOURCE_PATH_ASSETS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COPY_SOURCE_PATH_ASSETS));
+			var resultValue:* = result[TopLevelFields.COPY_SOURCE_PATH_ASSETS];
 			Assert.assertStrictlyEquals(resultValue, newValue);
 		}
 
@@ -58,8 +58,8 @@ package tests
 				"copySourcePathAssets": newValue
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COPY_SOURCE_PATH_ASSETS));
-			var resultValue:* = result[ASConfigFields.COPY_SOURCE_PATH_ASSETS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COPY_SOURCE_PATH_ASSETS));
+			var resultValue:* = result[TopLevelFields.COPY_SOURCE_PATH_ASSETS];
 			Assert.assertStrictlyEquals(resultValue, newValue);
 		}
 
@@ -86,9 +86,9 @@ package tests
 			{
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.FILES));
-			Assert.assertTrue(Array.isArray(result[ASConfigFields.FILES]));
-			var resultArray:Array = result[ASConfigFields.FILES] as Array;
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.FILES));
+			Assert.assertTrue(Array.isArray(result[TopLevelFields.FILES]));
+			var resultArray:Array = result[TopLevelFields.FILES] as Array;
 			Assert.assertStrictlyEquals(resultArray.length, 1);
 			var resultValue:* = resultArray[0];
 			Assert.assertStrictlyEquals(resultValue, baseValue);
@@ -108,9 +108,9 @@ package tests
 				]
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.FILES));
-			Assert.assertTrue(Array.isArray(result[ASConfigFields.FILES]));
-			var resultFiles:Array = result[ASConfigFields.FILES] as Array;
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.FILES));
+			Assert.assertTrue(Array.isArray(result[TopLevelFields.FILES]));
+			var resultFiles:Array = result[TopLevelFields.FILES] as Array;
 			Assert.assertStrictlyEquals(resultFiles.length, 1);
 			var resultValue:* = resultFiles[0];
 			Assert.assertStrictlyEquals(resultValue, newValue);
@@ -134,9 +134,9 @@ package tests
 				]
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.FILES));
-			Assert.assertTrue(Array.isArray(result[ASConfigFields.FILES]));
-			var resultFiles:Array = result[ASConfigFields.FILES] as Array;
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.FILES));
+			Assert.assertTrue(Array.isArray(result[TopLevelFields.FILES]));
+			var resultFiles:Array = result[TopLevelFields.FILES] as Array;
 			var resultValue:* = resultFiles[0];
 			Assert.assertStrictlyEquals(resultValue, newValue);
 		}
@@ -158,8 +158,8 @@ package tests
 			{
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.APPLICATION));
-			var resultValue:* = result[ASConfigFields.APPLICATION];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.APPLICATION));
+			var resultValue:* = result[TopLevelFields.APPLICATION];
 			Assert.assertStrictlyEquals(resultValue, baseValue);
 		}
 
@@ -175,8 +175,8 @@ package tests
 				"application": newValue
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.APPLICATION));
-			var resultValue:* = result[ASConfigFields.APPLICATION];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.APPLICATION));
+			var resultValue:* = result[TopLevelFields.APPLICATION];
 			Assert.assertStrictlyEquals(resultValue, newValue);
 		}
 
@@ -194,8 +194,8 @@ package tests
 				"application": newValue
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.APPLICATION));
-			var resultValue:* = result[ASConfigFields.APPLICATION];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.APPLICATION));
+			var resultValue:* = result[TopLevelFields.APPLICATION];
 			Assert.assertStrictlyEquals(resultValue, newValue);
 		}
 
@@ -215,8 +215,8 @@ package tests
 			{
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.APPLICATION));
-			var resultValue:* = result[ASConfigFields.APPLICATION];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.APPLICATION));
+			var resultValue:* = result[TopLevelFields.APPLICATION];
 			Assert.assertTrue(resultValue.hasOwnProperty(AIRPlatformType.ANDROID));
 			Assert.assertTrue(resultValue.hasOwnProperty(AIRPlatformType.IOS));
 			Assert.assertTrue(!resultValue.hasOwnProperty(AIRPlatformType.WINDOWS));
@@ -243,8 +243,8 @@ package tests
 				"application": newValue
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.APPLICATION));
-			var resultValue:* = result[ASConfigFields.APPLICATION];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.APPLICATION));
+			var resultValue:* = result[TopLevelFields.APPLICATION];
 			Assert.assertTrue(resultValue.hasOwnProperty(AIRPlatformType.ANDROID));
 			Assert.assertTrue(resultValue.hasOwnProperty(AIRPlatformType.IOS));
 			Assert.assertTrue(!resultValue.hasOwnProperty(AIRPlatformType.WINDOWS));
@@ -278,8 +278,8 @@ package tests
 				"application": newValue
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.APPLICATION));
-			var resultValue:* = result[ASConfigFields.APPLICATION];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.APPLICATION));
+			var resultValue:* = result[TopLevelFields.APPLICATION];
 			Assert.assertTrue(resultValue.hasOwnProperty(AIRPlatformType.ANDROID));
 			Assert.assertTrue(resultValue.hasOwnProperty(AIRPlatformType.IOS));
 			Assert.assertTrue(resultValue.hasOwnProperty(AIRPlatformType.WINDOWS));
@@ -310,8 +310,8 @@ package tests
 				"application": newValue
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.APPLICATION));
-			var resultValue:* = result[ASConfigFields.APPLICATION];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.APPLICATION));
+			var resultValue:* = result[TopLevelFields.APPLICATION];
 			Assert.assertTrue(resultValue.hasOwnProperty(AIRPlatformType.ANDROID));
 			Assert.assertTrue(resultValue.hasOwnProperty(AIRPlatformType.IOS));
 			Assert.assertTrue(resultValue.hasOwnProperty(AIRPlatformType.WINDOWS));
@@ -344,8 +344,8 @@ package tests
 				"application": newValue
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.APPLICATION));
-			var resultValue:* = result[ASConfigFields.APPLICATION];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.APPLICATION));
+			var resultValue:* = result[TopLevelFields.APPLICATION];
 			Assert.assertStrictlyEquals(resultValue, newValue);
 		}
 	}

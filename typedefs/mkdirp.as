@@ -1,8 +1,14 @@
-package 
+package
 {
 	[JSModule(name="mkdirp")]
 	/**
 	 * @externs
 	 */
-	public function mkdirp(dir:String, cbOrFlags:Object, cb:Function = null):void {}
+	public class mkdirp
+	{
+		public static function sync(dir:String, options:Object = null):String
+		{
+			return null;
+		}
+	}
 }

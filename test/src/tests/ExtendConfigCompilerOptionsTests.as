@@ -1,7 +1,7 @@
 package tests
 {
-	import com.as3mxml.asconfigc.ASConfigFields;
 	import com.as3mxml.asconfigc.CompilerOptions;
+	import com.as3mxml.asconfigc.TopLevelFields;
 	import com.as3mxml.asconfigc.utils.ConfigUtils;
 
 	import org.apache.royale.test.Assert;
@@ -26,8 +26,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.WARNINGS));
 			var resultValue:* = compilerOptions[CompilerOptions.WARNINGS];
 			Assert.assertStrictlyEquals(resultValue, baseValue);
@@ -47,8 +47,8 @@ package tests
 			{
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.WARNINGS));
 			var resultValue:* = compilerOptions[CompilerOptions.WARNINGS];
 			Assert.assertStrictlyEquals(resultValue, baseValue);
@@ -70,8 +70,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.WARNINGS));
 			var resultValue:* = compilerOptions[CompilerOptions.WARNINGS];
 			Assert.assertStrictlyEquals(resultValue, newValue);
@@ -91,8 +91,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.WARNINGS));
 			var resultValue:* = compilerOptions[CompilerOptions.WARNINGS];
 			Assert.assertStrictlyEquals(resultValue, newValue);
@@ -116,8 +116,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.WARNINGS));
 			var resultValue:* = compilerOptions[CompilerOptions.WARNINGS];
 			Assert.assertStrictlyEquals(resultValue, newValue);
@@ -145,8 +145,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.SOURCE_PATH));
 			Assert.assertTrue(Array.isArray(compilerOptions[CompilerOptions.SOURCE_PATH]));
 			var resultValue:Array = compilerOptions[CompilerOptions.SOURCE_PATH] as Array;
@@ -174,8 +174,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.SOURCE_PATH));
 			Assert.assertTrue(Array.isArray(compilerOptions[CompilerOptions.SOURCE_PATH]));
 			var resultValue:Array = compilerOptions[CompilerOptions.SOURCE_PATH] as Array;
@@ -201,8 +201,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.SOURCE_PATH));
 			Assert.assertTrue(Array.isArray(compilerOptions[CompilerOptions.SOURCE_PATH]));
 			var resultValue:Array = compilerOptions[CompilerOptions.SOURCE_PATH] as Array;
@@ -230,8 +230,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.SOURCE_PATH));
 			Assert.assertTrue(Array.isArray(compilerOptions[CompilerOptions.SOURCE_PATH]));
 			var resultValue:Array = compilerOptions[CompilerOptions.SOURCE_PATH] as Array;
@@ -261,8 +261,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.SOURCE_PATH));
 			Assert.assertTrue(Array.isArray(compilerOptions[CompilerOptions.SOURCE_PATH]));
 			var resultValue:Array = compilerOptions[CompilerOptions.SOURCE_PATH] as Array;
@@ -293,8 +293,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.SOURCE_PATH));
 			Assert.assertTrue(Array.isArray(compilerOptions[CompilerOptions.SOURCE_PATH]));
 			var resultValue:Array = compilerOptions[CompilerOptions.SOURCE_PATH] as Array;
@@ -327,8 +327,8 @@ package tests
 				"compilerOptions": {}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.DEFINE));
 			Assert.assertTrue(Array.isArray(compilerOptions[CompilerOptions.DEFINE]));
 			var resultValue:Array = compilerOptions[CompilerOptions.DEFINE] as Array;
@@ -358,8 +358,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.DEFINE));
 			Assert.assertTrue(Array.isArray(compilerOptions[CompilerOptions.DEFINE]));
 			var resultValue:Array = compilerOptions[CompilerOptions.DEFINE] as Array;
@@ -398,8 +398,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.DEFINE));
 			Assert.assertTrue(Array.isArray(compilerOptions[CompilerOptions.DEFINE]));
 			var resultValue:Array = compilerOptions[CompilerOptions.DEFINE] as Array;
@@ -440,8 +440,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.COMPILER_OPTIONS));
-			var compilerOptions:Object = result[ASConfigFields.COMPILER_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.COMPILER_OPTIONS));
+			var compilerOptions:Object = result[TopLevelFields.COMPILER_OPTIONS];
 			Assert.assertTrue(compilerOptions.hasOwnProperty(CompilerOptions.DEFINE));
 			Assert.assertTrue(Array.isArray(compilerOptions[CompilerOptions.DEFINE]));
 			var resultValue:Array = compilerOptions[CompilerOptions.DEFINE] as Array;

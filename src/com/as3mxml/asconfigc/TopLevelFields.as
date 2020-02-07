@@ -15,7 +15,7 @@ limitations under the License.
 */
 package com.as3mxml.asconfigc
 {
-	public class ASConfigFields
+	public class TopLevelFields
 	{
 		public static const TYPE:String = "type";
 		public static const CONFIG:String = "config";

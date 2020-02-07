@@ -17,9 +17,9 @@ package com.as3mxml.asconfigc.utils
 {
 	import com.as3mxml.asconfigc.AIROptions;
 	import com.as3mxml.asconfigc.AIRPlatformType;
-	import com.as3mxml.asconfigc.ASConfigFields;
 	import com.as3mxml.asconfigc.CompilerOptions;
 	import com.as3mxml.asconfigc.SigningOptions;
+	import com.as3mxml.asconfigc.TopLevelFields;
 
 	/**
 	 * Utilities for parsing asconfig.json files.
@@ -84,7 +84,7 @@ package com.as3mxml.asconfigc.utils
 			}
 			keys.forEach(function(value:String, key:Object, set:Set):void
 			{
-				if(key === ASConfigFields.EXTENDS)
+				if(key === TopLevelFields.EXTENDS)
 				{
 					//safe to skip
 					return;
@@ -93,15 +93,15 @@ package com.as3mxml.asconfigc.utils
 				var hasBase:Boolean = baseConfigData.hasOwnProperty(key);
 				if(hasConfig && hasBase)
 				{
-					if(key === ASConfigFields.APPLICATION)
+					if(key === TopLevelFields.APPLICATION)
 					{
 						result[key] = mergeApplication(configData[key], baseConfigData[key]);
 					}
-					else if(key === ASConfigFields.COMPILER_OPTIONS)
+					else if(key === TopLevelFields.COMPILER_OPTIONS)
 					{
 						result[key] = mergeCompilerOptions(configData[key], baseConfigData[key]);
 					}
-					else if(key === ASConfigFields.AIR_OPTIONS)
+					else if(key === TopLevelFields.AIR_OPTIONS)
 					{
 						result[key] = mergeAIROptions(configData[key], baseConfigData[key], true);
 					}

@@ -1,6 +1,6 @@
 {
   "name": "asconfigc",
-  "version": "0.15.0",
+  "version": "1.0.0",
   "description": "Builds an ActionScript & MXML project configured with asconfig.json, from simple compilation to packaging Adobe AIR apps.",
   "author": "Josh Tynjala",
   "repository": "BowlerHatLLC/asconfigc",
@@ -23,23 +23,26 @@
   "files": [
     "bin/js-release",
     "schemas",
+    "jsfl",
     "NOTICE",
     "asconfigc"
   ],
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=10.12.0"
   },
   "dependencies": {
     "adm-zip": "^0.4.13",
+    "chokidar": "^3.3.1",
     "del": "^3.0.0",
     "jsen": "^0.6.6",
     "json5": "^1.0.1",
     "minimist": "^1.2.0",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "tmp": "^0.1.0"
   },
   "scripts": {
     "build": "asnodec --source-map=true --source-path+=typedefs src/ASConfigC.as",
     "test": "npm run build && node ./bin/js-release/index.js -p test && cd ./test/fixtures && node ../bin/js-debug/index.js",
-    "prepublish": "npm test"
+    "prepack": "npm test"
   }
 }

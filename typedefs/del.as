@@ -6,6 +6,6 @@ package
 	 */
 	public class del
 	{
-		public static function sync(paths:Array):void {};
+		public static function sync(paths:Array, options:Object = null):void {};
 	}
 }

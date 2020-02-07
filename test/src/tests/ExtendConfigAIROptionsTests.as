@@ -2,8 +2,8 @@ package tests
 {
 	import com.as3mxml.asconfigc.AIROptions;
 	import com.as3mxml.asconfigc.AIRPlatformType;
-	import com.as3mxml.asconfigc.ASConfigFields;
 	import com.as3mxml.asconfigc.SigningOptions;
+	import com.as3mxml.asconfigc.TopLevelFields;
 	import com.as3mxml.asconfigc.utils.ConfigUtils;
 
 	import org.apache.royale.test.Assert;
@@ -28,8 +28,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.OUTPUT));
 			var resultValue:* = airOptions[AIROptions.OUTPUT];
 			Assert.assertStrictlyEquals(resultValue, baseValue);
@@ -49,8 +49,8 @@ package tests
 			{
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.OUTPUT));
 			var resultValue:* = airOptions[AIROptions.OUTPUT];
 			Assert.assertStrictlyEquals(resultValue, baseValue);
@@ -72,8 +72,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.OUTPUT));
 			var resultValue:* = airOptions[AIROptions.OUTPUT];
 			Assert.assertStrictlyEquals(resultValue, newValue);
@@ -93,8 +93,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.OUTPUT));
 			var resultValue:* = airOptions[AIROptions.OUTPUT];
 			Assert.assertStrictlyEquals(resultValue, newValue);
@@ -118,8 +118,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.OUTPUT));
 			var resultValue:* = airOptions[AIROptions.OUTPUT];
 			Assert.assertStrictlyEquals(resultValue, newValue);
@@ -150,8 +150,8 @@ package tests
 				"airOptions": {}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.FILES));
 			Assert.assertTrue(Array.isArray(airOptions[AIROptions.FILES]));
 			var resultValue:Array = airOptions[AIROptions.FILES] as Array;
@@ -181,8 +181,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.FILES));
 			Assert.assertTrue(Array.isArray(airOptions[AIROptions.FILES]));
 			var resultValue:Array = airOptions[AIROptions.FILES] as Array;
@@ -221,8 +221,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.FILES));
 			Assert.assertTrue(Array.isArray(airOptions[AIROptions.FILES]));
 			var resultValue:Array = airOptions[AIROptions.FILES] as Array;
@@ -263,8 +263,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.FILES));
 			Assert.assertTrue(Array.isArray(airOptions[AIROptions.FILES]));
 			var resultValue:Array = airOptions[AIROptions.FILES] as Array;
@@ -296,8 +296,8 @@ package tests
 				"airOptions": {}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.SIGNING_OPTIONS));
 			var signingOptions:Object = airOptions[AIROptions.SIGNING_OPTIONS];
 			Assert.assertTrue(signingOptions.hasOwnProperty(SigningOptions.KEYSTORE));
@@ -326,8 +326,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.SIGNING_OPTIONS));
 			var signingOptions:Object = airOptions[AIROptions.SIGNING_OPTIONS];
 			Assert.assertTrue(!signingOptions.hasOwnProperty(SigningOptions.KEYSTORE));
@@ -363,8 +363,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.SIGNING_OPTIONS));
 			var signingOptions:Object = airOptions[AIROptions.SIGNING_OPTIONS];
 			Assert.assertTrue(!signingOptions.hasOwnProperty(SigningOptions.KEYSTORE));
@@ -417,8 +417,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.SIGNING_OPTIONS));
 			var signingOptions:Object = airOptions[AIROptions.SIGNING_OPTIONS];
 			Assert.assertTrue(signingOptions.hasOwnProperty(SigningOptions.DEBUG));
@@ -468,8 +468,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.SIGNING_OPTIONS));
 			var signingOptions:Object = airOptions[AIROptions.SIGNING_OPTIONS];
 			Assert.assertTrue(signingOptions.hasOwnProperty(SigningOptions.DEBUG));
@@ -523,8 +523,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIROptions.SIGNING_OPTIONS));
 			var signingOptions:Object = airOptions[AIROptions.SIGNING_OPTIONS];
 			Assert.assertFalse(signingOptions.hasOwnProperty(SigningOptions.DEBUG));
@@ -558,8 +558,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
 			var android:Object = airOptions[AIRPlatformType.ANDROID];
 			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
@@ -586,8 +586,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
 			var android:Object = airOptions[AIRPlatformType.ANDROID];
 			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
@@ -611,8 +611,8 @@ package tests
 			{
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
 			var android:Object = airOptions[AIRPlatformType.ANDROID];
 			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
@@ -640,8 +640,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
 			var android:Object = airOptions[AIRPlatformType.ANDROID];
 			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
@@ -668,8 +668,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
 			var android:Object = airOptions[AIRPlatformType.ANDROID];
 			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
@@ -693,8 +693,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
 			var android:Object = airOptions[AIRPlatformType.ANDROID];
 			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
@@ -724,8 +724,8 @@ package tests
 				}
 			};
 			var result:Object = ConfigUtils.mergeConfigs(config, baseConfig);
-			Assert.assertTrue(result.hasOwnProperty(ASConfigFields.AIR_OPTIONS));
-			var airOptions:Object = result[ASConfigFields.AIR_OPTIONS];
+			Assert.assertTrue(result.hasOwnProperty(TopLevelFields.AIR_OPTIONS));
+			var airOptions:Object = result[TopLevelFields.AIR_OPTIONS];
 			Assert.assertTrue(airOptions.hasOwnProperty(AIRPlatformType.ANDROID));
 			var android:Object = airOptions[AIRPlatformType.ANDROID];
 			Assert.assertTrue(android.hasOwnProperty(AIROptions.OUTPUT));
