@@ -868,7 +868,7 @@ package
 			var logPath:String = null;
 			if(process.platform === "win32")
 			{
-				logPath = path.resolve(os["homedir"](), path.join("Adobe", "vscode-as3mxml"));
+				logPath = path.resolve(process.env["LOCALAPPDATA"], path.join("Adobe", "vscode-as3mxml"));
 			}
 			else
 			{
