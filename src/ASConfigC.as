@@ -1715,31 +1715,45 @@ package
 					srcFilePath = path.resolve(srcFilePath);
 					destFilePath = fileJSON[AIROptions.FILES__PATH];
 				}
+				if(!path.isAbsolute(srcFilePath))
+				{
+					srcFilePath = path.resolve(process.cwd(), srcFilePath);
+				}
+				//ensures that path formatting is consistent
+				destFilePath = path.relative(outputDir, path.resolve(outputDir, destFilePath));
+				if(destFilePath.startsWith(".."))
+				{
+					console.error("Invalid destination path for file in Adobe AIR application. Source: " + srcFilePath + ", Destination: " + destFilePath);
+					process.exit(1);
+				}
 
 				if(fs.statSync(srcFilePath).isDirectory())
 				{
 					var assetDirList:Vector.<String> = new <String>[srcFilePath];
 					var assetPaths:Array = findSourcePathAssets(null, assetDirList, outputDir, null);
-					assetDirList = new <String>[path.dirname(srcFilePath)];
 					var assetCount:int = assetPaths.length;
 					for(var j:int = 0; j < assetCount; j++)
 					{
 						var assetPath:String = assetPaths[j];
+						var relativeAssetPath:String = path.relative(srcFilePath, assetPath);
 						if(this._outputIsJS)
 						{
 							var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
-							var debugTargetPath:String = assetPathToOutputPath(assetPath, null, assetDirList, debugOutputDir);
+							debugOutputDir = path.resolve(debugOutputDir, destFilePath);
+							var debugTargetPath:String = path.resolve(debugOutputDir, relativeAssetPath);
 							copyAsset(assetPath, debugTargetPath);
 							if(!this._debugBuild)
 							{
 								var releaseOutputDir:String = path.join(outputDir, "bin", "js-release");
-								var releaseTargetPath:String = assetPathToOutputPath(assetPath, null, assetDirList, releaseOutputDir);
+								releaseOutputDir = path.resolve(releaseOutputDir, destFilePath);
+								var releaseTargetPath:String = path.resolve(releaseOutputDir, relativeAssetPath);
 								copyAsset(assetPath, releaseTargetPath);
 							}
 						}
 						else //swf
 						{
-							var swfTargetPath:String = assetPathToOutputPath(assetPath, null, assetDirList, outputDir);
+							var assetOutputDir:String = path.resolve(outputDir, destFilePath);
+							var swfTargetPath:String = path.resolve(assetOutputDir, relativeAssetPath);
 							copyAsset(assetPath, swfTargetPath);
 						}
 					}
