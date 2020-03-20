@@ -1719,15 +1719,22 @@ package
 				{
 					srcFilePath = path.resolve(process.cwd(), srcFilePath);
 				}
+				var srcIsDir:Boolean = fs.statSync(srcFilePath).isDirectory();
 				//ensures that path formatting is consistent
 				destFilePath = path.relative(outputDir, path.resolve(outputDir, destFilePath));
-				if(destFilePath.startsWith(".."))
+				if(destFilePath.length === 0)
+				{
+					//if paths are equal, path.relative() returns an empty
+					//string, but this is what we need to use later
+					destFilePath = ".";
+				}
+				if(destFilePath.startsWith("..") || (!srcIsDir && destFilePath === "."))
 				{
 					console.error("Invalid destination path for file in Adobe AIR application. Source: " + srcFilePath + ", Destination: " + destFilePath);
 					process.exit(1);
 				}
 
-				if(fs.statSync(srcFilePath).isDirectory())
+				if(srcIsDir)
 				{
 					var assetDirList:Vector.<String> = new <String>[srcFilePath];
 					var assetPaths:Array = findSourcePathAssets(null, assetDirList, outputDir, null);
