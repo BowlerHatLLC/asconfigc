@@ -27,6 +27,7 @@ package com.as3mxml.asconfigc
 		public static const DEFAULT_SIZE:String = "default-size";
 		public static const DEFAULT_SIZE__WIDTH:String = "width";
 		public static const DEFAULT_SIZE__HEIGHT:String = "height";
+		public static const DEFAULTS_CSS_FILES:String = "defaults-css-files";
 		public static const DEFINE:String = "define";
 		public static const DEFINE__NAME:String = "name";
 		public static const DEFINE__VALUE:String = "value";

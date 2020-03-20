@@ -104,6 +104,25 @@ package tests
 		}
 
 		[Test]
+		public function testDefaultsCssFiles():void
+		{
+			var value:Array =
+			[
+				"./test1.css",
+				"./test2/test.css"
+			];
+			var args:Object = {};
+			args[CompilerOptions.DEFAULTS_CSS_FILES] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 2,
+				"Incorrect argument count for " + CompilerOptions.DEFAULTS_CSS_FILES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.DEFAULTS_CSS_FILES + "+=" + value[0],
+				"Incorrect argument 0 value for " + CompilerOptions.DEFAULTS_CSS_FILES);
+			Assert.assertStrictlyEquals(result[1], "--" + CompilerOptions.DEFAULTS_CSS_FILES + "+=" + value[1],
+				"Incorrect argument 1 value for " + CompilerOptions.DEFAULTS_CSS_FILES);
+		}
+
+		[Test]
 		public function testDefine():void
 		{
 			var value:Array =

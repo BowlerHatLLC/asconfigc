@@ -70,6 +70,11 @@ package com.as3mxml.asconfigc
 						setDefaultSize(options[key], result);
 						break;
 					}
+					case CompilerOptions.DEFAULTS_CSS_FILES:
+					{
+						OptionsFormatter.appendPaths(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.DEFINE:
 					{
 						setDefine(key, options[key], result);
