@@ -40,9 +40,12 @@
     "mkdirp": "^0.5.1",
     "tmp": "^0.1.0"
   },
+  "devDependencies": {
+    "@apache-royale/royale-js": "0.9.6"
+  },
   "scripts": {
     "build": "asnodec --source-map=true --source-path+=typedefs src/ASConfigC.as",
-    "test": "npm run build && node ./bin/js-release/index.js -p test && cd ./test/fixtures && node ../bin/js-debug/index.js",
+    "test": "npm run build && node ./bin/js-release/index.js -p asconfig.test.json && cd ./test/fixtures && node ../bin/js-debug/index.js",
     "prepack": "npm test"
   }
 }

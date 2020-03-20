@@ -1,6 +1,7 @@
 {
 	"config": "node",
 	"compilerOptions": {
+		"js-output": "test",
 		"keep-as3-metadata": [
 			"Test",
 			"Ignore",
@@ -13,9 +14,9 @@
 		],
 		"warn-public-vars": false,
 		"source-path": [
+			"test/src",
 			"src",
-			"../src",
-			"../typedefs"
+			"typedefs"
 		],
 		"js-library-path": [
 			"${royalelib}/js/libs/LanguageJS.swc",
