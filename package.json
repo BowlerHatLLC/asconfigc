@@ -41,7 +41,7 @@
     "tmp": "^0.1.0"
   },
   "devDependencies": {
-    "@apache-royale/royale-js": "0.9.7"
+    "@apache-royale/royale-js": "0.9.6"
   },
   "scripts": {
     "build": "asnodec --source-map=true --source-path+=typedefs src/ASConfigC.as",
