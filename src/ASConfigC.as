@@ -24,6 +24,7 @@ package
 	import com.as3mxml.asconfigc.ConfigName;
 	import com.as3mxml.asconfigc.HTMLTemplateOptionsParser;
 	import com.as3mxml.asconfigc.JSOutputType;
+	import com.as3mxml.asconfigc.ModuleFields;
 	import com.as3mxml.asconfigc.ProjectType;
 	import com.as3mxml.asconfigc.SigningOptions;
 	import com.as3mxml.asconfigc.Targets;
@@ -38,6 +39,7 @@ package
 	import com.as3mxml.asconfigc.utils.findSourcePathAssets;
 	import com.as3mxml.asconfigc.utils.folderContains;
 	import com.as3mxml.asconfigc.utils.generateApplicationID;
+	import com.as3mxml.asconfigc.utils.parseAdditionalOptions;
 	import com.as3mxml.asconfigc.utils.populateAdobeAIRDescriptorTemplateFile;
 	import com.as3mxml.asconfigc.utils.populateHTMLTemplateFile;
 	import com.as3mxml.royale.utils.ApacheFlexJSUtils;
@@ -130,10 +132,9 @@ package
 		private var _outputIsJS:Boolean;
 		private var _jsOutputType:String;
 		private var _compilerArgs:Array;
-		private var _additionalOptions:String;
+		private var _allModuleCompilerArgs:Array;
 		private var _airDescriptors:Vector.<String> = null;
 		private var _outputPath:String = null;
-		private var _files:Array = null;
 		private var _mainFile:String = null;
 		private var _forceDebug:* = undefined;
 		private var _clean:Boolean = false;
@@ -520,6 +521,7 @@ package
 		private function parseConfig(configData:Object):void
 		{
 			this._compilerArgs = [];
+			this._allModuleCompilerArgs = [];
 			this._airArgs = [];
 			this._compilerOptionsJSON = null;
 			this._airOptionsJSON = null;
@@ -560,7 +562,9 @@ package
 			}
 			if(TopLevelFields.ADDITIONAL_OPTIONS in configData)
 			{
-				this._additionalOptions = configData[TopLevelFields.ADDITIONAL_OPTIONS];
+				var additionalOptions:String = configData[TopLevelFields.ADDITIONAL_OPTIONS];
+				var parsedOptions:Array = parseAdditionalOptions(additionalOptions);
+				this._compilerArgs = this._compilerArgs.concat(parsedOptions);
 			}
 			//if js-output-type was not specified, use the default
 			//swf projects won't have a js-output-type
@@ -614,29 +618,76 @@ package
 					}
 				}
 			}
+			if(TopLevelFields.MODULES in configData)
+			{
+				var modules:Array = configData[TopLevelFields.MODULES];
+				var templateModuleCompilerArgs:Array = this.duplicateCompilerOptionsForModule(this._compilerArgs);
+				tmp.setGracefulCleanup();
+				var linkReportPath:String = tmp.fileSync({"prefix": "asconfigc-link-report", "postfix": ".xml", "discardDescriptor": true}).name;
+				var moduleCount:int = modules.length;
+				for (i = 0; i < moduleCount; i++) {
+					var module:Object = modules[i];
+					var moduleCompilerArgs:Array = templateModuleCompilerArgs.slice();
+					var output:String = "";
+					if (ModuleFields.OUTPUT in module) {
+						output = module[ModuleFields.OUTPUT];
+					}
+					if (output.length > 0) {
+						moduleCompilerArgs.push("--" + CompilerOptions.OUTPUT + "=" + output);
+					}
+					var optimize:Boolean = false;
+					if (ModuleFields.OPTIMIZE in module) {
+						optimize = module[ModuleFields.OPTIMIZE] === true;
+					}
+					if (optimize) {
+						moduleCompilerArgs
+								.push("--" + CompilerOptions.LOAD_EXTERNS + "+=" + linkReportPath);
+					}
+					var file:String = module[ModuleFields.FILE];
+					moduleCompilerArgs.push("--");
+					moduleCompilerArgs.push(file);
+					this._allModuleCompilerArgs.push(moduleCompilerArgs);
+				}
+				if (moduleCount > 0) {
+					this._compilerArgs.push("--" + CompilerOptions.LINK_REPORT + "+=" + linkReportPath);
+				}
+			}
 			//parse files before airOptions because the mainFile may be
 			//needed to generate some file paths
 			if(TopLevelFields.FILES in configData)
 			{
-				this._files = configData[TopLevelFields.FILES] as Array;
+				var files:Array = configData[TopLevelFields.FILES] as Array;
 				if(this._projectType === ProjectType.LIB)
 				{
 					CompilerOptionsParser.parse(
 					{
-						"include-sources": this._files
+						"include-sources": files
 					}, this._compilerArgs);
 				}
 				else //app
 				{
-					if(this._files.length > 0)
+					var fileCount:int = files.length;
+					if(fileCount > 0)
 					{
-						this._mainFile = this._files[this._files.length - 1];
+						//terminate previous options and start default options
+						this._compilerArgs.push("--");
+						//mainClass is preferred, but for backwards
+						//compatibility, we need to support setting the entry
+						//point with files too
+						this._mainFile = files[fileCount - 1];
+					}
+					for (i = 0; i < fileCount; i++)
+					{
+						file = files[i];
+						this._compilerArgs.push(file);
 					}
 				}
 			}
 			//mainClass must be parsed after files
 			if(this._projectType === ProjectType.APP && TopLevelFields.MAIN_CLASS in configData)
 			{
+				//if set already, clear it because we're going to replace it
+				var hadMainFile:Boolean = this._mainFile !== null;
 				var mainClass:String = configData[TopLevelFields.MAIN_CLASS];
 				this._mainFile = ConfigUtils.resolveMainClass(mainClass, this._sourcePaths);
 				if(this._mainFile === null)
@@ -644,11 +695,12 @@ package
 					console.error("Main class not found in source paths: " + mainClass);
 					process.exit(1);
 				}
-				if(!this._files)
+				if(!hadMainFile)
 				{
-					this._files = [];
+					//terminate previous options and start default options
+					this._compilerArgs.push("--");
 				}
-				this._files.push(this._mainFile);
+				this._compilerArgs.push(this._mainFile);
 			}
 			if(TopLevelFields.AIR_OPTIONS in configData)
 			{
@@ -685,6 +737,14 @@ package
 					}
 				}
 			}
+		}
+
+		private function duplicateCompilerOptionsForModule(compilerArgs:Array):Array
+		{
+			return compilerArgs.filter(function(arg:String):Boolean
+			{
+				return !/^-{1,2}output\b/g.test(arg);
+			});
 		}
 
 		private function readProjectType(configData:Object):String
@@ -1199,6 +1259,17 @@ package
 
 		private function compileProject():void
 		{
+			compile(this._compilerArgs);
+			var moduleCount:int = this._allModuleCompilerArgs.length;
+			for(var i:int = 0; i < moduleCount; i++)
+			{
+				var moduleCompilerArgs:Array = this._allModuleCompilerArgs[i];
+				compile(moduleCompilerArgs);
+			}
+		}	
+
+		private function compile(compilerArgs:Array):void
+		{
 			if(this._verbose)
 			{
 				if(this._projectType == ProjectType.LIB)
@@ -1221,23 +1292,23 @@ package
 			{
 				//royale is a special case that has renamed many of the common
 				//configuration options for the compiler
-				this._compilerArgs.unshift("+royalelib=" + escapePath(frameworkPath));
-				this._compilerArgs.unshift(escapePath(jarPath));
-				this._compilerArgs.unshift("-jar");
-				this._compilerArgs.unshift("-Droyalelib=" + escapePath(frameworkPath));
-				this._compilerArgs.unshift("-Droyalecompiler=" + escapePath(this._sdkHome));
+				compilerArgs.unshift("+royalelib=" + escapePath(frameworkPath));
+				compilerArgs.unshift(escapePath(jarPath));
+				compilerArgs.unshift("-jar");
+				compilerArgs.unshift("-Droyalelib=" + escapePath(frameworkPath));
+				compilerArgs.unshift("-Droyalecompiler=" + escapePath(this._sdkHome));
 				//Royale requires this so that it doesn't changing the encoding of
 				//UTF-8 characters and display ???? instead
-				this._compilerArgs.unshift("-Dfile.encoding=UTF8");
+				compilerArgs.unshift("-Dfile.encoding=UTF8");
 			}
 			else
 			{
 				//other SDKs all use the same options
-				this._compilerArgs.unshift("+flexlib=" + escapePath(frameworkPath));
-				this._compilerArgs.unshift(escapePath(jarPath));
-				this._compilerArgs.unshift("-jar");
-				this._compilerArgs.unshift("-Dflexlib=" + escapePath(frameworkPath));
-				this._compilerArgs.unshift("-Dflexcompiler=" + escapePath(this._sdkHome));
+				compilerArgs.unshift("+flexlib=" + escapePath(frameworkPath));
+				compilerArgs.unshift(escapePath(jarPath));
+				compilerArgs.unshift("-jar");
+				compilerArgs.unshift("-Dflexlib=" + escapePath(frameworkPath));
+				compilerArgs.unshift("-Dflexcompiler=" + escapePath(this._sdkHome));
 			}
 			if(this._jvmArgs)
 			{
@@ -1245,36 +1316,15 @@ package
 				for(var i:int = jvmArgCount - 1; i >= 0; i--)
 				{
 					var jvmArg:String = this._jvmArgs[i] as String;
-					this._compilerArgs.unshift(jvmArg);
+					compilerArgs.unshift(jvmArg);
 				}
 			}
 			try
 			{
-				var command:String = escapePath(this._javaExecutable) + " " + this._compilerArgs.join(" ");
+				var command:String = escapePath(this._javaExecutable) + " " + compilerArgs.join(" ");
 				if(process.platform !== "win32")
 				{
 					command = command.replace(/\$\{/g, "\\${");
-				}
-				if(this._additionalOptions)
-				{
-					command += " " + this._additionalOptions;
-				}
-				if(this._files && this._projectType !== ProjectType.LIB)
-				{
-					var filesCount:int = this._files.length;
-					for(i = 0; i < filesCount; i++)
-					{
-						if(i === 0)
-						{
-							command += " -- ";
-						}
-						else
-						{
-							command += " ";
-						}
-						var file:String = this._files[i];
-						command += escapePath(file, false);
-					}
 				}
 				if(this._verbose)
 				{

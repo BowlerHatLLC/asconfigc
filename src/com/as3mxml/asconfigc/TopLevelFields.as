@@ -29,5 +29,6 @@ package com.as3mxml.asconfigc
 		public static const ANIMATE_OPTIONS:String = "animateOptions";
 		public static const EXTENDS:String = "extends";
 		public static const MAIN_CLASS:String = "mainClass";
+		public static const MODULES:String = "modules";
 	}
 }
