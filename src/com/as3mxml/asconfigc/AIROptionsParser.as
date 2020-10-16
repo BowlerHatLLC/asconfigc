@@ -372,8 +372,8 @@ package com.as3mxml.asconfigc
 
 		protected static function parseFiles(files:Array, result:Array):void
 		{
-			var selfFolders:Array = [];
-			var rootFolders:Array = [];
+			var cOptionFolders:Array = [];
+			var cOptionRootFolders:Array = [];
 			var count:int = files.length;
 			for(var i:int = 0; i < count; i++)
 			{
@@ -397,21 +397,21 @@ package com.as3mxml.asconfigc
 					{
 						//add these folders after everything else because we'll
 						//use the -C option
-						selfFolders.push(srcFile);
-						continue;
-					}
-					else if(destPath == path.basename(srcFile))
-					{
-						//add these folders after everything else because we'll
-						//use the -C option
-						selfFolders.push(srcFile);
+						cOptionFolders.push(new FolderToAddWithCOption(srcFile, null));
 						continue;
 					}
 					else if(destPath == ".")
 					{
 						//add these folders after everything else because we'll
 						//use the -C option
-						rootFolders.push(srcFile);
+						cOptionRootFolders.push(srcFile);
+						continue;
+					}
+					else if(canUseCOptionForFolder(srcFile, destPath))
+					{
+						//add these folders after everything else because we'll
+						//use the -C option
+						cOptionFolders.push(new FolderToAddWithCOption(srcFile, destPath));
 						continue;
 					}
 				}
@@ -422,22 +422,68 @@ package com.as3mxml.asconfigc
 				}
 				addFile(srcFile, destPath, result);
 			}
-			count = rootFolders.length;
+			count = cOptionRootFolders.length;
 			for(i = 0; i < count; i++)
 			{
-				folder = rootFolders[i];
+				var folder:String = cOptionRootFolders[i];
 				result.push("-C");
 				result.push(folder);
 				result.push(".");
 			}
-			count = selfFolders.length;
+			count = cOptionFolders.length;
 			for(i = 0; i < count; i++)
 			{
-				var folder:String = selfFolders[i];
-				result.push("-C");
-				result.push(path.dirname(folder));
-				result.push(path.basename(folder));
+				var cOptionFolder:FolderToAddWithCOption = FolderToAddWithCOption(cOptionFolders[i]);
+				var cOptionFolderSrcPath:String = cOptionFolder.srcPath;
+				var cOptionFolderDestPath:String = cOptionFolder.destPath;
+				if(!cOptionFolderDestPath)
+				{
+					result.push("-C");
+					result.push(path.dirname(cOptionFolderSrcPath));
+					result.push(path.basename(cOptionFolderSrcPath));
+				}
+				else
+				{
+					var baseFolderPath:String = cOptionFolderSrcPath;
+					var currentDestPath:String = cOptionFolderDestPath;
+					do
+					{
+						baseFolderPath = path.dirname(baseFolderPath);
+						if (baseFolderPath === ".") {
+							break;
+						}
+						currentDestPath = path.dirname(currentDestPath);
+					}
+					while(currentDestPath !== ".");
+
+					result.push("-C");
+					result.push(baseFolderPath);
+					result.push(cOptionFolderDestPath);
+				}
 			}
+		}
+
+		protected static function canUseCOptionForFolder(srcFolder:String, destPath:String):Boolean
+		{
+			var currentSrcPath:String = srcFolder;
+			var currentDestPath:String = destPath;
+			do
+			{
+				if(currentSrcPath === ".")
+				{
+					return false;
+				}
+				var currentSrcName:String = path.basename(currentSrcPath);
+				var currentDestName:String = path.basename(currentDestPath);
+				if(currentSrcName !== currentDestName)
+				{
+					return false;
+				}
+				currentSrcPath = path.dirname(currentSrcPath);
+				currentDestPath = path.dirname(currentDestPath);
+			}
+			while(currentDestPath !== ".");
+			return true;
 		}
 
 		protected static function addFile(srcFile:String, destPath:String, result:Array):void
@@ -521,4 +567,15 @@ package com.as3mxml.asconfigc
 			}
 		}
 	}
+}
+
+class FolderToAddWithCOption {
+	public function FolderToAddWithCOption(srcPath:String, destPath:String)
+	{
+		this.srcPath = srcPath;
+		this.destPath = destPath;
+	}
+
+	public var srcPath:String;
+	public var destPath:String; 
 }
