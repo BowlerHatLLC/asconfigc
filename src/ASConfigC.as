@@ -94,6 +94,7 @@ package
 			if(this._animateFile)
 			{
 				this.compileAnimateFile();
+				this.prepareNativeExtensions();
 			}
 			else
 			{
