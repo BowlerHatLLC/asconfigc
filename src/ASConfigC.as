@@ -563,9 +563,20 @@ package
 			}
 			if(TopLevelFields.ADDITIONAL_OPTIONS in configData)
 			{
-				var additionalOptions:String = configData[TopLevelFields.ADDITIONAL_OPTIONS];
-				var parsedOptions:Array = parseAdditionalOptions(additionalOptions);
-				this._compilerArgs = this._compilerArgs.concat(parsedOptions);
+				var additionalOptions:Object = configData[TopLevelFields.ADDITIONAL_OPTIONS];
+				if(Array.isArray(additionalOptions))
+				{
+					this._compilerArgs = this._compilerArgs.concat(additionalOptions);
+				}
+				else
+				{
+					var additionalOptionsString:String = additionalOptions as String;
+					if(additionalOptionsString != null)
+					{
+						var parsedOptions:Array = parseAdditionalOptions(additionalOptionsString);
+						this._compilerArgs = this._compilerArgs.concat(parsedOptions);
+					}
+				}
 			}
 			//if js-output-type was not specified, use the default
 			//swf projects won't have a js-output-type
