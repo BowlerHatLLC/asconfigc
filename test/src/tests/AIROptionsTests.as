@@ -91,6 +91,19 @@ package tests
 		}
 
 		[Test]
+		public function testResdir():void
+		{
+			var value:String = "path/to/res";
+			var args:Object = {};
+			args[AIRPlatformType.ANDROID] = {}
+			args[AIRPlatformType.ANDROID][AIROptions.RESDIR] = value;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.ANDROID, false, "application.xml", "test.swf", args);
+			var optionIndex:int = result.indexOf("-" + AIROptions.RESDIR);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value), optionIndex + 1);
+		}
+
+		[Test]
 		public function testEmbedBitcode():void
 		{
 			var value:Boolean = true;

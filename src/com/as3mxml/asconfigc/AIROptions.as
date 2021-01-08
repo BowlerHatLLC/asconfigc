@@ -40,5 +40,6 @@ package com.as3mxml.asconfigc
 		//android
 		public static const AIR_DOWNLOAD_URL:String = "airDownloadURL";
 		public static const ARCH:String = "arch";
+		public static const RESDIR:String = "resdir";
 	}
 }

@@ -250,6 +250,14 @@ package com.as3mxml.asconfigc
 			{
 				parseExtdir(options[AIROptions.EXTDIR], result);
 			}
+			if(overridesOptionForPlatform(options, AIROptions.RESDIR, platform))
+			{
+				setPathValueWithoutAssignment(AIROptions.RESDIR, options[platform][AIROptions.RESDIR], result);
+			}
+			else if(AIROptions.RESDIR in options)
+			{
+				setPathValueWithoutAssignment(AIROptions.RESDIR, options[AIROptions.RESDIR], result);
+			}
 			//FILE_OPTIONS end
 			
 			//ANE_OPTIONS begin
