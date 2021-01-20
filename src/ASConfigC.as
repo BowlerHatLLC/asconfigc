@@ -1155,7 +1155,7 @@ package
 			for(var i:int = 0; i < jarNamesCount; i++)
 			{
 				var jarName:String = jarNames[i];
-				if(this._outputIsJS)
+				if(this._sdkIsRoyale)
 				{
 					jarPath = path.join(this._sdkHome, "js", "lib", jarName);
 				}
