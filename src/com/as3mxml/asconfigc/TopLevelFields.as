@@ -30,5 +30,6 @@ package com.as3mxml.asconfigc
 		public static const EXTENDS:String = "extends";
 		public static const MAIN_CLASS:String = "mainClass";
 		public static const MODULES:String = "modules";
+		public static const WORKERS:String = "workers";
 	}
 }

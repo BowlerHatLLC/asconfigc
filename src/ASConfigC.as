@@ -134,8 +134,10 @@ package
 		private var _jsOutputType:String;
 		private var _compilerArgs:Array;
 		private var _allModuleCompilerArgs:Array;
+		private var _allWorkerCompilerArgs:Array;
 		private var _airDescriptors:Vector.<String> = null;
 		private var _outputPath:String = null;
+		private var _workerOutputPaths:Array;
 		private var _mainFile:String = null;
 		private var _forceDebug:* = undefined;
 		private var _clean:Boolean = false;
@@ -523,6 +525,7 @@ package
 		{
 			this._compilerArgs = [];
 			this._allModuleCompilerArgs = [];
+			this._allWorkerCompilerArgs = [];
 			this._airArgs = [];
 			this._compilerOptionsJSON = null;
 			this._airOptionsJSON = null;
@@ -633,7 +636,7 @@ package
 			if(TopLevelFields.MODULES in configData)
 			{
 				var modules:Array = configData[TopLevelFields.MODULES];
-				var templateModuleCompilerArgs:Array = this.duplicateCompilerOptionsForModule(this._compilerArgs);
+				var templateModuleCompilerArgs:Array = this.duplicateCompilerOptionsForModuleOrWorker(this._compilerArgs);
 				tmp.setGracefulCleanup();
 				var linkReportPath:String = tmp.fileSync({"prefix": "asconfigc-link-report", "postfix": ".xml", "discardDescriptor": true}).name;
 				var moduleCount:int = modules.length;
@@ -662,6 +665,29 @@ package
 				}
 				if (moduleCount > 0) {
 					this._compilerArgs.push("--" + CompilerOptions.LINK_REPORT + "+=" + linkReportPath);
+				}
+			}
+			if(TopLevelFields.WORKERS in configData)
+			{
+				this._workerOutputPaths = [];
+				var workers:Array = configData[TopLevelFields.WORKERS];
+				var templateWorkerCompilerArgs:Array = this.duplicateCompilerOptionsForModuleOrWorker(this._compilerArgs);
+				var workerCount:int = workers.length;
+				for (i = 0; i < workerCount; i++) {
+					var worker:Object = workers[i];
+					var workerCompilerArgs:Array = templateWorkerCompilerArgs.slice();
+					output = "";
+					if (ModuleFields.OUTPUT in worker) {
+						output = worker[ModuleFields.OUTPUT];
+						this._workerOutputPaths.push(output);
+					}
+					if (output.length > 0) {
+						workerCompilerArgs.push("--" + CompilerOptions.OUTPUT + "=" + output);
+					}
+					file = worker[ModuleFields.FILE];
+					workerCompilerArgs.push("--");
+					workerCompilerArgs.push(file);
+					this._allWorkerCompilerArgs.push(workerCompilerArgs);
 				}
 			}
 			//parse files before airOptions because the mainFile may be
@@ -751,7 +777,7 @@ package
 			}
 		}
 
-		private function duplicateCompilerOptionsForModule(compilerArgs:Array):Array
+		private function duplicateCompilerOptionsForModuleOrWorker(compilerArgs:Array):Array
 		{
 			return compilerArgs.filter(function(arg:String):Boolean
 			{
@@ -1207,6 +1233,30 @@ package
 				this.cleanOutputDirectory(outputDirectory);
 			}
 
+			if(this._workerOutputPaths != null) {
+				var workerCount:int = this._workerOutputPaths.length;
+				for(var i:int = 0; i < workerCount; i++)
+				{
+					var workerOutputPath:String = this._workerOutputPaths[i];
+					if(fs.existsSync(workerOutputPath))
+					{
+						try
+						{
+							fs.unlinkSync(workerOutputPath);
+						}
+						catch(e:Error)
+						{
+							console.error("Failed to clean project because an I/O exception occurred while deleting file: " + workerOutputPath);
+							if(this._verbose)
+							{
+								console.error(e);
+							}
+							process.exit(1);
+						}
+					}
+				}
+			}
+
 			//immediately exits after cleaning
 			process.exit(0);
 		}
@@ -1271,9 +1321,17 @@ package
 
 		private function compileProject():void
 		{
+			//compile workers first because they might be embedded in the app
+			var workerCount:int = this._allWorkerCompilerArgs.length;
+			for(var i:int = 0; i < workerCount; i++)
+			{
+				var workerCompilerArgs:Array = this._allWorkerCompilerArgs[i];
+				compile(workerCompilerArgs);
+			}
 			compile(this._compilerArgs);
+			//compile modules last because they might be optimized for the app
 			var moduleCount:int = this._allModuleCompilerArgs.length;
-			for(var i:int = 0; i < moduleCount; i++)
+			for(i = 0; i < moduleCount; i++)
 			{
 				var moduleCompilerArgs:Array = this._allModuleCompilerArgs[i];
 				compile(moduleCompilerArgs);
