@@ -1305,7 +1305,7 @@ package
 				}
 				try
 				{
-					del.sync([outputDirectory], {"force": true});
+					del.sync([outputDirectory + "/*"], {"force": true});
 				}
 				catch(e:Error)
 				{
