@@ -1,6 +1,9 @@
 {
 	"config": "node",
 	"compilerOptions": {
+		"targets": [
+			"JSNodeModule"
+		],
 		"source-path": [
 			"src",
 			"typedefs"

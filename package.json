@@ -20,6 +20,7 @@
     "Flash Player"
   ],
   "bin": "./asconfigc",
+  "main": "./bin/js-release/index.js",
   "files": [
     "bin/js-release",
     "schemas",
@@ -44,8 +45,8 @@
     "@apache-royale/royale-js": "0.9.6"
   },
   "scripts": {
-    "build": "asnodec --source-map=true --source-path+=typedefs src/ASConfigC.as",
-    "test": "npm run build && node ./bin/js-release/index.js -p asconfig.test.json && cd ./test/fixtures && node ../bin/js-debug/index.js",
+    "build": "asnodec --targets=JSNodeModule --source-map=true --source-path+=typedefs src/ASConfigC.as",
+    "test": "npm run build && node ./asconfigc -p asconfig.test.json && cd ./test/fixtures && node ../bin/js-debug/index.js",
     "prepack": "npm test"
   }
 }

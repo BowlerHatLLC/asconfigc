@@ -76,9 +76,9 @@ package
 
 		private static const ADT_JAR:String = "adt.jar";
 
-		public function ASConfigC()
+		public function ASConfigC(args:Array)
 		{
-			this.parseArguments();
+			this.parseArguments(args);
 
 			this.findConfig();
 			process.chdir(path.dirname(this._configFilePath));
@@ -192,9 +192,9 @@ package
 			console.info(" --print-config                                      (Advanced) Prints the contents of the asconfig.json file used to build, including any extensions.");
 		}
 
-		private function parseArguments():void
+		private function parseArguments(rawArgs:Array):void
 		{
-			var args:Object = minimist(process.argv.slice(2));
+			var args:Object = minimist(rawArgs);
 			for(var key:String in args)
 			{
 				switch(key)

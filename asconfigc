@@ -1,2 +1,3 @@
 #!/usr/bin/env node
-require("./bin/js-release/index.js");
+const ASConfigC = require("./bin/js-release/index.js");
+new ASConfigC(process.argv.slice(2));
