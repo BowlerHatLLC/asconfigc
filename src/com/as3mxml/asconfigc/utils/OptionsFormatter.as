@@ -44,8 +44,7 @@ package com.as3mxml.asconfigc.utils
 			var firstValue:Object = values[0];
 			if(firstValue === null)
 			{
-				console.error("Value for option \"" + optionName + "\" not valid: " + firstValue);
-				process.exit(1);
+				throw new Error("Value for option \"" + optionName + "\" not valid: " + firstValue);
 			}
 			result.push("--" + optionName + "=" + firstValue.toString());
 			appendValues(optionName, values.slice(1), result);
@@ -68,8 +67,7 @@ package com.as3mxml.asconfigc.utils
 				var currentValue:Object = values[i];
 				if(currentValue === null)
 				{
-					console.error("Value for option \"" + optionName + "\" not valid: " + currentValue);
-					process.exit(1);
+					throw new Error("Value for option \"" + optionName + "\" not valid: " + currentValue);
 				}
 				result.push("--" + optionName + "+=" + currentValue.toString());
 			}

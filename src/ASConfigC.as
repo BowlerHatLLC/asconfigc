@@ -76,9 +76,41 @@ package
 
 		private static const ADT_JAR:String = "adt.jar";
 
-		public function ASConfigC(args:Array)
+		public static function buildWithArgs(args:Array):Promise
 		{
+			return new Promise(function(resolve:Function, reject:Function):void
+			{
+				try
+				{
+					new ASConfigC(args, resolve, reject);
+				}
+				catch(e:Error)
+				{
+					reject(e);
+				}
+			});
+		}
+
+		public function ASConfigC(args:Array, resolve:Function, reject:Function)
+		{
+			this._resolvePromise = resolve;
+			this._rejectPromise = reject;
+
 			this.parseArguments(args);
+
+			if(this._printHelp)
+			{
+				this.printUsage();
+				this._resolvePromise();
+				return;
+			}
+
+			if(this._printVersion)
+			{
+				this.printVersion();
+				this._resolvePromise();
+				return;
+			}
 
 			this.findConfig();
 			process.chdir(path.dirname(this._configFilePath));
@@ -87,7 +119,8 @@ package
 			if(this._printConfig)
 			{
 				console.info(JSON.stringify(configData, null, 2));
-				process.exit(0);
+				this._resolvePromise();
+				return;
 			}
 			this.parseConfig(configData);
 
@@ -95,6 +128,8 @@ package
 			{
 				this.compileAnimateFile();
 				this.prepareNativeExtensions();
+				//compiling an Animate project is asynchronous, so we must wait
+				//to resolve/reject the promise until that completes
 			}
 			else
 			{
@@ -104,7 +139,11 @@ package
 				//if we're building SWF or JS. JS has stricter SDK requirements.
 				this.validateSDK();
 
-				this.cleanProject();
+				if(this._clean) {
+					this.cleanProject();
+					this._resolvePromise();
+					return;
+				}
 
 				this.compileProject();
 				this.copySourcePathAssets();
@@ -116,10 +155,14 @@ package
 				{
 					this.packageAIR();
 				}
-				process.exit(0);
+				this._resolvePromise();
 			}
 		}
 
+		private var _resolvePromise:Function;
+		private var _rejectPromise:Function;
+		private var _printHelp:Boolean = false;
+		private var _printVersion:Boolean = false;
 		private var _sdkHome:String;
 		private var _javaExecutable:String;
 		private var _configFilePath:String;
@@ -204,16 +247,14 @@ package
 						var value:String = String(args[key]);
 						if(value)
 						{
-							console.error("Unknown argument: " + value);
-							process.exit(1);
+							throw new Error("Unknown argument: " + value);
 						}
 						break;
 					}
 					case "h":
 					case "help":
 					{
-						this.printUsage();
-						process.exit(0);
+						this._printHelp = true;
 						break;
 					}
 					case "sdk":
@@ -235,16 +276,14 @@ package
 						projectPath = path.resolve(process.cwd(), projectPath);
 						if(!fs.existsSync(projectPath))
 						{
-							console.error("Project directory or JSON file not found: " + projectPath);
-							process.exit(1);
+							throw new Error("Project directory or JSON file not found: " + projectPath);
 						}
 						if(fs.statSync(projectPath).isDirectory())
 						{
 							var configFilePath:String = path.resolve(projectPath, ASCONFIG_JSON);
 							if(!fs.existsSync(configFilePath))
 							{
-								console.error("asconfig.json not found in directory: " + projectPath);
-								process.exit(1);
+								throw new Error("asconfig.json not found in directory: " + projectPath);
 							}
 							this._configFilePath = configFilePath;
 						}
@@ -323,14 +362,12 @@ package
 							if(this._airPlatform === AIRPlatformType.MAC &&
 								process.platform !== "darwin")
 							{
-								console.error("Error: Adobe AIR applications for macOS cannot be packaged on this platorm.");
-								process.exit(1);
+								throw new Error("Error: Adobe AIR applications for macOS cannot be packaged on this platorm.");
 							}
 							else if(this._airPlatform === AIRPlatformType.WINDOWS &&
 								process.platform !== "win32")
 							{
-								console.error("Error: Adobe AIR applications for Windows cannot be packaged on this platform.");
-								process.exit(1);
+								throw new Error("Error: Adobe AIR applications for Windows cannot be packaged on this platform.");
 							}
 						}
 						else
@@ -343,8 +380,7 @@ package
 					{
 						if(!args["air"])
 						{
-							console.error("Error: The storepass option requires the air option to be set too.");
-							process.exit(1);
+							throw new Error("Error: The storepass option requires the air option to be set too.");
 						}
 						this._storepass = String(args[key]);
 						break;
@@ -353,8 +389,7 @@ package
 					{
 						if(args["air"])
 						{
-							console.error("Error: The unpackage-anes option cannot be set when the air option is set.");
-							process.exit(1);
+							throw new Error("Error: The unpackage-anes option cannot be set when the air option is set.");
 						}
 						//support both --unpackage-anes=true or simply --unpackage-anes
 						var unpackageANEsValue:Object = args[key];
@@ -395,13 +430,12 @@ package
 					case "v":
 					case "version":
 					{
-						this.printVersion();
-						process.exit(0);
+						this._printVersion = true;
+						break;
 					}
 					default:
 					{
-						console.error("Unknown argument: " + key);
-						process.exit(1);
+						throw new Error("Unknown argument: " + key);
 					}
 				}
 			}
@@ -416,8 +450,7 @@ package
 			}
 			catch(error:Error)
 			{
-				console.error("Error: Cannot read schema file. " + schemaFilePath);
-				process.exit(1);
+				throw new Error("Error: Cannot read schema file. " + schemaFilePath);
 			}
 			try
 			{
@@ -425,9 +458,7 @@ package
 			}
 			catch(error:Error)
 			{
-				console.error("Error: Invalid JSON in schema file. " + schemaFilePath);
-				console.error(error);
-				process.exit(1);
+				throw new Error("Error: Invalid JSON in schema file. " + schemaFilePath + "\n" + String(error));
 			}
 			try
 			{
@@ -435,9 +466,7 @@ package
 			}
 			catch(error:Error)
 			{
-				console.error("Error: Invalid schema. " + schemaFilePath);
-				console.error(error);
-				process.exit(1);
+				throw new Error("Error: Invalid schema. " + schemaFilePath + "\n" + String(error));
 			}
 			return this.loadConfigFromPath(this._configFilePath, validate);
 		}
@@ -458,8 +487,7 @@ package
 			}
 			catch(error:Error)
 			{
-				console.error("Error: Cannot read file. " + configPath);
-				process.exit(1);
+				throw new Error("Error: Cannot read file. " + configPath);
 			}
 			if(this._verbose)
 			{
@@ -471,9 +499,7 @@ package
 			}
 			catch(error:Error)
 			{
-				console.error("Error: Invalid JSON in file. " + configPath);
-				console.error(error);
-				process.exit(1);
+				throw new Error("Error: Invalid JSON in file. " + configPath + "\n" + String(error));
 			}
 			if(this._verbose)
 			{
@@ -481,9 +507,11 @@ package
 			}
 			if(!validate(configData))
 			{
-				console.error("Error: Invalid asconfig.json file. " + configPath);
-				console.error(validate["errors"]);
-				process.exit(1);
+				var errors:Array = validate["errors"];
+				var errorsText:String = errors.reduce(function(accumulator:String, error:Object):String {
+					return accumulator + "\n" + JSON.stringify(error);
+				}, "");
+				throw new Error("Error: Invalid asconfig.json file. " + configPath + errorsText);
 			}
 			if(TopLevelFields.EXTENDS in configData)
 			{
@@ -515,9 +543,7 @@ package
 			else
 			{
 				//asconfig.json not found
-				console.error("asconfig.json not found in directory: " + process.cwd());
-				this.printUsage();
-				process.exit(1);
+				throw new Error("asconfig.json not found in directory: " + process.cwd());
 			}
 		}
 		
@@ -628,8 +654,7 @@ package
 
 					if(!fs.existsSync(airDescriptor) || fs.statSync(airDescriptor).isDirectory())
 					{
-						console.error("Adobe AIR application descriptor not found: " + airDescriptor);
-						process.exit(1);
+						throw new Error("Adobe AIR application descriptor not found: " + airDescriptor);
 					}
 				}
 			}
@@ -730,8 +755,7 @@ package
 				this._mainFile = ConfigUtils.resolveMainClass(mainClass, this._sourcePaths);
 				if(this._mainFile === null)
 				{
-					console.error("Main class not found in source paths: " + mainClass);
-					process.exit(1);
+					throw new Error("Main class not found in source paths: " + mainClass);
 				}
 				if(!hadMainFile)
 				{
@@ -804,9 +828,12 @@ package
 			}
 			catch(error:Error)
 			{
-				console.error("Error: Failed to parse compiler options.");
-				console.error(error.stack);
-				process.exit(1);
+				var errorText:String = "Error: Failed to parse compiler options.";
+				if(this._verbose)
+				{
+					errorText += "\n" + String(error);
+				}
+				throw new Error(errorText);
 			}
 			//make sure that we require Royale (or FlexJS) depending on which options are specified
 			if(CompilerOptions.JS_OUTPUT_TYPE in options)
@@ -867,9 +894,12 @@ package
 			}
 			catch(error:Error)
 			{
-				console.error("Error: Failed to parse Adobe AIR options.");
-				console.error(error.stack);
-				process.exit(1);
+				var errorText:String = "Error: Failed to parse Adobe AIR options.";
+				if(this._verbose)
+				{
+					errorText += "\n" + String(error);
+				}
+				throw new Error(errorText);
 			}
 		}
 
@@ -884,9 +914,12 @@ package
 			}
 			catch(error:Error)
 			{
-				console.error("Error: Failed to parse HTML template options.");
-				console.error(error.stack);
-				process.exit(1);
+				var errorText:String = "Error: Failed to parse HTML template options.";
+				if(this._verbose)
+				{
+					errorText += "\n" + String(error);
+				}
+				throw new Error(errorText);
 			}
 		}
 
@@ -929,13 +962,11 @@ package
 		{
 			if(!this._animatePath)
 			{
-				console.error("Adobe Animate not found. Use --animate option.");
-				process.exit(1);
+				throw new Error("Adobe Animate not found. Use --animate option.");
 			}
 			if(!fs.existsSync(this._animatePath))
 			{
-				console.error("Adobe Animate not found at path: " + this._animatePath);
-				process.exit(1);
+				throw new Error("Adobe Animate not found at path: " + this._animatePath);
 			}
 
 			var logPath:String = this.createAnimateLogFolder();
@@ -974,8 +1005,7 @@ package
 			}
 			if(logPath == null)
 			{
-				console.error("Failed to locate Adobe Animate logs at path: " + logPath);
-				process.exit(1);
+				throw new Error("Failed to locate Adobe Animate logs at path: " + logPath);
 			}
 			//macOS seems to require these files to be manually deleted to detect
 			//the appropriate create event
@@ -987,12 +1017,12 @@ package
 				}
 				catch(e:Error)
 				{
-					console.error("Failed to delete Adobe Animate logs because an I/O exception occurred.");
+					var errorText:String = "Failed to delete Adobe Animate logs because an I/O exception occurred.";
 					if(this._verbose)
 					{
-						console.error(e);
+						errorText += "\n" + String(e);
 					}
-					process.exit(1);
+					throw new Error(errorText);
 				}
 			}
 			mkdirp.sync(logPath);
@@ -1070,16 +1100,24 @@ package
 		{
 			if(!fs.existsSync(errorLogPath))
 			{
-				process.exit(0);
+				this._resolvePromise();
+				return;
 			}
-			var errorLogContents:String = fs.readFileSync(errorLogPath, "utf8") as String;
-			//print the errors/warnings to the console
-			console.error(errorLogContents);
-			if(errorLogContents.indexOf("**Error** ") !== -1)
+			try
 			{
-				process.exit(1);
+				var errorLogContents:String = fs.readFileSync(errorLogPath, "utf8") as String;
+				//print the errors/warnings to the console
+				if(errorLogContents.indexOf("**Error** ") !== -1)
+				{
+					this._rejectPromise(new Error(errorLogContents));
+					return;
+				}
+				this._resolvePromise();
 			}
-			process.exit(0);
+			catch(e:Error)
+			{
+				this._rejectPromise("Failed to read Adobe Animate log at path: " + errorLogPath + "\n" + String(e));
+			}
 		}
 
 		private function validateJava():void
@@ -1089,8 +1127,7 @@ package
 				this._javaExecutable = findJava();
 				if(!this._javaExecutable)
 				{
-					console.error("Java not found. Cannot run compiler without Java.");
-					process.exit(1);
+					throw new Error("Java not found. Cannot run compiler without Java.");
 				}
 			}
 		}
@@ -1127,8 +1164,7 @@ package
 				{
 					envHome = "ROYALE_HOME for Apache Royale, FLEX_HOME for Apache FlexJS";
 				}
-				console.error("SDK not found. Set " + envHome + ", add to PATH, or use --sdk option.");
-				process.exit(1);
+				throw new Error("SDK not found. Set " + envHome + ", add to PATH, or use --sdk option.");
 			}
 			var royaleHome:String = ApacheRoyaleUtils.isValidSDK(this._sdkHome);
 			if(royaleHome !== null)
@@ -1140,8 +1176,7 @@ package
 			{
 				if(!this._sdkIsRoyale)
 				{
-					console.error("Configuration options in asconfig.json require Apache Royale. Path to SDK is not valid: " + this._sdkHome);
-					process.exit(1);
+					throw new Error("Configuration options in asconfig.json require Apache Royale. Path to SDK is not valid: " + this._sdkHome);
 				}
 			}
 			var sdkIsFlexJS:Boolean = ApacheFlexJSUtils.isValidSDK(this._sdkHome);
@@ -1149,16 +1184,14 @@ package
 			{
 				if(!this._sdkIsRoyale && !sdkIsFlexJS)
 				{
-					console.error("Configuration options in asconfig.json require Apache Royale or FlexJS. Path to SDK is not valid: " + this._sdkHome);
-					process.exit(1);
+					throw new Error("Configuration options in asconfig.json require Apache Royale or FlexJS. Path to SDK is not valid: " + this._sdkHome);
 				}
 			}
 			if(this._configRequiresFlexJS)
 			{
 				if(!sdkIsFlexJS)
 				{
-					console.error("Configuration options in asconfig.json require Apache FlexJS. Path to SDK is not valid: " + this._sdkHome);
-					process.exit(1);
+					throw new Error("Configuration options in asconfig.json require Apache FlexJS. Path to SDK is not valid: " + this._sdkHome);
 				}
 			}
 
@@ -1210,11 +1243,6 @@ package
 
 		private function cleanProject():void
 		{
-			if(!this._clean)
-			{
-				return;
-			}
-
 			if(this._verbose)
 			{
 				console.info("Cleaning project...");
@@ -1246,19 +1274,16 @@ package
 						}
 						catch(e:Error)
 						{
-							console.error("Failed to clean project because an I/O exception occurred while deleting file: " + workerOutputPath);
+							var errorText:String = "Failed to clean project because an I/O exception occurred while deleting file: " + workerOutputPath;
 							if(this._verbose)
 							{
-								console.error(e);
+								errorText += "\n" + String(e);
 							}
-							process.exit(1);
+							throw new Error(errorText);
 						}
 					}
 				}
 			}
-
-			//immediately exits after cleaning
-			process.exit(0);
 		}
 
 		private function cleanOutputDirectory(outputDirectory:String):void
@@ -1266,8 +1291,7 @@ package
 			var cwd:String = process.cwd();
 			if(folderContains(outputDirectory, cwd))
 			{
-				console.error("Failed to clean project because the output path overlaps with the current working directory.");
-				process.exit(1);
+				throw new Error("Failed to clean project because the output path overlaps with the current working directory.");
 			}
 
 			var sourcePathsCopy:Vector.<String> = new <String>[];
@@ -1292,8 +1316,7 @@ package
 				if(folderContains(outputDirectory, sourcePath) ||
 					folderContains(sourcePath, outputDirectory))
 				{
-					console.error("Failed to clean project because the output path overlaps with a source path.");
-					process.exit(1);
+					throw new Error("Failed to clean project because the output path overlaps with a source path.");
 				}
 			}
 
@@ -1309,12 +1332,12 @@ package
 				}
 				catch(e:Error)
 				{
-					console.error("Failed to clean project because an I/O exception occurred.");
+					var errorText:String = "Failed to clean project because an I/O exception occurred.";
 					if(this._verbose)
 					{
-						console.error(e);
+						errorText += "\n" + String(e);
 					}
-					process.exit(1);
+					throw new Error(errorText);
 				}
 			}
 		}
@@ -1354,8 +1377,7 @@ package
 			var jarPath:String = this.findCompilerJarPath();
 			if(!jarPath)
 			{
-				console.error("Compiler not found in SDK. Expected: " + jarPath);
-				process.exit(1);
+				throw new Error("Compiler not found in SDK. Expected: " + jarPath);
 			}
 			var frameworkPath:String = path.join(this._sdkHome, "frameworks");
 			if(this._sdkIsRoyale)
@@ -1411,12 +1433,11 @@ package
 				if(error.status === null)
 				{
 					//this means something went wrong running the executable
-					console.error("Failed to execute compiler: " + error.code);
-					process.exit(1);
+					throw new Error("Failed to execute compiler. Exit code: " + error.code);
 				}
 				//while this means there was an error code from the executable,
 				//probably from compilation errors
-				process.exit(error.status);
+				throw new Error("Failed to execute compiler. Exit status: " + error.status);
 			}
 		}
 
@@ -1507,13 +1528,11 @@ package
 			}
 			if(!fs.existsSync(this._htmlTemplate))
 			{
-				console.error("htmlTemplate directory does not exist: " + this._htmlTemplate);
-				process.exit(1);
+				throw new Error("htmlTemplate directory does not exist: " + this._htmlTemplate);
 			}
 			if(!fs.statSync(this._htmlTemplate).isDirectory())
 			{
-				console.error("htmlTemplate path must be a directory. Invalid path: " + this._htmlTemplate);
-				process.exit(1);
+				throw new Error("htmlTemplate path must be a directory. Invalid path: " + this._htmlTemplate);
 			}
 			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
 			copyHTMLTemplateDirectory(this._htmlTemplate, outputDir);
@@ -1524,8 +1543,7 @@ package
 			mkdirp.sync(outputDir);
 			if(!fs.existsSync(outputDir))
 			{
-				console.error("Failed to create output directory for HTML template: " + outputDir);
-				process.exit(1);
+				throw new Error("Failed to create output directory for HTML template: " + outputDir);
 			}
 			var files:Array = fs.readdirSync(inputDir);
 			var fileCount:int = files.length;
@@ -1564,8 +1582,7 @@ package
 						}
 						catch(error)
 						{
-							console.error("Failed to copy file: " + inputFilePath);
-							process.exit(1);
+							throw new Error("Failed to copy file: " + inputFilePath);
 						}
 						content = populateHTMLTemplateFile(content, this._htmlTemplateOptions);
 						var outputFileName:String = fileNameWithoutExtension + extension;
@@ -1580,8 +1597,7 @@ package
 				}
 				catch(error)
 				{
-					console.error("Failed to copy file: " + inputFilePath);
-					process.exit(1);
+					throw new Error("Failed to copy file: " + inputFilePath);
 				}
 				fs.writeFileSync(outputFilePath, rawContent);
 
@@ -1616,8 +1632,7 @@ package
 			var contentValue:String = findApplicationContent(this._mainFile, this._outputPath, !this._outputIsJS);
 			if(contentValue === null)
 			{
-				console.error("Failed to find content for application descriptor.");
-				process.exit(1);
+				throw new Error("Failed to find content for application descriptor.");
 			}
 			if(this._verbose)
 			{
@@ -1637,8 +1652,7 @@ package
 					var appID:String = generateApplicationID(this._mainFile, this._outputPath);
 					if (appID == null)
 					{
-						console.error("Failed to generate application ID for Adobe AIR.");
-						process.exit(1);
+						throw new Error("Failed to generate application ID for Adobe AIR.");
 					}
 					if(this._verbose)
 					{
@@ -1781,8 +1795,7 @@ package
 			}
 			catch(error:Error)
 			{
-				console.error("Failed to copy Adobe AIR native extension from path: " + aneFilePath + ".");
-				process.exit(1);
+				throw new Error("Failed to copy Adobe AIR native extension from path: " + aneFilePath + ".");
 			}
 		}
 
@@ -1850,8 +1863,7 @@ package
 				}
 				if(destFilePath.startsWith("..") || (!srcIsDir && destFilePath === "."))
 				{
-					console.error("Invalid destination path for file in Adobe AIR application. Source: " + srcFilePath + ", Destination: " + destFilePath);
-					process.exit(1);
+					throw new Error("Invalid destination path for file in Adobe AIR application. Source: " + srcFilePath + ", Destination: " + destFilePath);
 				}
 
 				if(srcIsDir)
@@ -1928,8 +1940,7 @@ package
 			var jarPath:String = this.findAIRPackagerJarPath();
 			if(!jarPath)
 			{
-				console.error("AIR ADT not found in SDK. Expected: " + jarPath);
-				process.exit(1);
+				throw new Error("AIR ADT not found in SDK. Expected: " + jarPath);
 			}
 			this._airArgs.unshift(escapePath(jarPath));
 			this._airArgs.unshift("-jar");
@@ -1951,12 +1962,11 @@ package
 				if(error.status === null)
 				{
 					//this means something went wrong running the executable
-					console.error("Failed to execute AIR packager: " + error.code);
-					process.exit(1);
+					throw new Error("Failed to execute AIR packager. Exit code: " + error.code);
 				}
 				//while this means there was an error code from the executable,
 				//probably from compilation errors
-				process.exit(error.status);
+				throw new Error("Failed to execute AIR packager. Exit status: " + error.status);
 			}
 		}
 	}

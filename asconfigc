@@ -1,3 +1,16 @@
 #!/usr/bin/env node
 const ASConfigC = require("./bin/js-release/index.js");
-new ASConfigC(process.argv.slice(2));
+(async function() {
+	try {
+		await ASConfigC.buildWithArgs(process.argv.slice(2));
+		process.exit(0);
+	}
+	catch(e) {
+		if(e instanceof Error) {
+			console.error(e.message);
+		} else {
+			console.error(e);
+		}
+		process.exit(1);
+	}
+})();;

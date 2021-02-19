@@ -10,7 +10,7 @@ Requires [Node.js](https://nodejs.org/).
 npm install -g asconfigc
 ```
 
-## Usage
+## Command Line Usage
 
 Run *asconfigc* in a directory containing an [*asconfig.json*](https://github.com/BowlerHatLLC/vscode-as3mxml/wiki/asconfig.json) file.
 
@@ -59,6 +59,21 @@ The following options are available:
 * `-v` or `--version`
 
 	Print the version of `asconfigc`.
+
+## Module Usage
+
+The **asconfigc** build utility may be loaded as a CommonJS module in a Node.js script.
+
+```js
+const asconfigc = require("asconfigc");
+const args = ["--sdk", sdkPath, "--debug"];
+try {
+	await asconfigc.buildWithArgs(args);
+} catch(e) {
+	// the build failed
+	console.error(e);
+}
+```
 
 ## Made with Apache Royale
 

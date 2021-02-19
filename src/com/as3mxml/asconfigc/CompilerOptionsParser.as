@@ -369,8 +369,7 @@ package com.as3mxml.asconfigc
 				var currentValue:Object = values[i];
 				if(currentValue === null)
 				{
-					console.error("Value for option \"" + CompilerOptions.NAMESPACE + "\" not valid: " + currentValue);
-					process.exit(1);
+					throw new Error("Value for option \"" + CompilerOptions.NAMESPACE + "\" not valid: " + currentValue);
 				}
 
 				var uri:String = currentValue[CompilerOptions.NAMESPACE__URI].toString();
@@ -391,8 +390,7 @@ package com.as3mxml.asconfigc
 				var currentValue:Object = values[i];
 				if(currentValue === null)
 				{
-					console.error("Value for option \"" + optionName + "\" not valid: " + currentValue);
-					process.exit(1);
+					throw new Error("Value for option \"" + optionName + "\" not valid: " + currentValue);
 				}
 				result.push("--" + optionName + "+=\"" + currentValue.toString() + "\"");
 			}
@@ -417,8 +415,7 @@ package com.as3mxml.asconfigc
 				var currentValue:Object = values[i];
 				if(currentValue === null)
 				{
-					console.error("Value for option \"" + CompilerOptions.DEFINE + "\" not valid: " + currentValue);
-					process.exit(1);
+					throw new Error("Value for option \"" + CompilerOptions.DEFINE + "\" not valid: " + currentValue);
 				}
 				var defineName:String = currentValue[CompilerOptions.DEFINE__NAME].toString();
 				var defineValue:Object = currentValue[CompilerOptions.DEFINE__VALUE];
