@@ -88,5 +88,3 @@ The [ActionScript & MXML extension for Visual Studio Code](https://as3mxml.com/)
 Special thanks to the following sponsors for their generous support:
 
 * [Moonshine IDE](https://moonshine-ide.com/)
-
-* [Dedoose](https://www.dedoose.com/)
