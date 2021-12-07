@@ -110,6 +110,11 @@ package com.as3mxml.asconfigc
 						OptionsFormatter.setPathValue(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.EXCLUDE_DEFAULTS_CSS_FILES:
+					{
+						OptionsFormatter.appendPaths(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.EXPORT_PUBLIC_SYMBOLS:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
@@ -175,6 +180,16 @@ package com.as3mxml.asconfigc
 						appendJSCompilerOptions(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.JS_COMPLEX_IMPLICIT_COERCIONS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.JS_OUTPUT_OPTIMIZATION:
+					{
+						OptionsFormatter.setValues(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.JS_DEFAULT_INITIALIZERS:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
@@ -203,6 +218,16 @@ package com.as3mxml.asconfigc
 					case CompilerOptions.JS_OUTPUT_TYPE:
 					{
 						OptionsFormatter.setValue(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.JS_VECTOR_EMULATION_CLASS:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.JS_VECTOR_INDEX_CHECKS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.KEEP_ALL_TYPE_SELECTORS:

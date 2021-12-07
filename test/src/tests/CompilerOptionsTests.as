@@ -294,6 +294,25 @@ package tests
 		}
 
 		[Test]
+		public function testExcludeDefaultsCssFiles():void
+		{
+			var value:Array =
+			[
+				"./test1.css",
+				"./test2/test.css"
+			];
+			var args:Object = {};
+			args[CompilerOptions.EXCLUDE_DEFAULTS_CSS_FILES] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 2,
+				"Incorrect argument count for " + CompilerOptions.EXCLUDE_DEFAULTS_CSS_FILES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.EXCLUDE_DEFAULTS_CSS_FILES + "+=" + value[0],
+				"Incorrect argument 0 value for " + CompilerOptions.EXCLUDE_DEFAULTS_CSS_FILES);
+			Assert.assertStrictlyEquals(result[1], "--" + CompilerOptions.EXCLUDE_DEFAULTS_CSS_FILES + "+=" + value[1],
+				"Incorrect argument 1 value for " + CompilerOptions.EXCLUDE_DEFAULTS_CSS_FILES);
+		}
+
+		[Test]
 		public function testExportPublicSymbols():void
 		{
 			var args:Object = {};
@@ -512,6 +531,18 @@ package tests
 		}
 
 		[Test]
+		public function testJSComplexImplicitCoercions():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.JS_COMPLEX_IMPLICIT_COERCIONS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.JS_COMPLEX_IMPLICIT_COERCIONS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.JS_COMPLEX_IMPLICIT_COERCIONS + "=true",
+				"Incorrect argument value for " + CompilerOptions.JS_COMPLEX_IMPLICIT_COERCIONS);
+		}
+
+		[Test]
 		public function testJSDefaultInitializers():void
 		{
 			var args:Object = {};
@@ -594,6 +625,50 @@ package tests
 				"Incorrect argument count for " + CompilerOptions.JS_OUTPUT_TYPE);
 			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.JS_OUTPUT_TYPE + "=" + value,
 				"Incorrect argument value for " + CompilerOptions.JS_OUTPUT_TYPE);
+		}
+
+		[Test]
+		public function testJSOutputOptimization():void
+		{
+			var value:Array =
+			[
+				"skipAsCoercions",
+				"skipFunctionCoercions",
+			];
+			var args:Object = {};
+			args[CompilerOptions.JS_OUTPUT_OPTIMIZATION] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 2,
+				"Incorrect argument count for " + CompilerOptions.JS_OUTPUT_OPTIMIZATION);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.JS_OUTPUT_OPTIMIZATION + "=" + value[0],
+				"Incorrect argument 0 value for " + CompilerOptions.JS_OUTPUT_OPTIMIZATION);
+			Assert.assertStrictlyEquals(result[1], "--" + CompilerOptions.JS_OUTPUT_OPTIMIZATION + "+=" + value[1],
+				"Incorrect argument 1 value for " + CompilerOptions.JS_OUTPUT_OPTIMIZATION);
+		}
+
+		[Test]
+		public function testJSVectorEmulationClass():void
+		{
+			var value:String = "com.example.Vector";
+			var args:Object = {};
+			args[CompilerOptions.JS_VECTOR_EMULATION_CLASS] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.JS_VECTOR_EMULATION_CLASS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.JS_VECTOR_EMULATION_CLASS + "=" + value,
+				"Incorrect argument value for " + CompilerOptions.JS_VECTOR_EMULATION_CLASS);
+		}
+
+		[Test]
+		public function testJSVectorIndexChecks():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.JS_VECTOR_INDEX_CHECKS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.JS_VECTOR_INDEX_CHECKS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.JS_VECTOR_INDEX_CHECKS + "=true",
+				"Incorrect argument value for " + CompilerOptions.JS_VECTOR_INDEX_CHECKS);
 		}
 
 		[Test]

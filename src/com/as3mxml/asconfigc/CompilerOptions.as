@@ -70,6 +70,7 @@ package com.as3mxml.asconfigc
 		public static const ALLOW_ABSTRACT_CLASSES:String = "allow-abstract-classes";
 		public static const ALLOW_IMPORT_ALIASES:String = "allow-import-aliases";
 		public static const ALLOW_PRIVATE_CONSTRUCTORS:String = "allow-private-constructors";
+		public static const EXCLUDE_DEFAULTS_CSS_FILES:String = "exclude-defaults-css-files";
 		public static const EXPORT_PUBLIC_SYMBOLS:String = "export-public-symbols";
 		public static const EXPORT_PROTECTED_SYMBOLS:String = "export-protected-symbols";
 		public static const EXPORT_INTERNAL_SYMBOLS:String = "export-internal-symbols";
@@ -77,6 +78,7 @@ package com.as3mxml.asconfigc
 		public static const HTML_TEMPLATE:String = "html-template";
 		public static const INLINE_CONSTANTS:String = "inline-constants";
 		public static const JS_COMPILER_OPTION:String = "js-compiler-option";
+		public static const JS_COMPLEX_IMPLICIT_COERCIONS:String = "js-complex-implicit-coercions";
 		public static const JS_DEFAULT_INITIALIZERS:String = "js-default-initializers";
 		public static const JS_DYNAMIC_ACCESS_UNKNOWN_MEMBERS:String = "js-dynamic-access-unknown-members";
 		public static const JS_DEFINE:String = "js-define";
@@ -84,7 +86,10 @@ package com.as3mxml.asconfigc
 		public static const JS_LIBRARY_PATH:String = "js-library-path";
 		public static const JS_LOAD_CONFIG:String = "js-load-config";
 		public static const JS_OUTPUT:String = "js-output";
+		public static const JS_OUTPUT_OPTIMIZATION:String = "js-output-optimization";
 		public static const JS_OUTPUT_TYPE:String = "js-output-type";
+		public static const JS_VECTOR_EMULATION_CLASS:String = "js-vector-emulation-class";
+		public static const JS_VECTOR_INDEX_CHECKS:String = "js-vector-index-checks";
 		public static const PREVENT_RENAME_PUBLIC_SYMBOLS:String = "prevent-rename-public-symbols";
 		public static const PREVENT_RENAME_PUBLIC_STATIC_METHODS:String = "prevent-rename-public-static-methods";
 		public static const PREVENT_RENAME_PUBLIC_INSTANCE_METHODS:String = "prevent-rename-public-instance-methods";
