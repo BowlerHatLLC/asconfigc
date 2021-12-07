@@ -275,6 +275,111 @@ package com.as3mxml.asconfigc
 						OptionsFormatter.setValue(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.PREVENT_RENAME_PUBLIC_SYMBOLS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_METHODS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_METHODS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_VARIABLES:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_VARIABLES:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_ACCESSORS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_ACCESSORS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PROTECTED_SYMBOLS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_METHODS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_METHODS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_VARIABLES:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_VARIABLES:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_ACCESSORS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_ACCESSORS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_INTERNAL_SYMBOLS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_METHODS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_METHODS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_VARIABLES:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_VARIABLES:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_ACCESSORS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_ACCESSORS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.REMOVE_CIRCULARS:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);

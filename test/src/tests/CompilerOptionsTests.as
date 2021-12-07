@@ -857,6 +857,258 @@ package tests
 		}
 
 		[Test]
+		public function testPreventRenamePublicSymbols():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PUBLIC_SYMBOLS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PUBLIC_SYMBOLS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PUBLIC_SYMBOLS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PUBLIC_SYMBOLS);
+		}
+
+		[Test]
+		public function testPreventRenamePublicStaticMethods():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_METHODS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_METHODS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_METHODS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_METHODS);
+		}
+
+		[Test]
+		public function testPreventRenamePublicInstanceMethods():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_METHODS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_METHODS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_METHODS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_METHODS);
+		}
+
+		[Test]
+		public function testPreventRenamePublicStaticVariables():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_VARIABLES] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_VARIABLES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_VARIABLES + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_VARIABLES);
+		}
+
+		[Test]
+		public function testPreventRenamePublicInstanceVariables():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_VARIABLES] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_VARIABLES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_VARIABLES + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_VARIABLES);
+		}
+
+		[Test]
+		public function testPreventRenamePublicStaticAccessors():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_ACCESSORS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_ACCESSORS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_ACCESSORS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PUBLIC_STATIC_ACCESSORS);
+		}
+
+		[Test]
+		public function testPreventRenamePublicInstanceAccessors():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_ACCESSORS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_ACCESSORS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_ACCESSORS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PUBLIC_INSTANCE_ACCESSORS);
+		}
+
+		[Test]
+		public function testPreventRenameProtectedSymbols():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PROTECTED_SYMBOLS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PROTECTED_SYMBOLS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PROTECTED_SYMBOLS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PROTECTED_SYMBOLS);
+		}
+
+		[Test]
+		public function testPreventRenameProtectedStaticMethods():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_METHODS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_METHODS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_METHODS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_METHODS);
+		}
+
+		[Test]
+		public function testPreventRenameProtectedInstanceMethods():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_METHODS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_METHODS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_METHODS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_METHODS);
+		}
+
+		[Test]
+		public function testPreventRenameProtectedStaticVariables():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_VARIABLES] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_VARIABLES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_VARIABLES + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_VARIABLES);
+		}
+
+		[Test]
+		public function testPreventRenameProtectedInstanceVariables():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_VARIABLES] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_VARIABLES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_VARIABLES + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_VARIABLES);
+		}
+
+		[Test]
+		public function testPreventRenameProtectedStaticAccessors():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_ACCESSORS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_ACCESSORS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_ACCESSORS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PROTECTED_STATIC_ACCESSORS);
+		}
+
+		[Test]
+		public function testPreventRenameProtectedInstanceAccessors():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_ACCESSORS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_ACCESSORS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_ACCESSORS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_PROTECTED_INSTANCE_ACCESSORS);
+		}
+
+		[Test]
+		public function testPreventRenameInternalSymbols():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_INTERNAL_SYMBOLS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_INTERNAL_SYMBOLS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_INTERNAL_SYMBOLS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_INTERNAL_SYMBOLS);
+		}
+
+		[Test]
+		public function testPreventRenameInternalStaticMethods():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_METHODS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_METHODS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_METHODS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_METHODS);
+		}
+
+		[Test]
+		public function testPreventRenameInternalInstanceMethods():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_METHODS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_METHODS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_METHODS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_METHODS);
+		}
+
+		[Test]
+		public function testPreventRenameInternalStaticVariables():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_VARIABLES] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_VARIABLES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_VARIABLES + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_VARIABLES);
+		}
+
+		[Test]
+		public function testPreventRenameInternalInstanceVariables():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_VARIABLES] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_VARIABLES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_VARIABLES + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_VARIABLES);
+		}
+
+		[Test]
+		public function testPreventRenameInternalStaticAccessors():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_ACCESSORS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_ACCESSORS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_ACCESSORS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_INTERNAL_STATIC_ACCESSORS);
+		}
+
+		[Test]
+		public function testPreventRenameInternalInstanceAccessors():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_ACCESSORS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_ACCESSORS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_ACCESSORS + "=true",
+				"Incorrect argument value for " + CompilerOptions.PREVENT_RENAME_INTERNAL_INSTANCE_ACCESSORS);
+		}
+
+		[Test]
 		public function testRemoveCirculars():void
 		{
 			var args:Object = {};
