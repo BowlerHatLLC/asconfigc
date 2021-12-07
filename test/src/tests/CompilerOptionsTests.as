@@ -33,6 +33,42 @@ package tests
 		}
 
 		[Test]
+		public function testAllowAbstractClasses():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.ALLOW_ABSTRACT_CLASSES] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.ALLOW_ABSTRACT_CLASSES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.ALLOW_ABSTRACT_CLASSES + "=true",
+				"Incorrect argument value for " + CompilerOptions.ALLOW_ABSTRACT_CLASSES);
+		}
+
+		[Test]
+		public function testAllowImportAliases():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.ALLOW_IMPORT_ALIASES] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.ALLOW_IMPORT_ALIASES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.ALLOW_IMPORT_ALIASES + "=true",
+				"Incorrect argument value for " + CompilerOptions.ALLOW_IMPORT_ALIASES);
+		}
+
+		[Test]
+		public function testAllowPrivateConstructors():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.ALLOW_PRIVATE_CONSTRUCTORS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.ALLOW_PRIVATE_CONSTRUCTORS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.ALLOW_PRIVATE_CONSTRUCTORS + "=true",
+				"Incorrect argument value for " + CompilerOptions.ALLOW_PRIVATE_CONSTRUCTORS);
+		}
+
+		[Test]
 		public function testBenchmark():void
 		{
 			var args:Object = {};
@@ -258,6 +294,42 @@ package tests
 		}
 
 		[Test]
+		public function testExportPublicSymbols():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.EXPORT_PUBLIC_SYMBOLS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.EXPORT_PUBLIC_SYMBOLS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.EXPORT_PUBLIC_SYMBOLS + "=true",
+				"Incorrect argument value for " + CompilerOptions.EXPORT_PUBLIC_SYMBOLS);
+		}
+
+		[Test]
+		public function testExportProtectedSymbols():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.EXPORT_PROTECTED_SYMBOLS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.EXPORT_PROTECTED_SYMBOLS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.EXPORT_PROTECTED_SYMBOLS + "=true",
+				"Incorrect argument value for " + CompilerOptions.EXPORT_PROTECTED_SYMBOLS);
+		}
+
+		[Test]
+		public function testExportInternalSymbols():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.EXPORT_INTERNAL_SYMBOLS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.EXPORT_INTERNAL_SYMBOLS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.EXPORT_INTERNAL_SYMBOLS + "=true",
+				"Incorrect argument value for " + CompilerOptions.EXPORT_INTERNAL_SYMBOLS);
+		}
+
+		[Test]
 		public function testExternalLibraryPath():void
 		{
 			var value:Array =
@@ -412,6 +484,18 @@ package tests
 		}
 
 		[Test]
+		public function testInlineConstants():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.INLINE_CONSTANTS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.INLINE_CONSTANTS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.INLINE_CONSTANTS + "=true",
+				"Incorrect argument value for " + CompilerOptions.INLINE_CONSTANTS);
+		}
+
+		[Test]
 		public function testJSCompilerOption():void
 		{
 			var value:Array =
@@ -437,6 +521,18 @@ package tests
 				"Incorrect argument count for " + CompilerOptions.JS_DEFAULT_INITIALIZERS);
 			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.JS_DEFAULT_INITIALIZERS + "=true",
 				"Incorrect argument value for " + CompilerOptions.JS_DEFAULT_INITIALIZERS);
+		}
+
+		[Test]
+		public function testJSDynamicAccessUnknownMembers():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.JS_DYNAMIC_ACCESS_UNKNOWN_MEMBERS] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.JS_DYNAMIC_ACCESS_UNKNOWN_MEMBERS);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.JS_DYNAMIC_ACCESS_UNKNOWN_MEMBERS + "=true",
+				"Incorrect argument value for " + CompilerOptions.JS_DYNAMIC_ACCESS_UNKNOWN_MEMBERS);
 		}
 
 		[Test]
@@ -824,6 +920,18 @@ package tests
 		}
 
 		[Test]
+		public function testSourceMapSourceRoot():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.SOURCE_MAP_SOURCE_ROOT] = "http://www.example.com/app/";
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.SOURCE_MAP_SOURCE_ROOT);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.SOURCE_MAP_SOURCE_ROOT + "=http://www.example.com/app/",
+				"Incorrect argument value for " + CompilerOptions.SOURCE_MAP_SOURCE_ROOT);
+		}
+
+		[Test]
 		public function testSourcePath():void
 		{
 			var value:Array =
@@ -881,6 +989,18 @@ package tests
 				"Incorrect argument count for " + CompilerOptions.STRICT);
 			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.STRICT + "=true",
 				"Incorrect argument value for " + CompilerOptions.STRICT);
+		}
+
+		[Test]
+		public function testStrictIdentifierNames():void
+		{
+			var args:Object = {};
+			args[CompilerOptions.STRICT_IDENTIFIER_NAMES] = true;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 1,
+				"Incorrect argument count for " + CompilerOptions.STRICT_IDENTIFIER_NAMES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.STRICT_IDENTIFIER_NAMES + "=true",
+				"Incorrect argument value for " + CompilerOptions.STRICT_IDENTIFIER_NAMES);
 		}
 
 		[Test]

@@ -67,10 +67,18 @@ package com.as3mxml.asconfigc
 		public static const WARNINGS:String = "warnings";
 
 		//royale options
+		public static const ALLOW_ABSTRACT_CLASSES:String = "allow-abstract-classes";
+		public static const ALLOW_IMPORT_ALIASES:String = "allow-import-aliases";
+		public static const ALLOW_PRIVATE_CONSTRUCTORS:String = "allow-private-constructors";
+		public static const EXPORT_PUBLIC_SYMBOLS:String = "export-public-symbols";
+		public static const EXPORT_PROTECTED_SYMBOLS:String = "export-protected-symbols";
+		public static const EXPORT_INTERNAL_SYMBOLS:String = "export-internal-symbols";
 		public static const HTML_OUTPUT_FILENAME:String = "html-output-filename";
 		public static const HTML_TEMPLATE:String = "html-template";
+		public static const INLINE_CONSTANTS:String = "inline-constants";
 		public static const JS_COMPILER_OPTION:String = "js-compiler-option";
 		public static const JS_DEFAULT_INITIALIZERS:String = "js-default-initializers";
+		public static const JS_DYNAMIC_ACCESS_UNKNOWN_MEMBERS:String = "js-dynamic-access-unknown-members";
 		public static const JS_DEFINE:String = "js-define";
 		public static const JS_EXTERNAL_LIBRARY_PATH:String = "js-external-library-path";
 		public static const JS_LIBRARY_PATH:String = "js-library-path";
@@ -79,6 +87,8 @@ package com.as3mxml.asconfigc
 		public static const JS_OUTPUT_TYPE:String = "js-output-type";
 		public static const REMOVE_CIRCULARS:String = "remove-circulars";
 		public static const SOURCE_MAP:String = "source-map";
+		public static const SOURCE_MAP_SOURCE_ROOT:String = "source-map-source-root";
+		public static const STRICT_IDENTIFIER_NAMES:String = "strict-identifier-names";
 		public static const SWF_EXTERNAL_LIBRARY_PATH:String = "swf-external-library-path";
 		public static const SWF_LIBRARY_PATH:String = "swf-library-path";
 		public static const TARGETS:String = "targets";

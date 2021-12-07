@@ -40,6 +40,21 @@ package com.as3mxml.asconfigc
 						OptionsFormatter.setBoolean(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.ALLOW_ABSTRACT_CLASSES:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.ALLOW_IMPORT_ALIASES:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.ALLOW_PRIVATE_CONSTRUCTORS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.BENCHMARK:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
@@ -95,6 +110,21 @@ package com.as3mxml.asconfigc
 						OptionsFormatter.setPathValue(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.EXPORT_PUBLIC_SYMBOLS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.EXPORT_PROTECTED_SYMBOLS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.EXPORT_INTERNAL_SYMBOLS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.EXTERNAL_LIBRARY_PATH:
 					{
 						OptionsFormatter.appendPaths(key, options[key], result);
@@ -135,12 +165,22 @@ package com.as3mxml.asconfigc
 						OptionsFormatter.appendPaths(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.INLINE_CONSTANTS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.JS_COMPILER_OPTION:
 					{
 						appendJSCompilerOptions(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.JS_DEFAULT_INITIALIZERS:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.JS_DYNAMIC_ACCESS_UNKNOWN_MEMBERS:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
 						break;
@@ -255,6 +295,11 @@ package com.as3mxml.asconfigc
 						OptionsFormatter.setBoolean(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.SOURCE_MAP_SOURCE_ROOT:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.SOURCE_PATH:
 					{
 						OptionsFormatter.appendPaths(key, options[key], result);
@@ -266,6 +311,11 @@ package com.as3mxml.asconfigc
 						break;
 					}
 					case CompilerOptions.STRICT:
+					{
+						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.STRICT_IDENTIFIER_NAMES:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
 						break;
