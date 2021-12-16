@@ -892,6 +892,8 @@ package
 					this._debugBuild,
 					findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPath, !this._outputIsJS),
 					findApplicationContentOutputPath(this._mainFile, this._outputPath, !this._outputIsJS),
+					this._moduleOutputPaths,
+					this._workerOutputPaths,
 					options,
 					this._airArgs);
 			}

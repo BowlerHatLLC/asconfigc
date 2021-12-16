@@ -19,7 +19,7 @@ package com.as3mxml.asconfigc
 
 	public class AIROptionsParser
 	{
-		public static function parse(platform:String, debug:Boolean, applicationDescriptorPath:String, applicationContentPath:String, options:Object, result:Array = null):Array
+		public static function parse(platform:String, debug:Boolean, applicationDescriptorPath:String, applicationContentPath:String, modulePaths:Array, workerPaths:Array, options:Object, result:Array = null):Array
 		{
 			if(result === null)
 			{
@@ -227,19 +227,18 @@ package com.as3mxml.asconfigc
 			{
 				parseFiles(options[AIROptions.FILES], result);
 			}
-			if(applicationContentPath !== path.basename(applicationContentPath))
+			appendSWFPath(applicationContentPath, result);
+			if(modulePaths)
 			{
-				result.push("-C");
-				var dirname:String = path.dirname(applicationContentPath);
-				dirname = escapePath(dirname, false);
-				result.push(dirname);
-				var basename:String = path.basename(applicationContentPath);
-				basename = escapePath(basename, false);
-				result.push(basename);
+				for each(var modulePath:String in modulePaths) {
+					appendSWFPath(modulePath, result);
+				}
 			}
-			else
+			if(workerPaths)
 			{
-				result.push(escapePath(applicationContentPath, false));
+				for each(var workerPath:String in workerPaths) {
+					appendSWFPath(workerPath, result);
+				}
 			}
 
 			if(overridesOptionForPlatform(options, AIROptions.EXTDIR, platform))
@@ -295,6 +294,24 @@ package com.as3mxml.asconfigc
 				}
 			}
 			return result;
+		}
+
+		private static function appendSWFPath(swfPath:String, result:Array):void
+		{
+			if(swfPath !== path.basename(swfPath))
+			{
+				result.push("-C");
+				var dirname:String = path.dirname(swfPath);
+				dirname = escapePath(dirname, false);
+				result.push(dirname);
+				var basename:String = path.basename(swfPath);
+				basename = escapePath(basename, false);
+				result.push(basename);
+			}
+			else
+			{
+				result.push(escapePath(swfPath, false));
+			}
 		}
 
 		/**
