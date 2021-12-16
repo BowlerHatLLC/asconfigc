@@ -1431,6 +1431,10 @@ package
 				compilerArgs.unshift("-Dflexlib=" + escapePath(frameworkPath));
 				compilerArgs.unshift("-Dflexcompiler=" + escapePath(this._sdkHome));
 			}
+			if(process.platform === "darwin")
+			{
+				compilerArgs.unshift("-Dapple.awt.UIElement=true");
+			}
 			if(this._jvmArgs)
 			{
 				var jvmArgCount:int = this._jvmArgs.length;
