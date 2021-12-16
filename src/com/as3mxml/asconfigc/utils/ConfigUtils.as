@@ -43,7 +43,7 @@ package com.as3mxml.asconfigc.utils
 					{
 						return mainClassPath;
 					}
-					mainClassPath = path.resolve(mainClassBasePath + FILE_EXTENSION_MXML);
+					mainClassPath = path.resolve(sourcePath, mainClassBasePath + FILE_EXTENSION_MXML);
 					if(fs.existsSync(mainClassPath))
 					{
 						return mainClassPath;
