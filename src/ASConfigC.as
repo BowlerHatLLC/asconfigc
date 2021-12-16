@@ -180,6 +180,7 @@ package
 		private var _allWorkerCompilerArgs:Array;
 		private var _airDescriptors:Vector.<String> = null;
 		private var _outputPath:String = null;
+		private var _moduleOutputPaths:Array;
 		private var _workerOutputPaths:Array;
 		private var _mainFile:String = null;
 		private var _forceDebug:* = undefined;
@@ -660,6 +661,7 @@ package
 			}
 			if(TopLevelFields.MODULES in configData)
 			{
+				this._moduleOutputPaths = [];
 				var modules:Array = configData[TopLevelFields.MODULES];
 				var templateModuleCompilerArgs:Array = this.duplicateCompilerOptionsForModuleOrWorker(this._compilerArgs);
 				tmp.setGracefulCleanup();
@@ -671,6 +673,7 @@ package
 					var output:String = "";
 					if (ModuleFields.OUTPUT in module) {
 						output = module[ModuleFields.OUTPUT];
+						this._moduleOutputPaths.push(output);
 					}
 					if (output.length > 0) {
 						moduleCompilerArgs.push("--" + CompilerOptions.OUTPUT + "=" + output);
@@ -1259,6 +1262,30 @@ package
 			else //swf
 			{
 				this.cleanOutputDirectory(outputDirectory);
+			}
+
+			if(this._moduleOutputPaths != null) {
+				var moduleCount:int = this._moduleOutputPaths.length;
+				for(var i:int = 0; i < moduleCount; i++)
+				{
+					var moduleOutputPath:String = this._moduleOutputPaths[i];
+					if(fs.existsSync(moduleOutputPath))
+					{
+						try
+						{
+							fs.unlinkSync(moduleOutputPath);
+						}
+						catch(e:Error)
+						{
+							var errorText:String = "Failed to clean project because an I/O exception occurred while deleting file: " + moduleOutputPath;
+							if(this._verbose)
+							{
+								errorText += "\n" + String(e);
+							}
+							throw new Error(errorText);
+						}
+					}
+				}
 			}
 
 			if(this._workerOutputPaths != null) {
