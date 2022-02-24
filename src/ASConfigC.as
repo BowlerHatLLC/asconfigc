@@ -185,6 +185,7 @@ package
 		private var _mainFile:String = null;
 		private var _forceDebug:* = undefined;
 		private var _clean:Boolean = false;
+		private var _watch:Boolean = false;
 		private var _printConfig:Boolean = false;
 		private var _unpackageANEs:Boolean = false;
 		private var _animateFile:String = null;
@@ -231,6 +232,7 @@ package
 			console.info(" --animate FILE                                      Specify the path to the Adobe Animate executable.");
 			console.info(" --publish-animate                                   Publish Adobe Animate document, instead of only exporting the SWF.");
 			console.info(" --clean                                             Clean the output directory. Will not build the project.");
+			console.info(" --watch                                             Watch for file system changes and rebuild if detected (Royale only).");
 			console.info(" --verbose                                           Displays more detailed output, including the full set of options passed to all programs.");
 			console.info(" --jvmargs ARGS                                      (Advanced) Pass custom arguments to the Java virtual machine.");
 			console.info(" --print-config                                      (Advanced) Prints the contents of the asconfig.json file used to build, including any extensions.");
@@ -319,6 +321,20 @@ package
 						else
 						{
 							this._clean = cleanValue as Boolean;
+						}
+						break;
+					}
+					case "watch":
+					{
+						//support both --watch=true or simply --watch
+						var watchValue:Object = args[key];
+						if(typeof watchValue === "string")
+						{
+							this._watch = watchValue === "true";
+						}
+						else
+						{
+							this._watch = watchValue as Boolean;
 						}
 						break;
 					}
@@ -567,18 +583,32 @@ package
 				this.detectConfigRequirements(configName);
 				this._compilerArgs.push("+configname=" + configName);
 			}
+			if (this._watch)
+			{
+				this._debugBuild = true;
+				this._configRequiresRoyale = true;
+				if (this._forceDebug === false) {
+					throw new Error("Watch requires debug to be true");
+				}
+				this._compilerArgs.push("--watch=true");
+				this._compilerArgs.push("--debug=true");
+			}
+			else if (this._forceDebug === true || this._forceDebug === false)
+			{
+				this._debugBuild = this._forceDebug === true;
+				this._compilerArgs.push("--" + CompilerOptions.DEBUG + "=" + this._debugBuild);
+			}
 			if(TopLevelFields.COMPILER_OPTIONS in configData)
 			{
 				this._compilerOptionsJSON = configData[TopLevelFields.COMPILER_OPTIONS];
-				if(this._forceDebug === true || this._forceDebug === false)
+				if(this._watch || this._forceDebug === true || this._forceDebug === false)
 				{
 					//ignore the debug option when it is specified on the
 					//command line
-					delete this._compilerOptionsJSON["debug"];
-					this._compilerArgs.push("--debug=" + this._forceDebug);
+					delete this._compilerOptionsJSON[CompilerOptions.DEBUG];
 				}
 				this.readCompilerOptions(this._compilerOptionsJSON);
-				if(this._forceDebug === true || this._compilerOptionsJSON.debug)
+				if(this._compilerOptionsJSON.debug)
 				{
 					this._debugBuild = true;
 				}
