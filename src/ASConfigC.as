@@ -1726,7 +1726,8 @@ package
 					//clear this so that the name is based on the project name
 					airDescriptor = null;
 				}
-				descriptor = descriptor.replace(/<content>.*<\/content>/, "<content>" + contentValue + "</content>");
+				// (?!\s*-->) ignores lines that are commented out
+				descriptor = descriptor.replace(/<content>.*<\/content>(?!\s*-->)/, "<content>" + contentValue + "</content>");
 				if(this._outputIsJS)
 				{
 					var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");

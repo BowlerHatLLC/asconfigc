@@ -18,7 +18,8 @@ package com.as3mxml.asconfigc.utils
 	public function populateAdobeAIRDescriptorTemplateFile(descriptor:String, id:String):String
 	{
 		//these fields are required
-		descriptor = descriptor.replace(/<id>.*?<\/id>/, "<id>" + id + "</id>");
-		return descriptor.replace(/<filename>.*?<\/filename>/, "<filename>" + id + "</filename>");
+		// (?!\s*-->) ignores lines that are commented out
+		descriptor = descriptor.replace(/<id>.*?<\/id>(?!\s*-->)/, "<id>" + id + "</id>");
+		return descriptor.replace(/<filename>.*?<\/filename>(?!\s*-->)/, "<filename>" + id + "</filename>");
 	}
 }
