@@ -145,12 +145,12 @@ package
 					return;
 				}
 
-				this.compileProject();
 				this.copySourcePathAssets();
 				this.copyHTMLTemplate();
 				this.processAIRDescriptors();
 				this.copyAIRFiles();
 				this.prepareNativeExtensions();
+				this.compileProject();
 				if(this._airPlatform !== null)
 				{
 					this.packageAIR();
