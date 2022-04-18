@@ -15,7 +15,7 @@ limitations under the License.
 */
 package com.as3mxml.asconfigc.utils
 {
-	public function findAIRDescriptorOutputPath(mainFile:String, airDescriptor:String, outputPath:String, isSWF:Boolean):String
+	public function findAIRDescriptorOutputPath(mainFile:String, airDescriptor:String, outputPath:String, isSWF:Boolean, debugBuild:Boolean):String
 	{
 		var outputDir:String = findOutputDirectory(mainFile, outputPath, isSWF);
 		var fileName:String = null;
@@ -32,6 +32,14 @@ package com.as3mxml.asconfigc.utils
 			}
 			fileName = appID + "-app.xml";
 		}
-		return path.resolve(outputDir, fileName);
+		if (isSWF)
+		{
+			return path.resolve(outputDir, fileName);
+		}
+		var jsDir:String = "js-release";
+		if (debugBuild) {
+			jsDir = "js-debug";
+		}
+		return path.resolve(outputDir, path.join("bin", jsDir, fileName));
 	}
 }

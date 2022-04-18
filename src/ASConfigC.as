@@ -179,7 +179,9 @@ package
 		private var _allModuleCompilerArgs:Array;
 		private var _allWorkerCompilerArgs:Array;
 		private var _airDescriptors:Vector.<String> = null;
-		private var _outputPath:String = null;
+		private var _swfOutputPath:String = null;
+		private var _jsOutputPath:String = ";";
+		private var _outputPathForTarget:String = null;
 		private var _moduleOutputPaths:Array;
 		private var _workerOutputPaths:Array;
 		private var _mainFile:String = null;
@@ -618,7 +620,11 @@ package
 				}
 				if(CompilerOptions.OUTPUT in this._compilerOptionsJSON)
 				{
-					this._outputPath = this._compilerOptionsJSON[CompilerOptions.OUTPUT];
+					this._swfOutputPath = this._compilerOptionsJSON[CompilerOptions.OUTPUT];
+				}
+				if(CompilerOptions.JS_OUTPUT in this._compilerOptionsJSON)
+				{
+					this._jsOutputPath = this._compilerOptionsJSON[CompilerOptions.JS_OUTPUT];
 				}
 			}
 			if(TopLevelFields.ADDITIONAL_OPTIONS in configData)
@@ -920,8 +926,8 @@ package
 				AIROptionsParser.parse(
 					this._airPlatform,
 					this._debugBuild,
-					findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPath, !this._outputIsJS),
-					findApplicationContentOutputPath(this._mainFile, this._outputPath, !this._outputIsJS),
+					findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._swfOutputPath, !this._outputIsJS, this._debugBuild),
+					findApplicationContentOutputPath(this._mainFile, this._swfOutputPath, !this._outputIsJS),
 					this._moduleOutputPaths,
 					this._workerOutputPaths,
 					options,
@@ -945,7 +951,7 @@ package
 				this._htmlTemplateOptions = HTMLTemplateOptionsParser.parse(
 					compilerOptionsJSON,
 					this._mainFile,
-					this._outputPath);
+					this._swfOutputPath);
 			}
 			catch(error:Error)
 			{
@@ -1084,7 +1090,7 @@ package
 			var jsflContents:String = fs.readFileSync(jsflTemplatePath, "utf8") as String;
 
 			var resolvedOutputPath:String = null;
-			if(this._outputPath == null)
+			if(this._swfOutputPath == null)
 			{
 				var swfFileName:String = path.basename(this._animateFile);
 				swfFileName = swfFileName.substr(0, swfFileName.length - path.extname(swfFileName).length);
@@ -1092,7 +1098,7 @@ package
 			}
 			else
 			{
-				resolvedOutputPath = path.resolve(this._outputPath);
+				resolvedOutputPath = path.resolve(this._swfOutputPath);
 			}
 
 			mkdirp.sync(path.dirname(resolvedOutputPath));
@@ -1231,6 +1237,7 @@ package
 			}
 
 			this._outputIsJS = (this._sdkIsRoyale || sdkIsFlexJS) && !this._isSWFTargetOnly;
+			this._outputPathForTarget = this._outputIsJS ? this._jsOutputPath : this._swfOutputPath;
 			if(this._verbose)
 			{
 				console.info("SDK: " + this._sdkHome);
@@ -1283,7 +1290,7 @@ package
 				console.info("Cleaning project...");
 			}
 
-			var outputDirectory:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
+			var outputDirectory:String = findOutputDirectory(this._mainFile, this._outputPathForTarget, !this._outputIsJS);
 			if(this._outputIsJS)
 			{
 				var debugOutputDir:String = path.join(outputDirectory, "bin", "js-debug");
@@ -1322,7 +1329,7 @@ package
 
 			if(this._workerOutputPaths != null) {
 				var workerCount:int = this._workerOutputPaths.length;
-				for(var i:int = 0; i < workerCount; i++)
+				for(i = 0; i < workerCount; i++)
 				{
 					var workerOutputPath:String = this._workerOutputPaths[i];
 					if(fs.existsSync(workerOutputPath))
@@ -1333,7 +1340,7 @@ package
 						}
 						catch(e:Error)
 						{
-							var errorText:String = "Failed to clean project because an I/O exception occurred while deleting file: " + workerOutputPath;
+							errorText = "Failed to clean project because an I/O exception occurred while deleting file: " + workerOutputPath;
 							if(this._verbose)
 							{
 								errorText += "\n" + String(e);
@@ -1536,7 +1543,7 @@ package
 			{
 				sourcePaths = new <String>[];
 			}
-			var outputDirectory:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
+			var outputDirectory:String = findOutputDirectory(this._mainFile, this._outputPathForTarget, !this._outputIsJS);
 			var excludes:Vector.<String> = new <String>[];
 			if(this._airDescriptors)
 			{
@@ -1597,7 +1604,7 @@ package
 			{
 				throw new Error("htmlTemplate path must be a directory. Invalid path: " + this._htmlTemplate);
 			}
-			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
+			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPathForTarget, !this._outputIsJS);
 			copyHTMLTemplateDirectory(this._htmlTemplate, outputDir);
 		}
 
@@ -1691,8 +1698,7 @@ package
 					console.info("Using template fallback: " + templatePath);
 				}
 			}
-			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
-			var contentValue:String = findApplicationContent(this._mainFile, this._outputPath, !this._outputIsJS);
+			var contentValue:String = findApplicationContent(this._mainFile, this._swfOutputPath, !this._outputIsJS);
 			if(contentValue === null)
 			{
 				throw new Error("Failed to find content for application descriptor.");
@@ -1712,7 +1718,7 @@ package
 				var descriptor:String = fs.readFileSync(airDescriptor, "utf8") as String;
 				if(populateTemplate)
 				{
-					var appID:String = generateApplicationID(this._mainFile, this._outputPath);
+					var appID:String = generateApplicationID(this._mainFile, this._swfOutputPath);
 					if (appID == null)
 					{
 						throw new Error("Failed to generate application ID for Adobe AIR.");
@@ -1730,21 +1736,19 @@ package
 				descriptor = descriptor.replace(/<content>.*<\/content>(?!\s*-->)/, "<content>" + contentValue + "</content>");
 				if(this._outputIsJS)
 				{
-					var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
-					var debugDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, debugOutputDir, false);
+					var debugDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPathForTarget, false, true);
 					mkdirp.sync(path.dirname(debugDescriptorOutputPath));
 					fs.writeFileSync(debugDescriptorOutputPath, descriptor, "utf8");
 					if(!this._debugBuild)
 					{
-						var releaseOutputDir:String = path.join(outputDir, "bin", "js-release");
-						var releaseDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, releaseOutputDir, false);
+						var releaseDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPathForTarget, false, false);
 						mkdirp.sync(path.dirname(releaseDescriptorOutputPath));
 						fs.writeFileSync(releaseDescriptorOutputPath, descriptor, "utf8");
 					}
 				}
 				else //swf
 				{
-					var descriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPath, true);
+					var descriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._swfOutputPath, true, this._debugBuild);
 					mkdirp.sync(path.dirname(descriptorOutputPath));
 					fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
 				}
@@ -1847,7 +1851,7 @@ package
 				console.info("Unpacking: " + aneFilePath);
 			}
 
-			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
+			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPathForTarget, !this._outputIsJS);
 			var unpackedAneDir:String = path.resolve(outputDir, FILE_NAME_UNPACKAGED_ANES);
 			var currentAneDir:String = path.resolve(unpackedAneDir, path.basename(aneFilePath));		
 			mkdirp.sync(currentAneDir);
@@ -1882,7 +1886,7 @@ package
 				return;
 			}
 
-			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPath, !this._outputIsJS);
+			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPathForTarget, !this._outputIsJS);
 			var filesJSON:Array = this._airOptionsJSON.files as Array;
 			var fileCount:int = filesJSON.length;
 			if(fileCount === 0)
