@@ -1605,7 +1605,20 @@ package
 				throw new Error("htmlTemplate path must be a directory. Invalid path: " + this._htmlTemplate);
 			}
 			var outputDir:String = findOutputDirectory(this._mainFile, this._outputPathForTarget, !this._outputIsJS);
-			copyHTMLTemplateDirectory(this._htmlTemplate, outputDir);
+			if (this._outputIsJS)
+			{
+				var debugOutputDir:String = path.join(outputDir, "bin", "js-debug");
+				copyHTMLTemplateDirectory(this._htmlTemplate, debugOutputDir);
+				if(!this._debugBuild)
+				{
+					var releaseOutputDir:String = path.join(outputDir, "bin", "js-release");
+					copyHTMLTemplateDirectory(this._htmlTemplate, releaseOutputDir);
+				}
+			}
+			else //swf
+			{
+				copyHTMLTemplateDirectory(this._htmlTemplate, outputDir);
+			}
 		}
 
 		private function copyHTMLTemplateDirectory(inputDir:String, outputDir:String):void
