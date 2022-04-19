@@ -15,7 +15,7 @@ limitations under the License.
 */
 package com.as3mxml.asconfigc
 {
-	import com.as3mxml.asconfigc.utils.findOutputFileName;
+	import com.as3mxml.asconfigc.utils.findSWFOutputFileName;
 
 	public class HTMLTemplateOptionsParser
 	{
@@ -74,10 +74,10 @@ package com.as3mxml.asconfigc
 				result[HTMLTemplateOptions.VERSION_REVISION] = "124";
 			}
 
-			var outputFileName:String = findOutputFileName(mainFile, outputPath);
-			if(outputFileName)
+			var swfOutputFileName:String = findSWFOutputFileName(mainFile, outputPath);
+			if(swfOutputFileName)
 			{
-				var swfName:String = outputFileName.substr(0, outputFileName.length - path.extname(outputFileName).length);
+				var swfName:String = swfOutputFileName.substr(0, swfOutputFileName.length - path.extname(swfOutputFileName).length);
 				result[HTMLTemplateOptions.SWF] = swfName;
 				if(mainFile != null)
 				{
@@ -92,7 +92,7 @@ package com.as3mxml.asconfigc
 			}
 			else
 			{
-					result[HTMLTemplateOptions.APPLICATION] = "";
+				result[HTMLTemplateOptions.APPLICATION] = "";
 			}
 			
 			result[HTMLTemplateOptions.EXPRESS_INSTALL_SWF] = "playerProductInstall.swf";

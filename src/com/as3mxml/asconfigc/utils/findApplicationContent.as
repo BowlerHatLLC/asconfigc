@@ -22,6 +22,6 @@ package com.as3mxml.asconfigc.utils
 			//An AIR app will load an HTML file as its main content
 			return "index.html";
 		}
-		return findOutputFileName(mainFile, outputPath);
+		return findSWFOutputFileName(mainFile, outputPath);
 	}
 }

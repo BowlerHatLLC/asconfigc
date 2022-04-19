@@ -15,7 +15,7 @@ limitations under the License.
 */
 package com.as3mxml.asconfigc.utils
 {
-	public function findOutputFileName(mainFile:String, outputPath:String):String
+	public function findSWFOutputFileName(mainFile:String, outputPath:String):String
 	{
 		if(!outputPath)
 		{
