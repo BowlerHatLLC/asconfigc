@@ -15,7 +15,7 @@ limitations under the License.
 */
 package com.as3mxml.asconfigc.utils
 {
-	public function findAIRDescriptorOutputPath(mainFile:String, airDescriptor:String, outputPath:String, isSWF:Boolean, debugBuild:Boolean):String
+	public function findAIRDescriptorOutputPath(mainFile:String, airDescriptor:String, outputPath:String, projectPath:String, isSWF:Boolean, debugBuild:Boolean):String
 	{
 		var outputDir:String = findOutputDirectory(mainFile, outputPath, isSWF);
 		var fileName:String = null;
@@ -25,7 +25,7 @@ package com.as3mxml.asconfigc.utils
 		}
 		else
 		{
-			var appID:String = generateApplicationID(mainFile, outputPath);
+			var appID:String = generateApplicationID(mainFile, outputPath, projectPath);
 			if(appID == null)
 			{
 				return null;

@@ -15,20 +15,28 @@ limitations under the License.
 */
 package com.as3mxml.asconfigc.utils
 {
-	public function generateApplicationID(mainFile:String, outputPath:String):String
+	public function generateApplicationID(mainFile:String, outputPath:String, projectPath:String):String
 	{
-		if(!outputPath && !mainFile)
-		{
-			return null;
-		}
 		var fileName:String = null;
-		if(outputPath == null)
+		if(mainFile)
 		{
 			fileName = path.basename(mainFile);
 		}
-		else
+		if(!fileName && outputPath)
 		{
-			fileName = path.basename(outputPath);
+			if (outputPath.endsWith(".swf")) {
+				fileName = path.basename(outputPath);
+			}
+		}
+		if (!fileName && projectPath) {
+			if (fs.existsSync(projectPath) && fs.statSync(projectPath).isDirectory()) {
+				projectPath = fs.realpathSync(projectPath);
+				fileName = path.basename(projectPath);
+			}
+		}
+		if(!fileName)
+		{
+			return null;
 		}
 		var extensionIndex:int = fileName.indexOf(".");
 		if(extensionIndex == -1)

@@ -926,8 +926,8 @@ package
 				AIROptionsParser.parse(
 					this._airPlatform,
 					this._debugBuild,
-					findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._swfOutputPath, !this._outputIsJS, this._debugBuild),
-					findApplicationContentOutputPath(this._mainFile, this._swfOutputPath, !this._outputIsJS),
+					findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPathForTarget, process.cwd(), !this._outputIsJS, this._debugBuild),
+					findApplicationContentOutputPath(this._mainFile, this._outputPathForTarget, !this._outputIsJS),
 					this._moduleOutputPaths,
 					this._workerOutputPaths,
 					options,
@@ -951,7 +951,7 @@ package
 				this._htmlTemplateOptions = HTMLTemplateOptionsParser.parse(
 					compilerOptionsJSON,
 					this._mainFile,
-					this._swfOutputPath);
+					this._outputPathForTarget);
 			}
 			catch(error:Error)
 			{
@@ -1711,7 +1711,7 @@ package
 					console.info("Using template fallback: " + templatePath);
 				}
 			}
-			var contentValue:String = findApplicationContent(this._mainFile, this._swfOutputPath, !this._outputIsJS);
+			var contentValue:String = findApplicationContent(this._mainFile, this._outputPathForTarget, !this._outputIsJS);
 			if(contentValue === null)
 			{
 				throw new Error("Failed to find content for application descriptor.");
@@ -1731,7 +1731,7 @@ package
 				var descriptor:String = fs.readFileSync(airDescriptor, "utf8") as String;
 				if(populateTemplate)
 				{
-					var appID:String = generateApplicationID(this._mainFile, this._swfOutputPath);
+					var appID:String = generateApplicationID(this._mainFile, this._outputPathForTarget, process.cwd());
 					if (appID == null)
 					{
 						throw new Error("Failed to generate application ID for Adobe AIR.");
@@ -1749,19 +1749,19 @@ package
 				descriptor = descriptor.replace(/<content>.*<\/content>(?!\s*-->)/, "<content>" + contentValue + "</content>");
 				if(this._outputIsJS)
 				{
-					var debugDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPathForTarget, false, true);
+					var debugDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPathForTarget, process.cwd(), false, true);
 					mkdirp.sync(path.dirname(debugDescriptorOutputPath));
 					fs.writeFileSync(debugDescriptorOutputPath, descriptor, "utf8");
 					if(!this._debugBuild)
 					{
-						var releaseDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPathForTarget, false, false);
+						var releaseDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPathForTarget, process.cwd(), false, false);
 						mkdirp.sync(path.dirname(releaseDescriptorOutputPath));
 						fs.writeFileSync(releaseDescriptorOutputPath, descriptor, "utf8");
 					}
 				}
 				else //swf
 				{
-					var descriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._swfOutputPath, true, this._debugBuild);
+					var descriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPathForTarget, process.cwd(), true, this._debugBuild);
 					mkdirp.sync(path.dirname(descriptorOutputPath));
 					fs.writeFileSync(descriptorOutputPath, descriptor, "utf8");
 				}
