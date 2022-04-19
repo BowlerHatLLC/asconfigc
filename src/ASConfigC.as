@@ -283,7 +283,7 @@ package
 						{
 							throw new Error("Project directory or JSON file not found: " + projectPath);
 						}
-						if(fs.statSync(projectPath).isDirectory())
+						if(fs.existsSync(projectPath) && fs.statSync(projectPath).isDirectory())
 						{
 							var configFilePath:String = path.resolve(projectPath, ASCONFIG_JSON);
 							if(!fs.existsSync(configFilePath))
@@ -1635,7 +1635,7 @@ package
 				var fileName:String = files[i];
 				var inputFilePath:String = path.resolve(inputDir, fileName);
 				var outputFilePath:String = path.resolve(outputDir, fileName);
-				if(fs.statSync(inputFilePath).isDirectory())
+				if(fs.existsSync(inputFilePath) && fs.statSync(inputFilePath).isDirectory())
 				{
 					copyHTMLTemplateDirectory(inputFilePath, outputFilePath);
 					continue;
@@ -1837,7 +1837,7 @@ package
 				{
 					result.push(libraryPath);
 				}
-				else if(fs.statSync(libraryPath).isDirectory())
+				else if(fs.existsSync(libraryPath) && fs.statSync(libraryPath).isDirectory())
 				{
 					var files:Array = fs.readdirSync(libraryPath);
 					var fileCount:int = files.length;
@@ -1856,7 +1856,7 @@ package
 
 		private function unpackANE(aneFilePath:String):void
 		{
-			if(fs.statSync(aneFilePath).isDirectory())
+			if(fs.existsSync(aneFilePath) && fs.statSync(aneFilePath).isDirectory())
 			{
 				//this is either an ANE that's already unpacked
 				//...or something else entirely
@@ -1937,7 +1937,7 @@ package
 				{
 					srcFilePath = path.resolve(process.cwd(), srcFilePath);
 				}
-				var srcIsDir:Boolean = fs.statSync(srcFilePath).isDirectory();
+				var srcIsDir:Boolean = fs.existsSync(srcFilePath) && fs.statSync(srcFilePath).isDirectory();
 				//ensures that path formatting is consistent
 				destFilePath = path.relative(outputDir, path.resolve(outputDir, destFilePath));
 				if(destFilePath.length === 0)
