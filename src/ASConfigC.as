@@ -1646,6 +1646,10 @@ package
 					var templateExtension:String = ".template" + extension;
 					if(fileName.endsWith(templateExtension))
 					{
+						if (this._verbose)
+						{
+							console.info("Copying template asset: " + inputFilePath);
+						}
 						var fileNameWithoutExtension:String = fileName.substr(0, fileName.length - templateExtension.length);
 						if(fileNameWithoutExtension === "index")
 						{
