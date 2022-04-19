@@ -42,6 +42,10 @@ package com.as3mxml.asconfigc.utils
 			}
 			return mainPath;
 		}
+		if (!isSWF)
+		{
+			return outputPath;
+		}
 		return path.resolve(path.dirname(outputPath));
 	}
 }
