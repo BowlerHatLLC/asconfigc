@@ -19,3 +19,4 @@ node_modules/
 .vscode/
 asconfigc-*.tgz
 npm-debug.log
+*.as3proj
