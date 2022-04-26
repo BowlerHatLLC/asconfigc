@@ -135,9 +135,6 @@ package
 			{
 				//java is required to run the compiler
 				this.validateJava();
-				//validate the SDK after parsing the config because we need to know
-				//if we're building SWF or JS. JS has stricter SDK requirements.
-				this.validateSDK();
 
 				if(this._clean) {
 					this.cleanProject();
@@ -803,6 +800,21 @@ package
 				}
 				this._compilerArgs.push(this._mainFile);
 			}
+			if(TopLevelFields.ANIMATE_OPTIONS in configData)
+			{
+				var animateOptionsJSON:Object = configData[TopLevelFields.ANIMATE_OPTIONS];
+				if(AnimateOptions.FILE in animateOptionsJSON)
+				{
+					this._animateFile = animateOptionsJSON[AnimateOptions.FILE];
+					if(!path.isAbsolute(this._animateFile))
+					{
+						this._animateFile = path.resolve(process.cwd(), this._animateFile);
+					}
+				}
+			}
+			// before parsing AIR options, we need to figure out where the output
+			// directory is, based on the SDK type and compiler options
+			this.validateSDK();
 			if(TopLevelFields.AIR_OPTIONS in configData)
 			{
 				this._configRequiresAIR = true;
@@ -825,18 +837,6 @@ package
 					compilerOptionsJSON = configData[TopLevelFields.COMPILER_OPTIONS];
 				}
 				readHTMLTemplateOptions(compilerOptionsJSON);
-			}
-			if(TopLevelFields.ANIMATE_OPTIONS in configData)
-			{
-				var animateOptionsJSON:Object = configData[TopLevelFields.ANIMATE_OPTIONS];
-				if(AnimateOptions.FILE in animateOptionsJSON)
-				{
-					this._animateFile = animateOptionsJSON[AnimateOptions.FILE];
-					if(!path.isAbsolute(this._animateFile))
-					{
-						this._animateFile = path.resolve(process.cwd(), this._animateFile);
-					}
-				}
 			}
 		}
 
@@ -1175,6 +1175,10 @@ package
 
 		private function validateSDK():void
 		{
+			if (this._animateFile)
+			{
+				return;
+			}
 			//the --sdk argument wasn't passed in, try to find an SDK
 			if(!this._sdkHome)
 			{
