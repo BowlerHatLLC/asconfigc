@@ -1,6 +1,6 @@
 {
   "name": "asconfigc",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Builds an ActionScript & MXML project configured with asconfig.json, from simple compilation to packaging Adobe AIR apps.",
   "author": "Josh Tynjala",
   "repository": "BowlerHatLLC/asconfigc",
