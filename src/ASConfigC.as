@@ -177,7 +177,7 @@ package
 		private var _allWorkerCompilerArgs:Array;
 		private var _airDescriptors:Vector.<String> = null;
 		private var _swfOutputPath:String = null;
-		private var _jsOutputPath:String = ";";
+		private var _jsOutputPath:String = ".";
 		private var _outputPathForTarget:String = null;
 		private var _moduleOutputPaths:Array;
 		private var _workerOutputPaths:Array;
