@@ -478,7 +478,8 @@ package
 			}
 			try
 			{
-				var validate:Function = jsen(schemaData);
+				var ajv:Ajv = new Ajv();
+				var validate:Function = ajv.compile(schemaData);
 			}
 			catch(error:Error)
 			{

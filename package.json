@@ -33,9 +33,9 @@
   },
   "dependencies": {
     "adm-zip": "^0.4.16",
+    "ajv": "^8.11.0",
     "chokidar": "^3.5.3",
     "del": "^3.0.0",
-    "jsen": "^0.6.6",
     "json5": "^1.0.1",
     "minimist": "^1.2.6",
     "mkdirp": "^0.5.6",
