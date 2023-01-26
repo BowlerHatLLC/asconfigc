@@ -46,6 +46,7 @@ package
 	import com.as3mxml.royale.utils.ApacheRoyaleUtils;
 	import com.as3mxml.utils.ActionScriptSDKUtils;
 	import com.as3mxml.utils.findJava;
+	import com.as3mxml.asconfigc.utils.findAIRDescriptorNamespace;
 
 	/**
 	 * A command line utility to build a project defined with an asconfig.json
@@ -1708,11 +1709,18 @@ package
 				console.info("Processing Adobe AIR application descriptor(s)...");
 			}
 			
+			var templatePath:String = path.resolve(this._sdkHome, "templates/air/descriptor-template.xml");
+			var templateNamespace:String = null;
+			try
+			{
+				var templateContents:String = fs.readFileSync(templatePath, "utf8") as String;
+				templateNamespace = findAIRDescriptorNamespace(templateContents);
+			}
+			catch(e:Object) {}
 			var populateTemplate:Boolean = false;
 			if(this._airDescriptors == null || this._airDescriptors.length == 0)
 			{
 				this._airDescriptors = new <String>[];
-				var templatePath:String = path.resolve(this._sdkHome, "templates/air/descriptor-template.xml");
 				this._airDescriptors.push(templatePath);
 				populateTemplate = true;
 				if(this._verbose)
@@ -1756,6 +1764,10 @@ package
 				}
 				// (?!\s*-->) ignores lines that are commented out
 				descriptor = descriptor.replace(/<content>.*<\/content>(?!\s*-->)/, "<content>" + contentValue + "</content>");
+				if (templateNamespace)
+				{
+					descriptor = descriptor.replace(/<application xmlns=".*?"/, "<application xmlns=\"" + templateNamespace + "\"");
+				}
 				if(this._outputIsJS)
 				{
 					var debugDescriptorOutputPath:String = findAIRDescriptorOutputPath(this._mainFile, airDescriptor, this._outputPathForTarget, process.cwd(), false, true);
