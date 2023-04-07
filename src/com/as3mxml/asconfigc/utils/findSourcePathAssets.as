@@ -58,6 +58,10 @@ package com.as3mxml.asconfigc.utils
 		for(i = 0; i < sourcePathsCount; i++)
 		{
 			var sourcePath:String = sourcePaths[i];
+			if(!fs.existsSync(sourcePath) || !fs.statSync(sourcePath).isDirectory()) {
+				console.warn("Skipping assets in source path: " + sourcePath);
+				continue;
+			}
 			var files:Array = fs.readdirSync(sourcePath);
 			var fileCount:int = files.length;
 			for(var j:int = 0; j < fileCount; j++)
