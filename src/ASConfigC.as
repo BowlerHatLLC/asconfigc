@@ -376,6 +376,21 @@ package
 						if(typeof airPlatformValue === "string")
 						{
 							this._airPlatform = airPlatformValue as String;
+							if (this._airPlatform == "bundle")
+							{
+								if (process.platform === "darwin")
+								{
+									this._airPlatform = AIRPlatformType.MAC;
+								}
+								else if (process.platform === "win32")
+								{
+									this._airPlatform = AIRPlatformType.WINDOWS;
+								}
+								else
+								{
+									throw new Error("Adobe AIR target \"bundle\" specified, but current operating system not recognized: " + process.platform);
+								}
+							}
 							if(this._airPlatform === AIRPlatformType.MAC &&
 								process.platform !== "darwin")
 							{
