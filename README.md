@@ -30,7 +30,7 @@ The following options are available:
 
 * `--air PLATFORM`
 
-	Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, and `air`.
+	Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, `bundle`, and `air`.
 
 * `--storepass PASSWORD`
 
