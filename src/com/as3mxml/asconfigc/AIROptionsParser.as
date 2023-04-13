@@ -31,6 +31,7 @@ package com.as3mxml.asconfigc
 			//these are *desktop* signing options only
 			//mobile signing options must be specified later!
 			if(platform === AIRPlatformType.AIR ||
+				platform === AIRPlatformType.BUNDLE ||
 				platform === AIRPlatformType.WINDOWS ||
 				platform === AIRPlatformType.MAC)
 			{
@@ -107,6 +108,12 @@ package com.as3mxml.asconfigc
 						{
 							setValueWithoutAssignment(AIROptions.TARGET, AIRTarget.IPA_TEST_INTERPRETER_SIMULATOR, result);
 						}
+						break;
+					}
+					case AIRPlatformType.BUNDLE:
+					{
+						//captive runtime
+						setValueWithoutAssignment(AIROptions.TARGET, AIRTarget.BUNDLE, result);
 						break;
 					}
 					case AIRPlatformType.WINDOWS:
