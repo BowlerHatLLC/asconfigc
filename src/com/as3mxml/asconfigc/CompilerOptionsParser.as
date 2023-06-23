@@ -60,6 +60,26 @@ package com.as3mxml.asconfigc
 						OptionsFormatter.setBoolean(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.CONTEXT_ROOT:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.CONTRIBUTOR:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.CREATOR:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.DATE:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.DEBUG:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
@@ -98,6 +118,11 @@ package com.as3mxml.asconfigc
 					case CompilerOptions.JS_DEFINE:
 					{
 						setDefine(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.DESCRIPTION:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.DIRECTORY:
@@ -243,6 +268,11 @@ package com.as3mxml.asconfigc
 					case CompilerOptions.KEEP_GENERATED_ACTIONSCRIPT:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.LANGUAGE:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.LIBRARY_PATH:
@@ -405,9 +435,19 @@ package com.as3mxml.asconfigc
 						OptionsFormatter.setBoolean(key, options[key], result);
 						break;
 					}
+					case CompilerOptions.PUBLISHER:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
+						break;
+					}
 					case CompilerOptions.REMOVE_CIRCULARS:
 					{
 						OptionsFormatter.setBoolean(key, options[key], result);
+						break;
+					}
+					case CompilerOptions.SERVICES:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.SHOW_UNUSED_TYPE_SELECTOR_WARNINGS:
@@ -486,6 +526,11 @@ package com.as3mxml.asconfigc
 						{
 							OptionsFormatter.setPathValue(key, themeValue, result);
 						}
+						break;
+					}
+					case CompilerOptions.TITLE:
+					{
+						OptionsFormatter.setValue(key, options[key], result);
 						break;
 					}
 					case CompilerOptions.TOOLS_LOCALE:
