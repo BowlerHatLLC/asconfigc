@@ -494,7 +494,9 @@ package
 			}
 			try
 			{
-				var ajv:Ajv = new Ajv();
+				var ajv:Ajv = new Ajv({
+					"allowUnionTypes": true
+				});
 				var validate:Function = ajv.compile(schemaData);
 			}
 			catch(error:Error)
