@@ -744,7 +744,7 @@ package
 					this._allModuleCompilerArgs.push(moduleCompilerArgs);
 				}
 				if (moduleCount > 0) {
-					this._compilerArgs.push("--" + CompilerOptions.LINK_REPORT + "+=" + linkReportPath);
+					this._compilerArgs.push("--" + CompilerOptions.LINK_REPORT + "+=" + escapePath(linkReportPath));
 				}
 			}
 			if(TopLevelFields.WORKERS in configData)
@@ -797,7 +797,7 @@ package
 					for (i = 0; i < fileCount; i++)
 					{
 						file = files[i];
-						this._compilerArgs.push(file);
+						this._compilerArgs.push(escapePath(file));
 					}
 				}
 			}
@@ -817,7 +817,7 @@ package
 					//terminate previous options and start default options
 					this._compilerArgs.push("--");
 				}
-				this._compilerArgs.push(this._mainFile);
+				this._compilerArgs.push(escapePath(this._mainFile));
 			}
 			if(TopLevelFields.ANIMATE_OPTIONS in configData)
 			{
