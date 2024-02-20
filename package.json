@@ -15,8 +15,6 @@
     "MXML",
     "AIR",
     "Flash",
-    "Apache FlexJS",
-    "FlexJS",
     "Flash Player"
   ],
   "bin": "./asconfigc",

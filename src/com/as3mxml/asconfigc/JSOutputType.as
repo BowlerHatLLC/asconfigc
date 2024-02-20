@@ -19,6 +19,5 @@ package com.as3mxml.asconfigc
 	{
 		public static const JSC:String = "jsc";
 		public static const NODE:String = "node";
-		public static const FLEXJS:String = "flexjs";
 	}
 }

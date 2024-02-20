@@ -42,7 +42,6 @@ package
 	import com.as3mxml.asconfigc.utils.parseAdditionalOptions;
 	import com.as3mxml.asconfigc.utils.populateAdobeAIRDescriptorTemplateFile;
 	import com.as3mxml.asconfigc.utils.populateHTMLTemplateFile;
-	import com.as3mxml.royale.utils.ApacheFlexJSUtils;
 	import com.as3mxml.royale.utils.ApacheRoyaleUtils;
 	import com.as3mxml.utils.ActionScriptSDKUtils;
 	import com.as3mxml.utils.findJava;
@@ -167,12 +166,9 @@ package
 		private var _projectType:String;
 		private var _sdkIsRoyale:Boolean;
 		private var _configRequiresRoyale:Boolean;
-		private var _configRequiresFlexJS:Boolean;
-		private var _configRequiresRoyaleOrFlexJS:Boolean;
 		private var _configRequiresAIR:Boolean;
 		private var _isSWFTargetOnly:Boolean;
 		private var _outputIsJS:Boolean;
-		private var _jsOutputType:String;
 		private var _compilerArgs:Array;
 		private var _allModuleCompilerArgs:Array;
 		private var _allWorkerCompilerArgs:Array;
@@ -660,12 +656,6 @@ package
 					}
 				}
 			}
-			//if js-output-type was not specified, use the default
-			//swf projects won't have a js-output-type
-			if(this._jsOutputType)
-			{
-				this._compilerArgs.push("--" + CompilerOptions.JS_OUTPUT_TYPE + "=" + this._jsOutputType);
-			}
 			if(TopLevelFields.APPLICATION in configData)
 			{
 				this._configRequiresAIR = true;
@@ -893,43 +883,20 @@ package
 				}
 				throw new Error(errorText);
 			}
-			//make sure that we require Royale (or FlexJS) depending on which options are specified
+			//make sure that we require Royale, depending on which options are specified
 			if(CompilerOptions.JS_OUTPUT_TYPE in options)
 			{
-				//this option was used in FlexJS 0.7, but it was replaced with
-				//targets in FlexJS 0.8.
-				this._configRequiresFlexJS = true;
-				//if it is set explicitly, then clear the default
-				this._jsOutputType = null;
+				this._configRequiresRoyale = true;
 			}
 			if(CompilerOptions.TARGETS in options)
 			{
 				var targets:Array = options[CompilerOptions.TARGETS];
-				if(targets.indexOf(Targets.JS_ROYALE) !== -1 ||
-					targets.indexOf(Targets.JS_ROYALE_CORDOVA) !== -1)
-				{
-					//these targets definitely don't work with FlexJS
-					this._configRequiresRoyale = true;
-				}
-				else
-				{
-					//remaining targets are supported by both Royale and FlexJS
-					this._configRequiresRoyaleOrFlexJS = true;
-				}
+				this._configRequiresRoyale = true;
 				this._isSWFTargetOnly = targets.length === 1 && targets.indexOf(Targets.SWF) !== -1;
-				//if targets is set explicitly, then we're using a newer SDK
-				//that doesn't need js-output-type
-				this._jsOutputType = null;
-			}
-			if(this._sdkIsRoyale)
-			{
-				//this was only needed for Apache FlexJS
-				this._jsOutputType = null;
 			}
 			if(CompilerOptions.SOURCE_MAP in options)
 			{
-				//source-map compiler option is supported by both Royale and FlexJS
-				this._configRequiresRoyaleOrFlexJS = true;
+				this._configRequiresRoyale = true;
 			}
 		}
 
@@ -989,19 +956,16 @@ package
 			{
 				case ConfigName.JS:
 				{
-					this._jsOutputType = JSOutputType.JSC;
-					this._configRequiresRoyaleOrFlexJS = true;
+					this._configRequiresRoyale = true;
 					break;
 				}
 				case ConfigName.NODE:
 				{
-					this._jsOutputType = JSOutputType.NODE;
-					this._configRequiresRoyaleOrFlexJS = true;
+					this._configRequiresRoyale = true;
 					break;
 				}
 				case ConfigName.ROYALE:
 				{
-					//this option is not supported by FlexJS
 					this._configRequiresRoyale = true;
 					break;
 				}
@@ -1205,13 +1169,6 @@ package
 			}
 			if(!this._sdkHome && !this._configRequiresRoyale)
 			{
-				this._sdkHome = ApacheFlexJSUtils.findSDK();
-			}
-			if(!this._sdkHome &&
-				!this._configRequiresRoyale &&
-				!this._configRequiresRoyaleOrFlexJS &&
-				!this._configRequiresFlexJS)
-			{
 				//asconfigc prefers to use Royale, but if the specified
 				//configuration options don't require Royale, it will use any
 				//valid SDK
@@ -1224,10 +1181,6 @@ package
 				{
 					envHome = "ROYALE_HOME";
 				}
-				else if(this._configRequiresRoyaleOrFlexJS)
-				{
-					envHome = "ROYALE_HOME for Apache Royale, FLEX_HOME for Apache FlexJS";
-				}
 				throw new Error("SDK not found. Set " + envHome + ", add to PATH, or use --sdk option.");
 			}
 			var royaleHome:String = ApacheRoyaleUtils.isValidSDK(this._sdkHome);
@@ -1236,30 +1189,12 @@ package
 				this._sdkHome = royaleHome;
 				this._sdkIsRoyale = true;
 			}
-			if(this._configRequiresRoyale)
+			if(this._configRequiresRoyale && !this._sdkIsRoyale)
 			{
-				if(!this._sdkIsRoyale)
-				{
-					throw new Error("Configuration options in asconfig.json require Apache Royale. Path to SDK is not valid: " + this._sdkHome);
-				}
-			}
-			var sdkIsFlexJS:Boolean = ApacheFlexJSUtils.isValidSDK(this._sdkHome);
-			if(this._configRequiresRoyaleOrFlexJS)
-			{
-				if(!this._sdkIsRoyale && !sdkIsFlexJS)
-				{
-					throw new Error("Configuration options in asconfig.json require Apache Royale or FlexJS. Path to SDK is not valid: " + this._sdkHome);
-				}
-			}
-			if(this._configRequiresFlexJS)
-			{
-				if(!sdkIsFlexJS)
-				{
-					throw new Error("Configuration options in asconfig.json require Apache FlexJS. Path to SDK is not valid: " + this._sdkHome);
-				}
+				throw new Error("Configuration options in asconfig.json require Apache Royale. Path to SDK is not valid: " + this._sdkHome);
 			}
 
-			this._outputIsJS = (this._sdkIsRoyale || sdkIsFlexJS) && !this._isSWFTargetOnly;
+			this._outputIsJS = this._sdkIsRoyale && !this._isSWFTargetOnly;
 			this._outputPathForTarget = this._outputIsJS ? this._jsOutputPath : this._swfOutputPath;
 			if(this._verbose)
 			{
