@@ -32,6 +32,9 @@ package com.as3mxml.asconfigc
 		public static const CONNECT:String = "connect";
 		public static const LISTEN:String = "listen";
 
+		public static const LICENSE_DEV_ID:String = "licenseDevID";
+		public static const LICENSE_FILE:String = "licenseFile";
+
 		//ios
 		public static const SAMPLER:String = "sampler";
 		public static const HIDE_ANE_LIB_SYMBOLS:String = "hideAneLibSymbols"

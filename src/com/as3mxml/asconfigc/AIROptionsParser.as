@@ -25,6 +25,15 @@ package com.as3mxml.asconfigc
 			{
 				result = [];
 			}
+			if (AIROptions.LICENSE_DEV_ID in options)
+			{
+				setValueWithoutAssignment(AIROptions.LICENSE_DEV_ID, options[AIROptions.LICENSE_DEV_ID], result);
+			}
+			if (AIROptions.LICENSE_FILE in options)
+			{
+				setValueWithoutAssignment(AIROptions.LICENSE_FILE, options[AIROptions.LICENSE_FILE], result);
+			}
+
 			result.push("-" + AIROptions.PACKAGE);
 
 			//AIR_SIGNING_OPTIONS begin
@@ -279,6 +288,8 @@ package com.as3mxml.asconfigc
 					case AIROptions.EXTDIR:
 					case AIROptions.FILES:
 					case AIROptions.HIDE_ANE_LIB_SYMBOLS:
+					case AIROptions.LICENSE_DEV_ID:
+					case AIROptions.LICENSE_FILE:
 					case AIROptions.OUTPUT:
 					case AIROptions.PLATFORMSDK:
 					case AIROptions.SAMPLER:
