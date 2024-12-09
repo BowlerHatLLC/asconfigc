@@ -40,7 +40,7 @@
     "tmp": "^0.2.3"
   },
   "devDependencies": {
-    "@apache-royale/royale-js": "^0.9.11"
+    "@apache-royale/royale-js": "^0.9.12"
   },
   "scripts": {
     "build": "asnodec --targets=JSNodeModule --source-map=true --source-path+=typedefs src/ASConfigC.as",
