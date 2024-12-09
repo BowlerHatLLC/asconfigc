@@ -18,23 +18,21 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x, 20.x]
+        node-version: [16.x, 18.x, 20.x, 22.x]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install -g npm@7
-      if: ${{ matrix.node-version == '14.x' }}
     - run: |
         npm ci
         npm pack
       env:
         CI: true
-    - uses: actions/upload-artifact@v3
-      if: ${{ matrix.node-version == '14.x' }}
+    - uses: actions/upload-artifact@v4
+      if: ${{ matrix.node-version == '16.x' }}
       with:
         name: asconfigc
         path: asconfigc-*.tgz
