@@ -224,7 +224,7 @@ package
 			console.info(" --debug=true, --debug=false                         Specify debug or release mode. Overrides the debug compiler option, if specified in asconfig.json.");
 			console.info(" --air PLATFORM                                      Package the project as an Adobe AIR application. The allowed platforms include `android`, `ios`, `windows`, `mac`, `bundle`, and `air`.");
 			console.info(" --storepass PASSWORD                                The password used when signing and packaging an Adobe AIR application. If not specified, prompts for the password.");
-			console.info(" --unpackage-anes                                    Unpackage native extensions to the output directory when creating a debug build for the Adobe AIR simulator.");
+			console.info(" --unpackage-anes                                    Unpackage native extensions to the output directory for the Adobe AIR simulator.");
 			console.info(" --animate FILE                                      Specify the path to the Adobe Animate executable.");
 			console.info(" --publish-animate                                   Publish Adobe Animate document, instead of only exporting the SWF.");
 			console.info(" --clean                                             Clean the output directory. Will not build the project.");
@@ -1752,11 +1752,6 @@ package
 			if(!this._unpackageANEs)
 			{
 				//don't copy anything if it's not requested.
-				return;
-			}
-			if(!this._debugBuild)
-			{
-				//don't copy anything when it's a release build.
 				return;
 			}
 			if(this._compilerOptionsJSON === null)
