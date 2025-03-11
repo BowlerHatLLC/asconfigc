@@ -432,6 +432,28 @@ package tests
 		}
 
 		[Test]
+		public function testIncludes():void
+		{
+			var value:Array =
+			[
+				"com.example.MyClass",
+				"com.example.AnotherClass",
+				"TopLevel"
+			];
+			var args:Object = {};
+			args[CompilerOptions.INCLUDES] = value;
+			var result:Array = CompilerOptionsParser.parse(args);
+			Assert.assertStrictlyEquals(result.length, 3,
+				"Incorrect argument count for " + CompilerOptions.INCLUDES);
+			Assert.assertStrictlyEquals(result[0], "--" + CompilerOptions.INCLUDES + "+=" + value[0],
+				"Incorrect argument value for " + CompilerOptions.INCLUDES);
+			Assert.assertStrictlyEquals(result[1], "--" + CompilerOptions.INCLUDES + "+=" + value[1],
+				"Incorrect argument value for " + CompilerOptions.INCLUDES);
+			Assert.assertStrictlyEquals(result[2], "--" + CompilerOptions.INCLUDES + "+=" + value[2],
+				"Incorrect argument value for " + CompilerOptions.INCLUDES);
+		}
+
+		[Test]
 		public function testIncludeLibraries():void
 		{
 			var value:Array =

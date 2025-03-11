@@ -39,6 +39,7 @@ package com.as3mxml.asconfigc
 		public static const DIRECTORY:String = "directory";
 		public static const DUMP_CONFIG:String = "dump-config";
 		public static const EXTERNAL_LIBRARY_PATH:String = "external-library-path";
+		public static const INCLUDES:String = "includes";
 		public static const INCLUDE_LIBRARIES:String = "include-libraries";
 		public static const KEEP_ALL_TYPE_SELECTORS:String = "keep-all-type-selectors";
 		public static const KEEP_AS3_METADATA:String = "keep-as3-metadata";
