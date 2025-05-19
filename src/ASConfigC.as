@@ -688,6 +688,24 @@ package
 					var index:int = 0;
 					for(var platformID:String in application)
 					{
+						if (AIRPlatformType.WINDOWS === platformID
+								&& process.platform !== "win32") {
+							// AIR can't compile for Windows from macOS or
+							// Linux, so we can skip this one
+							continue;
+						}
+						if (AIRPlatformType.MAC === platformID
+								&& process.platform !== "darwin") {
+							// AIR can't compile for macOS from Windows or
+							// Linux, so we can skip this one
+							continue;
+						}
+						if (AIRPlatformType.LINUX === platformID
+								&& process.platform !== "linux") {
+							// AIR can't compile for Linux from Windows or
+							// macOS, so we can skip this one
+							continue;
+						}
 						this._airDescriptors[index] = application[platformID];
 						index++;
 					}
