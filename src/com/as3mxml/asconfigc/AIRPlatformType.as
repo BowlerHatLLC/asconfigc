@@ -23,5 +23,6 @@ package com.as3mxml.asconfigc
 		public static const ANDROID:String = "android"; // android device
 		public static const WINDOWS:String = "windows"; //captive runtime
 		public static const MAC:String = "mac"; //captive runtime
+		public static const LINUX:String = "linux"; //captive runtime
 	}
 }

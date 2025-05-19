@@ -382,9 +382,9 @@ package
 								{
 									this._airPlatform = AIRPlatformType.WINDOWS;
 								}
-								else
+								else if (process.platform === "linux")
 								{
-									throw new Error("Adobe AIR target \"bundle\" specified, but current operating system not recognized: " + process.platform);
+									this._airPlatform = AIRPlatformType.LINUX;
 								}
 							}
 							if(this._airPlatform === AIRPlatformType.MAC &&
@@ -396,6 +396,11 @@ package
 								process.platform !== "win32")
 							{
 								throw new Error("Error: Adobe AIR applications for Windows cannot be packaged on this platform.");
+							}
+							else if(this._airPlatform === AIRPlatformType.LINUX &&
+								process.platform !== "linux")
+							{
+								throw new Error("Error: Adobe AIR applications for Linux cannot be packaged on this platform.");
 							}
 						}
 						else

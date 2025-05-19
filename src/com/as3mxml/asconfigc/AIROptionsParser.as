@@ -41,7 +41,8 @@ package com.as3mxml.asconfigc
 			//mobile signing options must be specified later!
 			if(platform === AIRPlatformType.AIR ||
 				platform === AIRPlatformType.WINDOWS ||
-				platform === AIRPlatformType.MAC)
+				platform === AIRPlatformType.MAC ||
+				platform === AIRPlatformType.LINUX)
 			{
 				if(AIROptions.SIGNING_OPTIONS in options &&
 					!overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, platform))
@@ -65,6 +66,11 @@ package com.as3mxml.asconfigc
 						overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, AIRPlatformType.WINDOWS))
 					{
 						parseSigningOptions(options[AIRPlatformType.WINDOWS][AIROptions.SIGNING_OPTIONS], debug, result);
+					}
+					else if(process.platform === "linux" &&
+						overridesOptionForPlatform(options, AIROptions.SIGNING_OPTIONS, AIRPlatformType.LINUX))
+					{
+						parseSigningOptions(options[AIRPlatformType.LINUX][AIROptions.SIGNING_OPTIONS], debug, result);
 					}
 				}
 			}
@@ -125,6 +131,12 @@ package com.as3mxml.asconfigc
 						break;
 					}
 					case AIRPlatformType.MAC:
+					{
+						//captive runtime
+						setValueWithoutAssignment(AIROptions.TARGET, AIRTarget.BUNDLE, result);
+						break;
+					}
+					case AIRPlatformType.LINUX:
 					{
 						//captive runtime
 						setValueWithoutAssignment(AIROptions.TARGET, AIRTarget.BUNDLE, result);
@@ -281,6 +293,7 @@ package com.as3mxml.asconfigc
 					case AIRPlatformType.IOS_SIMULATOR:
 					case AIRPlatformType.MAC:
 					case AIRPlatformType.WINDOWS:
+					case AIRPlatformType.LINUX:
 
 					case AIROptions.AIR_DOWNLOAD_URL:
 					case AIROptions.ARCH:
