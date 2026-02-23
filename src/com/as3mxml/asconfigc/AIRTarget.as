@@ -22,12 +22,17 @@ package com.as3mxml.asconfigc
 		public static const ANE:String = "ane";
 		public static const BUNDLE:String = "bundle";
 		public static const NATIVE:String = "native";
+		public static const CMDLINE:String = "cmdline";
 
 		public static const APK:String = "apk";
 		public static const APK_CAPTIVE_RUNTIME:String = "apk-captive-runtime";
 		public static const APK_DEBUG:String = "apk-debug";
 		public static const APK_EMULATOR:String = "apk-emulator";
 		public static const APK_PROFILE:String = "apk-profile";
+		public static const AAB:String = "aab";
+		public static const AAB_DEBUG:String = "aab-debug";
+		public static const ANDROID_STUDIO:String = "android-studio";
+		public static const ANDROID_STUDIO_DEBUG:String = "android-studio-debug";
 
 		public static const IPA_APP_STORE:String = "ipa-app-store";
 		public static const IPA_AD_HOC:String = "ipa-ad-hoc";
