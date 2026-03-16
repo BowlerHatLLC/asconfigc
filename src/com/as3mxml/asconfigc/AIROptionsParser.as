@@ -178,11 +178,15 @@ package com.as3mxml.asconfigc
 			{
 				setValueWithoutAssignment(AIROptions.AIR_DOWNLOAD_URL, options[platform][AIROptions.AIR_DOWNLOAD_URL], result);
 			}
+			//Android options end
+
+			//This option is commonly used for both Android and Windows
+			//Windows and Android options begin
 			if(overridesOptionForPlatform(options, AIROptions.ARCH, platform))
 			{
 				setValueWithoutAssignment(AIROptions.ARCH, options[platform][AIROptions.ARCH], result);
 			}
-			//Android options end
+			//Windows and Android options end
 
 			//NATIVE_SIGNING_OPTIONS begin
 			//these are *mobile* signing options only

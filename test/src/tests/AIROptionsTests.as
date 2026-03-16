@@ -91,6 +91,19 @@ package tests
 		}
 
 		[Test]
+		public function testArchWindows():void
+		{
+			var value:String = "x64";
+			var args:Object = {};
+			args[AIRPlatformType.WINDOWS] = {}
+			args[AIRPlatformType.WINDOWS][AIROptions.ARCH] = value;
+			var result:Array = AIROptionsParser.parse(AIRPlatformType.WINDOWS, false, "application.xml", "test.swf", null, null, args);
+			var optionIndex:int = result.indexOf("-" + AIROptions.ARCH);
+			Assert.assertNotStrictlyEquals(optionIndex, -1);
+			Assert.assertStrictlyEquals(result.indexOf(value), optionIndex + 1);
+		}
+
+		[Test]
 		public function testResdir():void
 		{
 			var value:String = "path/to/res";
