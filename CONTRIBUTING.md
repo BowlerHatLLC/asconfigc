@@ -1,4 +1,4 @@
-# Contributing to vscode-as3mxml
+# Contributing to asconfigc
 
 ## Use of generative AI
 
