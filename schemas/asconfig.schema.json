@@ -339,6 +339,11 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "arch": {
+              "type": "string",
+              "description": "Specifies the CPU architecture to target on Windows.",
+              "pattern": "^(x86|x64)$"
+            },
             "extdir": { "$ref": "#/definitions/airOptionsExtdir" },
             "files": { "$ref": "#/definitions/airOptionsFiles" },
             "output": { "$ref": "#/definitions/airOptionsOutput" },
