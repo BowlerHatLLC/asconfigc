@@ -68,6 +68,10 @@ package com.as3mxml.asconfigc.utils
 			{
 				var fileName:String = files[j];
 				var fullPath:String = path.resolve(sourcePath, fileName);
+				if(excludes && excludes.indexOf(fullPath) !== -1)
+				{
+					continue;
+				}
 				if(fs.statSync(fullPath).isDirectory())
 				{
 					//add this directory to the source paths
@@ -79,10 +83,6 @@ package com.as3mxml.asconfigc.utils
 				if(extname === ".as" || extname === ".mxml")
 				{
 					// don't copy source files; only assets
-					continue;
-				}
-				if(excludes && excludes.indexOf(fullPath) !== -1)
-				{
 					continue;
 				}
 				if(fileName.startsWith("._") || fileName === ".DS_Store")

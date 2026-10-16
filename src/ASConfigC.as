@@ -1526,6 +1526,7 @@ package
 			}
 			var outputDirectory:String = findOutputDirectory(this._mainFile, this._outputPathForTarget, !this._outputIsJS);
 			var excludes:Vector.<String> = new <String>[];
+			excludes.push(outputDirectory);
 			if(this._airDescriptors)
 			{
 				var descriptorCount:int = this._airDescriptors.length;
