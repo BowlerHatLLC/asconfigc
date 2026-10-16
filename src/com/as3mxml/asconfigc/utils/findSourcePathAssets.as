@@ -74,6 +74,11 @@ package com.as3mxml.asconfigc.utils
 				}
 				if(fs.statSync(fullPath).isDirectory())
 				{
+					if (SOURCE_CONTROL_DIRECTORY_NAMES.indexOf(path.basename(fullPath)) !== -1) {
+						// we accept most types of files, including hidden ones,
+						// but it's a bad idea to copy source control directories
+						continue;
+					}
 					//add this directory to the source paths
 					sourcePaths.push(fullPath);
 					sourcePathsCount++;
@@ -101,3 +106,5 @@ package com.as3mxml.asconfigc.utils
 		return Array.from(result);
 	}
 }
+
+const SOURCE_CONTROL_DIRECTORY_NAMES:Array = [".git", ".svn", ".hg", ".jj"];
