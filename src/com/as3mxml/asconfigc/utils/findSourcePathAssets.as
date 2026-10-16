@@ -90,6 +90,11 @@ package com.as3mxml.asconfigc.utils
 					// macOS system files that can be ignored
 					continue;
 				}
+				if(fileName === "Thumbs.db")
+				{
+					// windows system files that can be ignored
+					continue;
+				}
 				result.add(fullPath);
 			}
 		}
